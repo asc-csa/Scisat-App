@@ -63,7 +63,7 @@ df['timestamp'] = pd.to_datetime(df['timestamp'])  # converts the timestamp to d
 """
 
 #!!!!!! L'on va devoir créer une fonction pour reformatter le nom selon les données désirées
-def data_reader(file,path_to_files,start_date=0,end_date=0) :
+def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
     if type(file)==list:
         file=file[0]
     name=path_to_files+'//'+file
@@ -113,11 +113,16 @@ def data_reader(file,path_to_files,start_date=0,end_date=0) :
     df['lat'] = lat
     df['long'] = long
     
+    #filters the data based on the date
     if start_date!=0 and end_date!=0 :
         df=df[np.where(df['date']>start_date,True,False)]
         df=df[np.where(df['date']<end_date,True,False)]
 
-    
+    #filters the data based on min/max longitude/latitude
+    df=df[np.where(df['lat']>lat_min,True,False)]
+    df=df[np.where(df['lat']<lat_max,True,False)]
+    df=df[np.where(df['long']>lon_min,True,False)]
+    df=df[np.where(df['long']<lon_max,True,False)]
     return df
 
 
@@ -410,7 +415,7 @@ def build_filtering():
                                 html.Label(
                                     dcc.Dropdown(
                                         id="gaz_list",
-                                        options=[],
+                                        options= [],
                                         multi=False,
                                         value=gaz_values,
                                         className="dcc_control",
@@ -473,20 +478,20 @@ def build_filtering():
                                         dcc.Input(
                                             id="lon_min",
                                             type='number',
-                                            value=-90.0,
+                                            value=-180.0,
                                             placeholder="Min Longitude",
-                                            min=-90.0,
-                                            max=90.0,
+                                            min=-180.0,
+                                            max=180.0,
                                             step=5,
                                             style={"margin-left": "5px"}
                                         ),
                                         dcc.Input(
                                             id="lon_max",
                                             type='number',
-                                            value=90.0,
+                                            value=180.0,
                                             placeholder="Max Longitude",
-                                            min=-90.0,
-                                            max=90.0,
+                                            min=-180.0,
+                                            max=180.0,
                                             step=5,
                                             style={"margin-left": "5px"}
                                         ),
@@ -716,70 +721,15 @@ app.layout = html.Div(
 
 
 # Helper functions
-def filter_dataframe(df, start_date_dt, end_date_dt, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
-    """Filter the extracted ionogram dataframe on multiple parameters.
 
-    Called for every component.
-
-    Parameters
-    ----------
-    df : DataFrame (note: SciPy/NumPy documentation usually refers to this as array_like)
-        The DataFrame with ionogram data to be filtered.
-
-    start_date_dt : datetime object
-        Starting date stored as a datetime object
-
-    end_date_dt : datetime object
-        Ending date stored as a datetime object
-
-    lat_min : double
-        Minimum value of the latitude stored as a double.
-        
-    lat_max : double
-        Maximum value of the latitude stored as a double.
-        
-    lon_min : double
-        Minimum value of the longitude stored as a double.
-        
-    lon_max : double
-        Maximum value of the longitude stored as a double.
-
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
-
-    Returns
-    -------
-    DataFrame
-        The filtered DataFrame
-    """
-
-    dff = df[
-        (df["timestamp"].dt.date >= dt.date(start_date_dt.year, start_date_dt.month, start_date_dt.day))
-        & (df["timestamp"].dt.date <= dt.date(end_date_dt.year, end_date_dt.month, end_date_dt.day))
-            ]
-    if (lat_min != -90) or (lat_max != 90):
-        dff = dff[
-            (dff["lat"] >= lat_min)
-            & (dff["lat"] <= lat_max)
-               ]
-    if (lon_min != -90) or (lon_max != 90):
-        dff = dff[
-            (dff["lon"] >= lon_min)
-            & (dff["lon"] <= lon_max)
-                ]
-    if (ground_stations is not None) and (ground_stations != []):
-        dff = dff[
-            (dff["station_name"].isin(ground_stations))
-            ]
-
-    return dff
 
 
 # Selectors -> ionogram count
 @app.callback(
     Output("ionograms_text", "children"),
     [
-        Input("date_value", "value"),
+        Input('date_picker_range', "start_date"),
+        Input('date_picker_range', "end_date"),
         Input("lat_min", "value"),
         Input("lat_max", "value"),
         Input("lon_min", "value"),
@@ -787,7 +737,7 @@ def filter_dataframe(df, start_date_dt, end_date_dt, lat_min, lat_max, lon_min, 
         Input("gaz_list", "value"),
     ],
 )
-def update_ionograms_text(date, end_date, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list):
     """Update the component that counts the number of ionograms selected.
 
     Parameters
@@ -815,16 +765,16 @@ def update_ionograms_text(date, end_date, lat_min, lat_max, lon_min, lon_max, gr
     int
         The number of ionograms present in the dataframe after filtering
     """
-    start_time = dt.datetime.now()
-
-    date = dt.datetime.strptime(date.split('T')[0], '%Y-%m-%d')  # Convert strings to datetime objects
    
 
-    dff = filter_dataframe(df, date, lat_min, lat_max, lon_min, lon_max, ground_stations)
+    
+   
 
-    print(f'update_ionograms_text: {(dt.datetime.now()-start_time).total_seconds()}')
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
-    return "{:n}".format(dff.shape[0]) + " / " + "{:n}".format(406566)
+    
+
+    return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
 
 
@@ -849,16 +799,17 @@ def update_picker(gaz_list):
 @app.callback(
     Output("download-link-2", "href"),
     [
-      
-        Input('date_picker_range', "value"),
+        Input("gaz_list", "value"),
+        Input('date_picker_range', "start_date"),
+        Input('date_picker_range', "end_date"),
         Input("lat_min", "value"),
         Input("lat_max", "value"),
         Input("lon_min", "value"),
         Input("lon_max", "value"),
-        Input("gaz_list", "value"),
+        
     ],
 )
-def update_images_link(date, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def update_images_link(gaz,date, lat_min, lat_max, lon_min, lon_max):
     """Updates the link to the Ionogram images download
 
     Returns
@@ -888,12 +839,12 @@ def download_images():  #!!!!! à corriger selon donnée
     lon_min = flask.request.args.get('lon_min')
     lon_max = flask.request.args.get('lon_max')
 
-    ground_stations = flask.request.args.get('ground_stations') # parses a string representation of ground_stations
-    ground_stations = literal_eval(ground_stations) # converts into a list representation
+    gaz_list = flask.request.args.get('gaz_list') # parses a string representation of ground_stations
+  
 
-    dff = filter_dataframe(df, start_date, end_date, int(lat_min), int(lat_max), int(lon_min), int(lon_max), ground_stations)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
-    dff['file_path'] = dff['file_name'].map(lambda x: os.path.join(IONOGRAM_PATH, x) + '.png')
+  
 
     # Store the zip in memory
     memory_file = BytesIO()
@@ -918,16 +869,17 @@ def download_images():  #!!!!! à corriger selon donnée
 # Selectors -> CSV Link
 @app.callback(
     Output("download-link-1", "href"),
-    [
-        Input('date_picker_range', "value"),
+    [   Input("gaz_list", "value"),
+        Input('date_picker_range', "start_date"),
+        Input('date_picker_range', "end_date"),
         Input("lat_min", "value"),
         Input("lat_max", "value"),
         Input("lon_min", "value"),
         Input("lon_max", "value"),
-        Input("gaz_list", "value"),
+       
     ],
 )
-def update_csv_link(date, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def update_csv_link(gaz,start_date,end_date, lat_min, lat_max, lon_min, lon_max):
     """Updates the link to the CSV download
 
     Returns
@@ -989,7 +941,7 @@ def download_csv():
     ground_stations = flask.request.args.get('ground_stations') # parses a string representation of ground_stations
     ground_stations = literal_eval(ground_stations) # converts into a list representation
 
-    dff = filter_dataframe(df,date, int(lat_min), int(lat_max), int(lon_min), int(lon_max), ground_stations)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -1075,80 +1027,39 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         layout as as a Plotly layout graph object.
     """
     
-    df =data_reader(gaz_list,r'data',start_date,end_date)
-    aaa=np.array(df.values[:,0:150],dtype=np.float32)
- 
-
-    lat=np.array(df['lat'][:])
-    lon=np.array(df['long'][:])
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    concentration=df.values[:,0:150]
+    concentration=np.array(concentration,dtype=np.float32)
+    concentration=np.ma.masked_array(concentration, np.isnan(concentration))
+    xx=concentration.mean(axis=0).data
+    err_xx=concentration.std(axis=0).data
     
-    a=np.where(np.logical_and(lat>lat_min,lat<lat_max))
-    b=np.where(np.logical_and(lon>lon_min,lon<lon_max))
-    a=a[a==b]
-    concentration=concentration[a,:]
-    concentration=np.nanmean(concentration,axis=1)
-    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CAMILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEE
-    fig2 = px.bar( x=concentration, y=df.columns, color='day', orientation='h',
-             hover_data=["tip", "size"],
-             height=400,
-             title='Restaurant bills')
-
-    fig =go.Figure( 
-        x=concentration,
-        y=df.columns,
-        mode="markers",
-        marker=dict(
-            color=df['Sum O3'][df['Sum O3']<0.0003],
-            colorscale=[[0, 'blue'],
-            [1, 'red']],
-            cmin=0,
-            cmax=max(df['Sum O3'][df['Sum O3']<0.0003]),
-            showscale=True,
-            
-            size=5,
-            colorbar=dict(
-               # x=0.9,
-               # len=0.7,
-                title=dict(
-                    text="Gaz Concentration (sum on altitude)",
-                 #   font={"color": "#737a8d", "family": "Open Sans"},
-                ),
-                titleside="right",     
+    layout_count = copy.deepcopy(layout)
+    data = [
+        dict(
+            x=xx,
+            y=df.columns[0:150],
+            error_x=err_xx,
+            name="Altitude",
+            opacity=1,
+            hoverinfo="skip",
         ),
-        opacity=0.8,
-        )
-    )
+        
+    ]
 
+    layout_count["title"] = _("Ionograms Per Month")
+    layout_count["xaxis"] = {"title": "Date", "automargin": True}
+    layout_count["yaxis"] = {"title": _("Number of Ionograms"), "automargin": True}
+    #layout_count["dragmode"] = "select"
+    layout_count['clickmode']="event+select",
+    layout_count['hovermode']="closest",
+    layout_count["showlegend"] = False
+    layout_count["autosize"] = True
+    layout_count["transition"] = {'duration': 500}
 
- 
+    fig = dict(data=data, layout=layout_count)
 
-    fig.update_layout(
-        margin=dict(l=10, r=10, t=20, b=10, pad=5),
-      #  plot_bgcolor="#171b26",
-      #  paper_bgcolor="#171b26",
-        clickmode="event+select",
-        hovermode="closest",
-        showlegend=False,
-        # legend=go.layout.Legend(
-        #     x=1,
-        #     y=1,
-        #     traceorder="normal",
-        # ),
-        mapbox=go.layout.Mapbox(
-            accesstoken=mapbox_access_token
-            #bearing=10,
-            #center=go.layout.mapbox.Center(
-            #    lat=df_stations.lat.mean(), lon=df_stations.lon.mean()
-            #),
-            #pitch=5,
-            #zoom=1,
-            #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex",
-        ),
-        transition={'duration': 500},
-    )
-
-
-    return fig2
+    return fig
 
 
 #=====================================================================
@@ -1165,11 +1076,11 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         Input("lat_max", "value"),
         Input("lon_min", "value"),#!!!!!! à remplacer lorsque le click-select est pret
         Input("lon_max", "value"),
-        Input("gaz_list", "value"),
+       
     ],
 )
 
-def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max):
     """Create and update the map of ground stations for selected iongograms.
 
  
@@ -1223,7 +1134,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     
    #!!!!!!!!!!! si possible se débarasser de la boucle; trop lent
    
-    df =data_reader(gaz_list,r'data',start_date,end_date)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
     fig =go.Figure( go.Scattermapbox(
         lat=df['lat'][df['Sum O3']<0.0003],
@@ -1289,7 +1200,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     # [Input("visualize-button", "n_clicks")],
     [
        
-        Input('date_picker_range', "value"),
+        Input("date_picker_range", "start_date"),
+        Input("date_picker_range", "end_date"),
         Input("x_axis_selection_1", "value"),
         Input("y_axis_selection_1", "value"),
         Input("lat_min", "value"),
@@ -1299,7 +1211,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         Input("gaz_list", "value"),
     ],
 )
-def make_viz_chart(date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, gaz_list):
     """Create and update the chart for visualizing selected iongograms based on varying x and y-axis selection.
 
     Displays the mean value from the selected x-axis with a calculated 95% confidence interval, displaying the
@@ -1338,19 +1250,16 @@ def make_viz_chart(date, x_axis_selection, y_axis_selection, lat_min, lat_max, l
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the chart's layout
         as a Plotly layout graph object.
     """
-    start_time = dt.datetime.now()
+    
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    concentration=df.values[:,0:150]
+    concentration=np.array(concentration,dtype=np.float32)
+    concentration=np.ma.masked_array(concentration, np.isnan(concentration))
+    concentration=concentration.mean(axis=0).data
 
-   
-    date = dt.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
 
-    dff = filter_dataframe(df,date, lat_min, lat_max, lon_min, lon_max, ground_stations)
 
-    confidence = 0.95
 
-    estimated_means = []
-    ci_upper_limits = []
-    ci_lower_limits = []
-    bins = []
 
     # bucketing the data
     if x_axis_selection == 'timestamp':
@@ -1528,8 +1437,8 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
      # Convert strings to datetime objects
     date = dt.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
 
-    filtered_data = filter_dataframe(df,date, lat_min, lat_max, lon_min, lon_max, ground_stations)
-
+    df =data_reader(gaz_list,r'data',start_date,end_date)
+    
     traces = []
     for station_details, dfff in filtered_data.groupby(["station_name", "lat", "lon"]):
         trace = dict(

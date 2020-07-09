@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import dash
-import pathlib
+
 import copy
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,22 +11,22 @@ import datetime as dt
 from scipy.stats import sem, t
 from scipy import mean
 from dateutil.relativedelta import relativedelta
-from dash.dependencies import Input, Output, State
-import locale
-import urllib.parse
-import urllib.request
+from dash.dependencies import Input, Output
+
+
+
 from zipfile import ZipFile
 import os
 import flask
 from io import StringIO
 from flask_babel import _ ,Babel
-from flask import session, redirect, url_for, request
+from flask import session, redirect, url_for
 from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-from pandas.tseries.offsets import DateOffset
+
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime
-import plotly.express as px
+
 #===============================================================================================
 """
 #Emplacement tomporaire. Permet de régler le slider pour la date. À corriger et mieux placer dans le code ou effacer
@@ -45,14 +45,6 @@ for i in dlist:
 """
 #==========================================================================================
 
-
-# get relative data folder
-PATH = pathlib.Path(__file__).parent
-DATA_PATH = PATH.joinpath("data").resolve()  # path to "data" folder
-
-IONOGRAM_PATH = 'U:/Downloads'  # Directory to Ionogram images for testing
-# IONOGRAM_PATH = '/storage_slow/ftp_root/users/OpenData_DonneesOuvertes/pub/AlouetteData/Alouette Data'  # Directory to Ionogram images on server
-
 #==========================================================================================
 # load data and transform as needed
 
@@ -62,7 +54,6 @@ df = pd.read_csv(r'data/final_alouette_data.csv')  # edit for compatibility with
 df['timestamp'] = pd.to_datetime(df['timestamp'])  # converts the timestamp to date_time objects
 """
 
-#!!!!!! L'on va devoir créer une fonction pour reformatter le nom selon les données désirées
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
     if type(file)==list:
         file=file[0]
@@ -97,13 +88,11 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
     #Colonne de dates
     date=[]
-    d = np.zeros((len(days),3))
+
     
     for i in range (len(days)):
-        # d[i][0]=years[i]
-        # d[i][1]=months[i]
-        # d[i][2]=days[i]
-        date.append(datetime.datetime(years[i],months[i],days[i],hour=hours[i]))
+      
+        date.append(datetime.datetime(years[i],months[i],days[i],hours[i]))
     
     
     data_sumAlt = np.nanmean(data,1) #Somme sur l'altitude #!!! À revérifier scientifiquement
@@ -129,10 +118,13 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
 
 
+
+
+
 # Dropdown options
 #======================================================================================
 # Controls for webapp
-gaz_name_options = [ #!!!!!!!! à remplacer par le nom de chaque gaz ; peut être lu directement des données
+gaz_name_options = [ 
                     
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p0_C2H2.nc'},
@@ -533,7 +525,7 @@ def build_filtering():
                                     html.Label(
                                         dcc.DatePickerRange(
                                             id='date_picker_range',
-                                            min_date_allowed=dt.datetime(1962, 9, 29),#!!!!!!!!!!!!!1
+                                            min_date_allowed=dt.datetime(1962, 9, 29),
                                             max_date_allowed=dt.datetime(1972, 12, 31),
                                             #initial_visible_month=dt.datetime(1962, 9, 29),
                                             start_date=dt.datetime(1962, 9, 29),
@@ -1039,7 +1031,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         dict(
             x=xx,
             y=df.columns[0:150],
-            error_x=err_xx,
+            error_x=err_xx,#!!!!!!!!!! Ne semble pas marcher
             name="Altitude",
             opacity=1,
             hoverinfo="skip",
@@ -1252,10 +1244,12 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     """
     
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
-    concentration=df.values[:,0:150]
-    concentration=np.array(concentration,dtype=np.float32)
-    concentration=np.ma.masked_array(concentration, np.isnan(concentration))
-    concentration=concentration.mean(axis=0).data
+    
+    
+    
+    
+    concentration =df.groupby('date')['Sum O3'].mean()
+    concentration =  concentration.groupby(concentration.index.floor('D')).mean()
 
 
 
@@ -1325,7 +1319,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
             name="",
             type="scatter",
             x=bins,
-            y=ci_upper_limits,
+            #y=ci_upper_limits,
             #line_color="rgba(255,255,255,0)",
             fillcolor="rgba(255,255,255,0)",
             line={'color': 'rgba(18,99,168,0)'},
@@ -1338,10 +1332,10 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
             name="95% Confidence Interval",
             type="scatter",
             x=bins,
-            y=ci_lower_limits,
+            #y=ci_lower_limits,
             fillcolor="rgba(18,99,168,0.25)",
             #line_color="rgba(255,255,255,0)",
-            line={'width': '0px'},
+            line={'width': '5px'},
             connectgaps=True,
             showlegend=True,
         ),
@@ -1349,7 +1343,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
             type="scatter",
             mode="lines+markers",
             x=bins,
-            y=estimated_means,
+            #y=estimated_means,
             name="Estimated Mean",
             line={'color': 'rgb(18,99,168)'},
             marker={'size': 2.5},
@@ -1373,7 +1367,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
 
     figure = dict(data=data, layout=layout)
 
-    print(f'make_viz_chart: {(dt.datetime.now()-start_time).total_seconds()}')
+    
 
     return figure
 
@@ -1609,7 +1603,7 @@ def translate_static(x):
     return [
                 _("Scisat data visualisation"),
                 _("Learn More About SciSat"),
-                _("ionograms selected") + " / " + _("total of ionograms"),
+                _("data selected"),
                 #_("Launched in 1962, Alouette I sent signals with different frequencies into the topmost layer of the atmosphere, known as the ionosphere, and collected data on the depth these frequencies travelled. The results of this were sent to ground stations around the world and stored in films as ionogram images, which have now been digitized. The ionograms Alouette I provided were used to fuel hundreds of scientific papers at the time. Although ionosphere data from more recent years is readily available, the data from Alouette I’s ionograms are the only ones available for this time period. Barriers for accessing, interpreting and analyzing the data at a larger scale have prevented this data's usage. "),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize Scisat's data. "),
@@ -1619,7 +1613,7 @@ def translate_static(x):
                 _("select date:"),
                 _("Select gaz:"),
                 _('Download Summary Data as CSV'),
-                _('Download Selected Ionogram Images'),
+                _('Download full data as netcdf'),
                 _("Select x-axis:"),
                 _("Select y-axis:"),
                 _("Select statistic:"),

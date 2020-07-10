@@ -1252,8 +1252,8 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     concentration =df.groupby('date')['Sum O3'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
     bins=concentration
-    date=df['date']
-
+    date=df["date"].map(pd.Timestamp.date).unique()
+   
 
 
     # bucketing the data
@@ -1363,6 +1363,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
         title=_("Data Visualization (95% Confidence Interval)"),
+        
         xaxis={"title": x_axis_selection, "automargin": True},
         yaxis={"title": y_axis_selection, "automargin": True},
         height=500,

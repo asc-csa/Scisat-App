@@ -8,21 +8,12 @@ import dash_dangerously_set_inner_html
 import plotly.graph_objs as go
 import pandas as pd
 import datetime as dt
-from scipy.stats import sem, t
-from scipy import mean
-from dateutil.relativedelta import relativedelta
 from dash.dependencies import Input, Output
-
-
-
-from zipfile import ZipFile
-import os
 import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for
 from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime
@@ -234,7 +225,7 @@ x_axis_options = [
     {'label': _('Longitude'), 'value': ('longitude')}]
 
 y_axis_options = [
-    {'label': _('Minimum Frequency'), 'value': ('fmin')},
+    {'label': _('Concentration'), 'value': ('Concentration')},
     {'label': _('Maximum Depth'), 'value': ('max_depth')}]
 
 year_dict = {}
@@ -274,6 +265,7 @@ app = dash.Dash(
 server = app.server
 server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
+
 
 # Create global chart template
 mapbox_access_token = "pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w"
@@ -613,7 +605,7 @@ def build_stats():
                                         id="y_axis_selection_1",
                                         options=y_axis_options,
                                         multi=False,
-                                        value='max_depth',
+                                        value='Concentration',
                                         className="dcc_control",
                                     ),
                                 ),
@@ -1045,9 +1037,9 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         
     ]
 
-    layout_count["title"] = _("Ionograms Per Month")
-    layout_count["xaxis"] = {"title": "Date", "automargin": True}
-    layout_count["yaxis"] = {"title": _("Number of Ionograms"), "automargin": True}
+    layout_count["title"] = _("Mean concentration as a function of altitude")
+    layout_count["xaxis"] = {"title": _("Concentration"), "automargin": True}
+    layout_count["yaxis"] = {"title": _("Altitude (km) "), "automargin": True}
     #layout_count["dragmode"] = "select"
     layout_count['clickmode']="event+select",
     layout_count['hovermode']="closest",
@@ -1151,7 +1143,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                # x=0.9,
                # len=0.7,
                 title=dict(
-                    text="Gaz Concentration (sum on altitude)",
+                    text=_("Gaz Concentration (sum on altitude)"),
                  #   font={"color": "#737a8d", "family": "Open Sans"},
                 ),
                 titleside="right",     
@@ -1367,7 +1359,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Data Visualization (95% Confidence Interval)"),
+        title=_("Data Visualization "),
         
         xaxis={"title": x_axis_selection, "automargin": True},
         yaxis={"title": y_axis_selection, "automargin": True},
@@ -1623,8 +1615,8 @@ def translate_static(x):
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize Scisat's data. "),
                 _("Select Data"),
-                _("Filter by ground station latitude:"),
-                _("Filter by ground station longitude:"),
+                _("Filter by latitude:"),
+                _("Filter by longitude:"),
                 _("select date:"),
                 _("Select gaz:"),
                 _('Download Summary Data as CSV'),
@@ -1732,7 +1724,8 @@ def translate_static(x):
                 ],
                 [  # x_axis_options
                     {'label': _('Date'), 'value': 'timestamp'},
-                    {'label': _('Latitude'), 'value': 'latitude'}, {'label': _('Longitude'), 'value': 'longitude'}
+                    {'label': _('Latitude'), 'value': 'latitude'},
+                    {'label': _('Longitude'), 'value': 'longitude'}
                 ],
                 [  # y_axis_options
                     {'label': _('Minimum Frequency'), 'value': 'fmin'},

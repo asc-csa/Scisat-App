@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-20 14:30-0400\n"
-"PO-Revision-Date: 2020-01-20 16:09-0500\n"
+"POT-Creation-Date: 2020-07-10 16:35-0400\n"
+"PO-Revision-Date: 2020-07-10 16:35-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -16,299 +16,403 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 
-#: app.py:925
-msgid "Ionograms Per Month"
-msgstr "Ionogrammes par mois"
+#: app.py:124 app.py:1634
+msgid "Acetone"
+msgstr "Acétone"
 
-#: app.py:927
-msgid "Number of Ionograms"
+#: app.py:125 app.py:1635
+msgid "Acetylene"
+msgstr "Acétylène"
+
+#: app.py:126 app.py:1636
+msgid "Ethane"
+msgstr "Éthane"
+
+#: app.py:127 app.py:1637
+msgid "dichlorodifluoromethane"
+msgstr "dichlorodifluorométhane"
+
+#: app.py:128 app.py:1638
+msgid "trichlorofluoromethane"
+msgstr "trichlorofluorométhane"
+
+#: app.py:129 app.py:1639
+msgid "Carbon tetrachloride"
+msgstr "Tétrachlorométhane"
+
+#: app.py:132 app.py:1642
+msgid "Carbon tetrafluoride"
+msgstr "tétrafluorométhane"
+
+#: app.py:133 app.py:1643
+msgid "Trichlorotrifluoroethane"
+msgstr " trichlorotrifluoroéthane"
+
+#: app.py:134 app.py:1644
+msgid "Chloromethane"
+msgstr "Chlorométhane"
+
+#: app.py:135 app.py:1645
+msgid "Acetonitrite"
+msgstr "Acétonitrile"
+
+#: app.py:136 app.py:1646
+msgid "Methanol"
+msgstr "Méthanol"
+
+#: app.py:137 app.py:1647
+msgid "Methane"
+msgstr "Méthane"
+
+#: app.py:139 app.py:1649
+msgid "Methane 212"
+msgstr "Méthane 212"
+
+#: app.py:140 app.py:1650
+msgid "Methane 311"
+msgstr "Méthane 311"
+
+#: app.py:141 app.py:1651
+msgid "Difluorochloromethane"
+msgstr "Chlorodifluoromethane"
+
+#: app.py:142 app.py:1652
+msgid "Trifluoromethane"
+msgstr "Trifluorométhane"
+
+#: app.py:143 app.py:1653
+msgid "chlorine monoxide"
+msgstr "Monoxyde de chlore"
+
+#: app.py:144 app.py:1654
+msgid "Chlorine nitrate"
+msgstr "Nitrate de chlore"
+
+#: app.py:146 app.py:1656
+msgid "Carbon monoxide"
+msgstr "Monoxyde de carbone"
+
+#: app.py:147 app.py:1657
+msgid "Carbon dioxide"
+msgstr "Dioxyde de carbone"
+
+#: app.py:148 app.py:1658
+msgid "Carbon dioxide 627"
+msgstr "Dioxyde de carbone 627"
+
+#: app.py:149 app.py:1659
+msgid "Carbon dioxide 628"
+msgstr "Dioxyde de carbone 628"
+
+#: app.py:150 app.py:1660
+msgid "Carbon dioxide 636"
+msgstr "Dioxyde de carbone 636"
+
+#: app.py:151 app.py:1661
+msgid "Carbon dioxide 637"
+msgstr "Dioxyde de carbone 637"
+
+#: app.py:154 app.py:1664
+msgid "Carbon dioxide 638"
+msgstr "Dioxyde de carbone 638"
+
+#: app.py:155 app.py:1665
+msgid "Phosgene"
+msgstr "Phosgène"
+
+#: app.py:156 app.py:1666
+msgid "Carbonyl chlorine fluoride"
+msgstr "Monofluorure de chlore"
+
+#: app.py:157 app.py:1667
+msgid "Carbonyl fluoride"
+msgstr "Fluorure de carbonyle"
+
+#: app.py:158 app.py:1668
+msgid "Carbon monoxide 27"
+msgstr "Monoxyde de carbone 27"
+
+#: app.py:159 app.py:1669
+msgid "Carbon monoxide 28"
+msgstr "Monoxyde de carbone 28"
+
+#: app.py:161 app.py:1671
+msgid "Carbon monoxide 36"
+msgstr "Monoxyde de carbone 36"
+
+#: app.py:162 app.py:1672
+msgid "Carbon monoxide 38"
+msgstr "Monoxyde de carbone 38"
+
+#: app.py:163 app.py:1673
+msgid "GLC"
 msgstr ""
 
-#: app.py:1307
-msgid "Data Visualization (95% Confidence Interval)"
+#: app.py:164 app.py:1674
+msgid "Formaldehyde"
+msgstr "Formaldéhyde"
+
+#: app.py:165 app.py:1675
+msgid "Water"
+msgstr "Eau"
+
+#: app.py:166 app.py:1676
+msgid "Hydrogen peroxide"
+msgstr "Peroxyde d'hydrogène"
+
+#: app.py:169 app.py:1679
+msgid "Water 162"
+msgstr "Eau 162"
+
+#: app.py:170 app.py:1680
+msgid "Water 171"
+msgstr "Eau 171"
+
+#: app.py:171 app.py:1681
+msgid "Water 181"
+msgstr "eau 181"
+
+#: app.py:172 app.py:1682
+msgid "Water 182"
+msgstr "Eau 182"
+
+#: app.py:173 app.py:1683
+msgid "Hydrochlorofluorocarbon 141b"
+msgstr "Chlorofluorocarbure 141b"
+
+#: app.py:174 app.py:1684
+msgid "Hydrochlorofluorocarbon 142b"
+msgstr "Chlorofluorocarbure 142b"
+
+#: app.py:175 app.py:1685
+msgid "Hydrochloric acid"
+msgstr "Acide chlorydrique"
+
+#: app.py:179 app.py:1689
+msgid "Hydrogen cyanide"
+msgstr "Cyanure d'hydrogène"
+
+#: app.py:180 app.py:1690
+msgid "Formic acid"
+msgstr "Acide formique"
+
+#: app.py:181 app.py:1691
+msgid "Hydrogen fluoride"
+msgstr "Fluorure d'hydrogène"
+
+#: app.py:182 app.py:1692
+msgid "Hydrofluorocarbon 134a"
+msgstr "Hydrofluorocarbure"
+
+#: app.py:183 app.py:1693
+msgid "Nitric acid"
+msgstr "Acide nitrique"
+
+#: app.py:184 app.py:1694
+msgid "Nitric acid 156"
+msgstr "Acide nitrique 156"
+
+#: app.py:187 app.py:1697
+msgid "peroxynitric acid"
+msgstr "Acide peroxynitrique "
+
+#: app.py:188 app.py:1698
+msgid "Nitrogen"
+msgstr "Azote"
+
+#: app.py:189 app.py:1699
+msgid "Nitrous oxide"
+msgstr "Protoxyde d'azote"
+
+#: app.py:190 app.py:1700
+msgid "dinitrogen pentaoxide"
+msgstr "Pentoxyde d'azote"
+
+#: app.py:191 app.py:1701
+msgid "Nitrous oxide 447"
+msgstr "Protoxyde d'azote 447"
+
+#: app.py:192 app.py:1702
+msgid "Nitrous oxide 448"
+msgstr "Protoxyde d'azote 448"
+
+#: app.py:194 app.py:1704
+msgid "Nitrous oxide 456"
+msgstr "Protoxyde d'azote 456"
+
+#: app.py:195 app.py:1705
+msgid "Nitrous oxide 546"
+msgstr "Protoxyde d'azote 546"
+
+#: app.py:196 app.py:1706
+msgid "Nitrogen monoxide 447"
+msgstr "Monoxyde d'azote"
+
+#: app.py:197 app.py:1707
+msgid "Nitrogen dioxide"
+msgstr "Dioxyde d'azote"
+
+#: app.py:198 app.py:1708
+msgid "Nitrogen dioxide 656"
+msgstr "Dioxyde d'azote 656"
+
+#: app.py:199 app.py:1709
+msgid "Oxygen"
+msgstr "Oxygène"
+
+#: app.py:202 app.py:1712
+msgid "Ozone"
+msgstr "Ozone"
+
+#: app.py:203 app.py:1713
+msgid "Ozone 667"
+msgstr "Ozone 667"
+
+#: app.py:204 app.py:1714
+msgid "Ozone 668"
+msgstr "Ozone 668"
+
+#: app.py:205 app.py:1715
+msgid "Ozone 676"
+msgstr "Ozone 676"
+
+#: app.py:206 app.py:1716
+msgid "Ozone 686"
+msgstr "Ozone 686"
+
+#: app.py:207 app.py:1717
+msgid "Carbonyl sulfide"
+msgstr "Oxysulfure de carbone"
+
+#: app.py:208 app.py:1718
+msgid "Carbonyl sulfide 623"
+msgstr "Oxysulfure de carbone 623"
+
+#: app.py:211 app.py:1721
+msgid "Carbonyl sulfide 624"
+msgstr "Oxysulfure de carbone 624"
+
+#: app.py:212 app.py:1722
+msgid "Carbonyl sulfide 632"
+msgstr "Oxysulfure de carbone 632"
+
+#: app.py:213 app.py:1723
+msgid "Phosphorus"
+msgstr "Phosphore"
+
+#: app.py:214 app.py:1724
+msgid "Polyacrylonitrile"
+msgstr "polyacrylonitrile"
+
+#: app.py:215 app.py:1725
+msgid "Sulfur hexafluoride"
+msgstr "Hexafluorure de soufre"
+
+#: app.py:216 app.py:1726
+msgid "Sulfur dioxide"
+msgstr "Dioxyde de soufre"
+
+#: app.py:217 app.py:1727
+msgid "T"
 msgstr ""
 
-#: app.py:1552
-msgid "Alouette I Ionogram Data"
-msgstr "Données Ionogramme de l'Alouette I"
-
-#: app.py:1553
-msgid "Learn More About Alouette"
-msgstr "Pour en Savoir Plus sur Alouette"
-
-#: app.py:1554
-msgid "ionograms selected"
-msgstr "ionogrammes sélectionnés"
-
-#: app.py:1554
-msgid "total of ionograms"
-msgstr "nombre total d'ionogrammes"
-
-#: app.py:1555
-msgid ""
-"Launched in 1962, Alouette I sent signals with different frequencies into"
-" the topmost layer of the atmosphere, known as the ionosphere, and "
-"collected data on the depth these frequencies travelled. The results of "
-"this were sent to ground stations around the world and stored in films as"
-" ionogram images, which have now been digitized. The ionograms Alouette I"
-" provided were used to fuel hundreds of scientific papers at the time. "
-"Although ionosphere data from more recent years is readily available, the"
-" data from Alouette I’s ionograms are the only ones available for this "
-"time period. Barriers for accessing, interpreting and analyzing the data "
-"at a larger scale have prevented this data's usage. "
-msgstr ""
-"Lancée en 1962, Alouette I a envoyé des signaux de différentes fréquences"
-" dans la couche supérieure de l'atmosphère, connue sous le nom "
-"d'ionosphère, et a recueilli des données sur la profondeur de ces "
-"fréquences. Les résultats de ces films ont été envoyés à des stations "
-"terrestres dans le monde entier et stockés dans des films comme, qui ont "
-"maintenant été numérisées. Les ionogrammes Alouette ILes données fournies"
-" ont été utilisées pour alimenter des centaines d'articles scientifiques "
-"à l'époque. Bien que les données sur l'ionosphère des années plus "
-"récentes soient facilement disponibles, le les données des ionogrammes "
-"d'Alouette I sont les seules disponibles pour cela période de temps. "
-"Obstacles à l'accès, à l'interprétation et à l'analyse des données à une "
-"plus grande échelle ont empêché l'utilisation de ces données. "
-
-#: app.py:1556
-msgid ""
-"This application provides users the ability to select, download and "
-"visualize Alouette I's data. Please note that the extracted ionogram "
-"parameters, such as max depth and min frequency, are provided primarily "
-"for demonstration purposes. These values are subject to error, and should"
-" not be directly used in a scientific context."
-msgstr ""
-"Cette application permet aux utilisateurs de sélectionner, télécharger et visualiser les données d'Alouette I. Veuillez noter que les paramètres des ionogrammes extraits, tels que la profondeur maximale et la fréquence minimale, sont fournis principalement à des fins de démonstration. Ces valeurs sont sujettes à erreur et ne doivent pas être utilisées directement dans un contexte scientifique."
-
-#: app.py:1557
-msgid "Select Data"
-msgstr "Sélectionner les Données"
-
-#: app.py:1558
-msgid "Filter by ground station latitude:"
-msgstr "Filtrez par la latitude de la station:"
-
-#: app.py:1559
-msgid "Filter by ground station longitude:"
-msgstr "Filtrer par la longitude de la station:"
-
-#: app.py:1560
-msgid "Filter by date:"
-msgstr "Filtrer par date:"
-
-#: app.py:1561
-msgid "Select ground stations:"
-msgstr "Sélectionnez les stations:"
-
-#: app.py:1562
-msgid "Download Summary Data as CSV"
-msgstr "Télécharger la Synthèse CSV"
-
-#: app.py:1563
-msgid "Download Selected Ionogram Images"
-msgstr "Télécharger les Ionogrammes Sélectionnées"
-
-#: app.py:1564
-msgid "Select x-axis:"
-msgstr "Sélectionnez l'axe des x:"
-
-#: app.py:1565
-msgid "Select y-axis:"
-msgstr "Sélectionnez l'axe des y:"
-
-#: app.py:1566
-msgid "Select statistic:"
-msgstr "Sélectionnez statistique:"
-
-#: app.py:1567
-msgid "Select plotted value:"
-msgstr "Sélectionnez la valeur tracée:"
-
-#: app.py:1569 controls.py:7
-msgid "Resolute Bay, No. W. Territories"
-msgstr "Resolute Bay, Territoires du Nord-Ouest"
-
-#: app.py:1570 controls.py:8
-msgid "Blossom Point, Maryland"
-msgstr "Blossom Point, Maryland"
-
-#: app.py:1571 controls.py:9
-msgid "South Atlantic, Falkland Islands"
-msgstr "Atlantique Sud, îles Malouines"
-
-#: app.py:1572 controls.py:10
-msgid "St. John's, Newfoundland"
-msgstr "St. John's, Terre-Neuve"
-
-#: app.py:1573 controls.py:11
-msgid "Orroral Valley, Australia"
-msgstr "Vallée de l'Orroral, Australie"
-
-#: app.py:1574 controls.py:12
-msgid "Prince Albert, Canada"
-msgstr ""
-
-#: app.py:1575 controls.py:13
-msgid "Ottawa, Canada"
-msgstr ""
-
-#: app.py:1576 controls.py:14
-msgid "Byrd Station, Antartica"
-msgstr "Station Byrd, Antarctique"
-
-#: app.py:1577 controls.py:15
-msgid "Las Palmas, Canary Island"
-msgstr "Las Palmas, île des Canaries"
-
-#: app.py:1578 controls.py:16
-msgid "Winkfield, England"
-msgstr "Winkfield, Angleterre"
-
-#: app.py:1579 controls.py:17
-msgid "Fort Myers, Florida"
-msgstr "Fort Myers, Floride"
-
-#: app.py:1580 controls.py:18
-msgid "Antofagasta, Chile"
-msgstr ""
-
-#: app.py:1581 controls.py:19
-msgid "East Grand Forks, Minnesota"
-msgstr ""
-
-#: app.py:1582 controls.py:20
-msgid "Rosman, No. Carolina"
-msgstr "Rosman, Caroline du Nord"
-
-#: app.py:1583 controls.py:21
-msgid "College, Fairbanks, Alaska"
-msgstr "Collège, Fairbanks, Alaska"
-
-#: app.py:1584 controls.py:22
-msgid "Woomera, Australia"
-msgstr "Woomera, Australie"
-
-#: app.py:1585 controls.py:23
-msgid "Gilmore Creek, Fairbanks, Alaska"
-msgstr ""
-
-#: app.py:1586 controls.py:24
-msgid "Tromso, Norway"
-msgstr "Tromso, Norvège"
-
-#: app.py:1587 controls.py:25
-msgid "University of Alaska, Fairbanks, Alaska"
-msgstr "Université de l'Alaska, Fairbanks, Alaska"
-
-#: app.py:1588 controls.py:26
-msgid "Darwin, Australia"
-msgstr "Darwin, Australie"
-
-#: app.py:1589 controls.py:27
-msgid "Quito, Ecuador"
-msgstr "Quito, Équateur"
-
-#: app.py:1590 controls.py:28
-msgid "South Point, Hawaiian Islands"
-msgstr "South Point, îles hawaïennes"
-
-#: app.py:1591 controls.py:29
-msgid "Lima, Peru"
-msgstr ""
-
-#: app.py:1592 controls.py:30
-msgid "Johannesburg, South Africa"
-msgstr "Johannesburg, Afrique du Sud"
-
-#: app.py:1593 controls.py:31
-msgid "Kano, Nigeria"
-msgstr "Kano Nigéria"
-
-#: app.py:1594 controls.py:32
-msgid "Tananarive, Madagascar"
-msgstr ""
-
-#: app.py:1595 controls.py:33
-msgid "Bretigny, France"
-msgstr ""
-
-#: app.py:1596 controls.py:34
-msgid "Singapore, Malaysia"
-msgstr "Singapour, Malaisie"
-
-#: app.py:1597 controls.py:35
-msgid "Boulder, Colorado"
-msgstr ""
-
-#: app.py:1598 controls.py:36
-msgid "Mojave, California"
-msgstr "Mojave, Californie"
-
-#: app.py:1599 controls.py:37
-msgid "Kauai, Hawaii"
-msgstr ""
-
-#: app.py:1600 controls.py:38
-msgid "Kashima, Japan"
-msgstr "Kashima, Japon"
-
-#: app.py:1603 controls.py:46
+#: app.py:227 app.py:1731
 msgid "Date"
 msgstr ""
 
-#: app.py:1604 controls.py:47
+#: app.py:228 app.py:1732
 msgid "Latitude"
 msgstr ""
 
-#: app.py:1604 controls.py:48
+#: app.py:229 app.py:1733
 msgid "Longitude"
 msgstr ""
 
-#: app.py:1607 app.py:1611 controls.py:51
-msgid "Minimum Frequency"
-msgstr "Fréquence Minimale"
+#: app.py:232 app.py:1046
+msgid "Concentration"
+msgstr ""
 
-#: app.py:1608 app.py:1612 controls.py:52
+#: app.py:233 app.py:1737
 msgid "Maximum Depth"
-msgstr "Profondeur Maximale"
+msgstr ""
 
-#: app.py:1615
-msgid "Mean"
-msgstr "Moyenne"
+#: app.py:1045
+msgid "Mean concentration as a function of altitude"
+msgstr "Concentration moyenne en fonction de l'altitude"
+
+#: app.py:1047
+msgid "Altitude (km) "
+msgstr ""
+
+#: app.py:1151
+msgid "Gaz Concentration (sum on altitude)"
+msgstr "Concentration du gaz(somme sur l'altitude)"
+
+#: app.py:1367
+msgid "Data Visualization "
+msgstr "Visualisation de données"
 
 #: app.py:1616
-msgid "Median"
-msgstr "Médianes"
+msgid "SciSat data visualisation"
+msgstr "Visualisation des données de SciSat"
 
-#~ msgid "timestamp"
-#~ msgstr ""
+#: app.py:1617
+msgid "Learn More About SciSat"
+msgstr "En apprendre plus sur Scisat"
 
-#~ msgid "lat"
-#~ msgstr ""
+#: app.py:1618
+msgid "data selected"
+msgstr "Données sélectionnées"
 
-#~ msgid "lon"
-#~ msgstr ""
+#: app.py:1620
+msgid ""
+"Launched on August 12, 2003, SCISAT helps a team of Canadian and "
+"international scientists improve their understanding of the depletion of "
+"the ozone layer, with a special emphasis on the changes occurring over "
+"Canada and in the Arctic. "
+msgstr "Lancé le 12 août 2003, le satellite SCISAT aide une équipe de chercheurs canadiens et internationaux à mieux comprendre le problème de l'appauvrissement de la couche d'ozone en s'attardant particulièrement aux changements qui se produisent au-dessus du Canada et dans l'Arctique."
 
-#~ msgid "fmin"
-#~ msgstr ""
+#: app.py:1621
+msgid ""
+"This application provides users the ability to select, download and "
+"visualize Scisat's data. "
+msgstr "Cette application permet aux utilisateurs de sélectionner, télécharger et visualiser les données d'Alouette I. Veuillez noter que les paramètres des ionogrammes extraits, tels que la profondeur maximale et la fréquence minimale, sont fournis principalement à des fins de démonstration. Ces valeurs sont sujettes à erreur et ne doivent pas être utilisées directement dans un contexte scientifique."
 
-#~ msgid "max_depth"
-#~ msgstr ""
 
-#~ msgid "ionograms selected \\/ total of ionograms"
-#~ msgstr "ionogrammes sélectionnés / nombre total d'ionogrammes"
+#: app.py:1622
+msgid "Select Data"
+msgstr "Données sélectionnées"
 
-#~ msgid "ionograms selected / total of ionograms"
-#~ msgstr ""
+#: app.py:1623
+msgid "Filter by latitude:"
+msgstr "Filtrer par latitude :"
 
-#~ msgid ""
-#~ "This application provides users the "
-#~ "ability to select, download and "
-#~ "visualize Alouette I's data."
-#~ msgstr ""
-#~ "Cette application permet aux utilisateurs "
-#~ "de sélectionner, télécharger evisualiser les"
-#~ " données d'Alouette I."
+#: app.py:1624
+msgid "Filter by longitude:"
+msgstr "Filtrer par longitude :"
 
+#: app.py:1625
+msgid "select date:"
+msgstr "Sélectionner la date :"
+
+#: app.py:1626
+msgid "Select gaz:"
+msgstr "Choisir le gaz :"
+
+#: app.py:1627
+msgid "Download Summary Data as CSV"
+msgstr "Télécharger la Synthèse CSV"
+
+#: app.py:1629
+msgid "Select x-axis:"
+msgstr "Choisir l'axe x"
+
+#: app.py:1630
+msgid "Select y-axis:"
+msgstr "Choisir l'axe y"
+
+#: app.py:1736
+msgid "Minimum Frequency"
+msgstr ""

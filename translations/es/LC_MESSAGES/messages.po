@@ -1,0 +1,418 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-07-10 16:09-0400\n"
+"PO-Revision-Date: 2020-07-10 16:26-0400\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: app.py:120 app.py:1628
+msgid "Acetone"
+msgstr ""
+
+#: app.py:121 app.py:1629
+msgid "Acetylene"
+msgstr ""
+
+#: app.py:122 app.py:1630
+msgid "Ethane"
+msgstr ""
+
+#: app.py:123 app.py:1631
+msgid "dichlorodifluoromethane"
+msgstr ""
+
+#: app.py:124 app.py:1632
+msgid "trichlorofluoromethane"
+msgstr ""
+
+#: app.py:125 app.py:1633
+msgid "Carbon tetrachloride"
+msgstr ""
+
+#: app.py:128 app.py:1636
+msgid "Carbon tetrafluoride"
+msgstr ""
+
+#: app.py:129 app.py:1637
+msgid "Trichlorotrifluoroethane"
+msgstr ""
+
+#: app.py:130 app.py:1638
+msgid "Chloromethane"
+msgstr ""
+
+#: app.py:131 app.py:1639
+msgid "Acetonitrite"
+msgstr ""
+
+#: app.py:132 app.py:1640
+msgid "Methanol"
+msgstr ""
+
+#: app.py:133 app.py:1641
+msgid "Methane"
+msgstr ""
+
+#: app.py:135 app.py:1643
+msgid "Methane 212"
+msgstr ""
+
+#: app.py:136 app.py:1644
+msgid "Methane 311"
+msgstr ""
+
+#: app.py:137 app.py:1645
+msgid "Difluorochloromethane"
+msgstr ""
+
+#: app.py:138 app.py:1646
+msgid "Trifluoromethane"
+msgstr ""
+
+#: app.py:139 app.py:1647
+msgid "chlorine monoxide"
+msgstr ""
+
+#: app.py:140 app.py:1648
+msgid "Chlorine nitrate"
+msgstr ""
+
+#: app.py:142 app.py:1650
+msgid "Carbon monoxide"
+msgstr ""
+
+#: app.py:143 app.py:1651
+msgid "Carbon dioxide"
+msgstr ""
+
+#: app.py:144 app.py:1652
+msgid "Carbon dioxide 627"
+msgstr ""
+
+#: app.py:145 app.py:1653
+msgid "Carbon dioxide 628"
+msgstr ""
+
+#: app.py:146 app.py:1654
+msgid "Carbon dioxide 636"
+msgstr ""
+
+#: app.py:147 app.py:1655
+msgid "Carbon dioxide 637"
+msgstr ""
+
+#: app.py:150 app.py:1658
+msgid "Carbon dioxide 638"
+msgstr ""
+
+#: app.py:151 app.py:1659
+msgid "Phosgene"
+msgstr ""
+
+#: app.py:152 app.py:1660
+msgid "Carbonyl chlorine fluoride"
+msgstr ""
+
+#: app.py:153 app.py:1661
+msgid "Carbonyl fluoride"
+msgstr ""
+
+#: app.py:154 app.py:1662
+msgid "Carbon monoxide 27"
+msgstr ""
+
+#: app.py:155 app.py:1663
+msgid "Carbon monoxide 28"
+msgstr ""
+
+#: app.py:157 app.py:1665
+msgid "Carbon monoxide 36"
+msgstr ""
+
+#: app.py:158 app.py:1666
+msgid "Carbon monoxide 38"
+msgstr ""
+
+#: app.py:159 app.py:1667
+msgid "GLC"
+msgstr ""
+
+#: app.py:160 app.py:1668
+msgid "Formaldehyde"
+msgstr ""
+
+#: app.py:161 app.py:1669
+msgid "Water"
+msgstr ""
+
+#: app.py:162 app.py:1670
+msgid "Hydrogen peroxide"
+msgstr ""
+
+#: app.py:165 app.py:1673
+msgid "Water 162"
+msgstr ""
+
+#: app.py:166 app.py:1674
+msgid "Water 171"
+msgstr ""
+
+#: app.py:167 app.py:1675
+msgid "Water 181"
+msgstr ""
+
+#: app.py:168 app.py:1676
+msgid "Water 182"
+msgstr ""
+
+#: app.py:169 app.py:1677
+msgid "Hydrochlorofluorocarbon 141b"
+msgstr ""
+
+#: app.py:170 app.py:1678
+msgid "Hydrochlorofluorocarbon 142b"
+msgstr ""
+
+#: app.py:171 app.py:1679
+msgid "Hydrochloric acid"
+msgstr ""
+
+#: app.py:175 app.py:1683
+msgid "Hydrogen cyanide"
+msgstr ""
+
+#: app.py:176 app.py:1684
+msgid "Formic acid"
+msgstr ""
+
+#: app.py:177 app.py:1685
+msgid "Hydrogen fluoride"
+msgstr ""
+
+#: app.py:178 app.py:1686
+msgid "Hydrofluorocarbon 134a"
+msgstr ""
+
+#: app.py:179 app.py:1687
+msgid "Nitric acid"
+msgstr ""
+
+#: app.py:180 app.py:1688
+msgid "Nitric acid 156"
+msgstr ""
+
+#: app.py:183 app.py:1691
+msgid "peroxynitric acid"
+msgstr ""
+
+#: app.py:184 app.py:1692
+msgid "Nitrogen"
+msgstr ""
+
+#: app.py:185 app.py:1693
+msgid "Nitrous oxide"
+msgstr ""
+
+#: app.py:186 app.py:1694
+msgid "dinitrogen pentaoxide"
+msgstr ""
+
+#: app.py:187 app.py:1695
+msgid "Nitrous oxide 447"
+msgstr ""
+
+#: app.py:188 app.py:1696
+msgid "Nitrous oxide 448"
+msgstr ""
+
+#: app.py:190 app.py:1698
+msgid "Nitrous oxide 456"
+msgstr ""
+
+#: app.py:191 app.py:1699
+msgid "Nitrous oxide 546"
+msgstr ""
+
+#: app.py:192 app.py:1700
+msgid "Nitrous monoxide 447"
+msgstr ""
+
+#: app.py:193 app.py:1701
+msgid "Nitrogen dioxide"
+msgstr ""
+
+#: app.py:194 app.py:1702
+msgid "Nitrogen dioxide 656"
+msgstr ""
+
+#: app.py:195 app.py:1703
+msgid "Oxygen"
+msgstr ""
+
+#: app.py:198 app.py:1706
+msgid "Ozone"
+msgstr ""
+
+#: app.py:199 app.py:1707
+msgid "Ozone 667"
+msgstr ""
+
+#: app.py:200 app.py:1708
+msgid "Ozone 668"
+msgstr ""
+
+#: app.py:201 app.py:1709
+msgid "Ozone 676"
+msgstr ""
+
+#: app.py:202 app.py:1710
+msgid "Ozone 686"
+msgstr ""
+
+#: app.py:203 app.py:1711
+msgid "Carbonyl sulfide"
+msgstr ""
+
+#: app.py:204 app.py:1712
+msgid "Carbonyl sulfide 623"
+msgstr ""
+
+#: app.py:207 app.py:1715
+msgid "Carbonyl sulfide 624"
+msgstr ""
+
+#: app.py:208 app.py:1716
+msgid "Carbonyl sulfide 632"
+msgstr ""
+
+#: app.py:209 app.py:1717
+msgid "Phosphorus"
+msgstr ""
+
+#: app.py:210 app.py:1718
+msgid "Polyacrylonitrile"
+msgstr ""
+
+#: app.py:211 app.py:1719
+msgid "Sulfur hexafluoride"
+msgstr ""
+
+#: app.py:212 app.py:1720
+msgid "Sulfur dioxide"
+msgstr ""
+
+#: app.py:213 app.py:1721
+msgid "T"
+msgstr ""
+
+#: app.py:223 app.py:1725
+msgid "Date"
+msgstr ""
+
+#: app.py:224 app.py:1726
+msgid "Latitude"
+msgstr ""
+
+#: app.py:225 app.py:1727
+msgid "Longitude"
+msgstr ""
+
+#: app.py:228 app.py:1040
+msgid "Concentration"
+msgstr ""
+
+#: app.py:229 app.py:1731
+msgid "Maximum Depth"
+msgstr ""
+
+#: app.py:1039
+msgid "Mean concentration as a function of altitude"
+msgstr ""
+
+#: app.py:1041
+msgid "Altitude (km) "
+msgstr ""
+
+#: app.py:1145
+msgid "Gaz Concentration (sum on altitude)"
+msgstr ""
+
+#: app.py:1361
+msgid "Data Visualization "
+msgstr ""
+
+#: app.py:1610
+msgid "Scisat data visualisation"
+msgstr ""
+
+#: app.py:1611
+msgid "Learn More About SciSat"
+msgstr ""
+
+#: app.py:1612
+msgid "data selected"
+msgstr ""
+
+#: app.py:1614
+msgid ""
+"Launched on August 12, 2003, SCISAT helps a team of Canadian and "
+"international scientists improve their understanding of the depletion of "
+"the ozone layer, with a special emphasis on the changes occurring over "
+"Canada and in the Arctic. "
+msgstr ""
+
+#: app.py:1615
+msgid ""
+"This application provides users the ability to select, download and "
+"visualize Scisat's data. "
+msgstr ""
+
+#: app.py:1616
+msgid "Select Data"
+msgstr ""
+
+#: app.py:1617
+msgid "Filter by latitude:"
+msgstr ""
+
+#: app.py:1618
+msgid "Filter by longitude:"
+msgstr ""
+
+#: app.py:1619
+msgid "select date:"
+msgstr ""
+
+#: app.py:1620
+msgid "Select gaz:"
+msgstr ""
+
+#: app.py:1621
+msgid "Download Summary Data as CSV"
+msgstr ""
+
+#: app.py:1623
+msgid "Select x-axis:"
+msgstr ""
+
+#: app.py:1624
+msgid "Select y-axis:"
+msgstr ""
+
+#: app.py:1730
+msgid "Minimum Frequency"
+msgstr ""
+

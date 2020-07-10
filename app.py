@@ -549,11 +549,11 @@ def build_filtering():
                                             href="",
                                             target="_blank",
                                         ),
-                                        html.A(
-                                            html.Button(id='download-button-2',  n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                            id='download-link-2',
-                                            style={"margin-left": "5px"},
-                                        )
+                                       # html.A(
+                                       #     html.Button(id='download-button-2',  n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                       #     id='download-link-2',
+                                       #     style={"margin-left": "5px"},
+                                       # )
                                     ],
                                 ),
                             ],
@@ -633,55 +633,55 @@ def build_stats():
             [
                 html.Div(
                     [
-                        html.Div(
-                            [dcc.Graph(id="viz_map")],
-                            id="vizGraphContainer",
-                        ),
+                        #html.Div(
+                        #    [dcc.Graph(id="viz_map")],
+                        #    id="vizGraphContainer",
+                        #),
                     ],
                     id="left-column-4",
                     className="nine columns",
                 ),
-                html.Div(
-                    [
-                        html.Div(
-                            [
-                                html.P(
-                                    id="stat-selection-text",
-                                    className="control_label",
-                                ),
-                                html.Label(
-                                    dcc.Dropdown(
-                                        id="stat_selection",
-                                        options=[
-                                            {'label': 'Mean', 'value': 'mean'},
-                                            {'label': 'Median', 'value': 'median'}
-                                        ],
-                                        multi=False,
-                                        value='mean',
-                                        className="dcc_control",
-                                    ),
-                                ),
-                                html.P(
-                                    id="stat-y-axis-text",
-                                    className="control_label",
-                                ),
-                                html.Label(
-                                    dcc.Dropdown(
-                                        id="y_axis_selection_2",
-                                        options=y_axis_options,
-                                        multi=False,
-                                        value='max_depth',
-                                        className="dcc_control",
-                                    ),
-                                ),
-                            ],
-                            #className="pretty_container",
-                            id="map-viz-options",
-                        ),
-                    ],
-                    id="right-column-4",
-                    className="three columns",
-                ),
+                #html.Div(
+                #    [
+                #        html.Div(
+                #            [
+                #                html.P(
+                #                    id="stat-selection-text",
+                #                    className="control_label",
+                #                ),
+                #                html.Label(
+                #                    dcc.Dropdown(
+                #                        id="stat_selection",
+                #                        options=[
+                #                            {'label': 'Mean', 'value': 'mean'},
+                #                            {'label': 'Median', 'value': 'median'}
+                #                        ],
+                #                        multi=False,
+                #                        value='mean',
+                #                        className="dcc_control",
+                #                    ),
+                #               ),
+                #                html.P(
+                #                    id="stat-y-axis-text",
+                #                    className="control_label",
+                #                ),
+                #                html.Label(
+                #                    dcc.Dropdown(
+                #                        id="y_axis_selection_2",
+                #                        options=y_axis_options,
+                #                        multi=False,
+                #                       value='max_depth',
+                #                       className="dcc_control",
+                #                  ),
+                #                ),
+                #            ],
+                #            #className="pretty_container",
+                #            id="map-viz-options",
+                #        ),
+                #   ],
+                #    id="right-column-4",
+                #    className="three columns",
+                #),
             ],
             className="row flex-display pretty_container",
             #style={"height": "500px"},
@@ -788,27 +788,28 @@ def update_picker(gaz_list):
     
  
 # Selectors -> Image download link
-@app.callback(
-    Output("download-link-2", "href"),
-    [
-        Input("gaz_list", "value"),
-        Input('date_picker_range', "start_date"),
-        Input('date_picker_range', "end_date"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        
-    ],
-)
-def update_images_link(gaz,date, lat_min, lat_max, lon_min, lon_max):
-    """Updates the link to the Ionogram images download
-
-    Returns
-    -------
-    link : str
-        Link that redirects to the Flask route to download the CSV based on selected filters
-    """
+#
+#@app.callback(
+#    Output("download-link-2", "href"),
+#    [
+#        Input("gaz_list", "value"),
+#        Input('date_picker_range', "start_date"),
+#        Input('date_picker_range', "end_date"),
+#        Input("lat_min", "value"),
+#        Input("lat_max", "value"),
+#        Input("lon_min", "value"),
+#        Input("lon_max", "value"),
+#        
+#    ],
+#)
+#def update_images_link(gaz,date, lat_min, lat_max, lon_min, lon_max):
+#    """Updates the link to the Ionogram images download
+#
+#    Returns
+#    -------
+#    link : str
+#        Link that redirects to the Flask route to download the CSV based on selected filters
+"""
 
     link = '/dash/downloadImages?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&ground_stations={}'\
         .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ground_stations)  #!!!!! à corriger selon donnée
@@ -855,7 +856,7 @@ def download_images():  #!!!!! à corriger selon donnée
     memory_file.seek(0)
 
     return flask.send_file(memory_file, attachment_filename='Ionograms.zip', as_attachment=True)
-
+"""
 
 
 # Selectors -> CSV Link
@@ -1250,12 +1251,13 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     
     concentration =df.groupby('date')['Sum O3'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
-
-
+    bins=concentration
+    date=df['date']
 
 
 
     # bucketing the data
+    """
     if x_axis_selection == 'timestamp':
         dff.index = dff["timestamp"]
 
@@ -1312,44 +1314,46 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
                 ci_upper_limits.append(bin_mean + error_range)
                 ci_lower_limits.append(bin_mean - error_range if bin_mean - error_range >= 0 else 0)
                 bins.append(i)
-
+    """
     data = [
         dict(
             #mode="lines",
             name="",
             type="scatter",
-            x=bins,
-            #y=ci_upper_limits,
+            x=date,
+            y=bins,
             #line_color="rgba(255,255,255,0)",
             fillcolor="rgba(255,255,255,0)",
-            line={'color': 'rgba(18,99,168,0)'},
+            line={'color': 'rgb(18,99,168)'},
             connectgaps=True,
             showlegend=False,
         ),
-        dict(
-            fill="tonexty",
-            mode="none",
-            name="95% Confidence Interval",
-            type="scatter",
-            x=bins,
-            #y=ci_lower_limits,
-            fillcolor="rgba(18,99,168,0.25)",
-            #line_color="rgba(255,255,255,0)",
-            line={'width': '5px'},
-            connectgaps=True,
-            showlegend=True,
-        ),
-        dict(
-            type="scatter",
-            mode="lines+markers",
-            x=bins,
-            #y=estimated_means,
-            name="Estimated Mean",
-            line={'color': 'rgb(18,99,168)'},
-            marker={'size': 2.5},
-            connectgaps=False,
-            showlegend=True,
-        ),
+       
+        #dict(
+        #    fill="tonexty",
+        #    mode="none",
+        #    name="95% Confidence Interval",
+        #    type="scatter",
+        #    x=bins,
+        #    #y=ci_lower_limits,
+        #    fillcolor="rgba(18,99,168,0.25)",
+        #    #line_color="rgba(255,255,255,0)",
+        #    line={'width': '5px'},
+        #    connectgaps=True,
+        #    showlegend=True,
+        #),
+        #dict(
+        #    type="scatter",
+        #    mode="lines+markers",
+        #    x=bins,
+        #    #y=estimated_means,
+        #    name="Estimated Mean",
+        #    line={'color': 'rgb(18,99,168)'},
+        #    marker={'size': 2.5},
+        #    connectgaps=False,
+        #    showlegend=True,
+        #),
+   
     ]
 
     layout = dict(
@@ -1370,7 +1374,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     
 
     return figure
-
+"""
 # Selectors -> viz map
 @app.callback(
     Output("viz_map", "figure"),
@@ -1387,8 +1391,12 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         Input("gaz_list", "value"),
     ],
 )
+
+
 def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
-    """Create and update a map visualizing the selected ionograms' values for the selected variable by ground station.
+"""
+"""
+    Create and update a map visualizing the selected ionograms' values for the selected variable by ground station.
 
     The size of the ground station marker indicates the number of ionograms from that ground station.
 
@@ -1425,7 +1433,8 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
     dict
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
-    """
+"""
+"""
     start_time = dt.datetime.now()
 
      # Convert strings to datetime objects
@@ -1568,7 +1577,7 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
     print(f'make_viz_map: {(dt.datetime.now()-start_time).total_seconds()}')
 
     return {"data": stations, "layout": layout}
-
+"""
 
 # Inject the static text here after translating
 # The variables in controls.py are placed here; babel does not work for translation unless it is hard coded here, not sure why. Likely has to with the way Dash builds the web app.
@@ -1585,16 +1594,16 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("yearslider-text", "children"),
         Output("groundstations-text", "children"),
         Output("download-button-1", "children"),
-        Output("download-button-2", "children"),
+        #("download-button-2", "children"),
         Output("x-axis-selection-text", "children"),
         Output("y-axis-selection-text", "children"),
-        Output("stat-selection-text", "children"),
-        Output("stat-y-axis-text", "children"),
+        #Output("stat-selection-text", "children"),
+        #Output("stat-y-axis-text", "children"),
         Output("gaz_list", "options"),
         Output("x_axis_selection_1", "options"),
         Output("y_axis_selection_1", "options"),
-        Output("y_axis_selection_2", "options"),
-        Output("stat_selection", "options"),
+        #Output("y_axis_selection_2", "options"),
+        #Output("stat_selection", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
 )
@@ -1613,11 +1622,11 @@ def translate_static(x):
                 _("select date:"),
                 _("Select gaz:"),
                 _('Download Summary Data as CSV'),
-                _('Download full data as netcdf'),
+                #_('Download full data as netcdf'),
                 _("Select x-axis:"),
                 _("Select y-axis:"),
-                _("Select statistic:"),
-                _("Select plotted value:"),
+                #_("Select statistic:"),
+                #_("Select plotted value:"),
                 [  # Ground_station_options
                      {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p0_C2H2.nc'},
@@ -1723,14 +1732,14 @@ def translate_static(x):
                     {'label': _('Minimum Frequency'), 'value': 'fmin'},
                     {'label': _('Maximum Depth'), 'value': 'max_depth'}
                 ],
-                [  # y_axis_selection_2
-                    {'label': _('Minimum Frequency'), 'value': 'fmin'},
-                    {'label': _('Maximum Depth'), 'value': 'max_depth'}
-                ],
-                [  # stat_selection
-                    {'label': _('Mean'), 'value': 'mean'},
-                    {'label': _('Median'), 'value': 'median'}
-                ],
+                #[  # y_axis_selection_2
+                #    {'label': _('Minimum Frequency'), 'value': 'fmin'},
+                #    {'label': _('Maximum Depth'), 'value': 'max_depth'}
+                #],
+                #[  # stat_selection
+                #    {'label': _('Mean'), 'value': 'mean'},
+                #    {'label': _('Median'), 'value': 'median'}
+                #],
 
     ]
 

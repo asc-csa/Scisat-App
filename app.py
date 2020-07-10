@@ -872,7 +872,7 @@ def download_images():  #!!!!! à corriger selon donnée
        
     ],
 )
-def update_csv_link(gaz,start_date,end_date, lat_min, lat_max, lon_min, lon_max):
+def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max):
     """Updates the link to the CSV download
 
     Returns
@@ -881,13 +881,15 @@ def update_csv_link(gaz,start_date,end_date, lat_min, lat_max, lon_min, lon_max)
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
 
-    link = '/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&ground_stations={}' \
-            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ground_stations)
+    link = '/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list)
+            
+    
 
     return link
 
 from flask import make_response
-from ast import literal_eval
+from dateutil.parser import parse
 
 
 # Flask route that handles the CSV downloads. This allows for larger files to be passed,
@@ -924,21 +926,24 @@ def download_csv():
     """
 
    
-    date = dt.datetime.strptime(flask.request.args.get('date').split('T')[0], '%Y-%m-%d')
+    
 
-    lat_min = flask.request.args.get('lat_min')
-    lat_max = flask.request.args.get('lat_max')
-    lon_min = flask.request.args.get('lon_min')
-    lon_max = flask.request.args.get('lon_max')
-
-    ground_stations = flask.request.args.get('ground_stations') # parses a string representation of ground_stations
-    ground_stations = literal_eval(ground_stations) # converts into a list representation
-
+    lat_min    = float(flask.request.args.get('lat_min'))
+    lat_max    = float(flask.request.args.get('lat_max'))
+    lon_min    = float(flask.request.args.get('lon_min'))
+    lon_max    = float(flask.request.args.get('lon_max'))
+    start_date = flask.request.args.get('start_date')
+    end_date   = flask.request.args.get('end_date')
+    
+    gaz_list= flask.request.args.get('gaz_list')
+   
+    #start_date =pd.Timestamp(parse(start_date))
+    #end_date   =pd.Timestamp(parse(end_date))
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
-    dff.to_csv(csv_buffer, index=False)
+    df.to_csv(csv_buffer, index=False)
     output = make_response(csv_buffer.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
     output.headers["Content-type"] = "text/csv"

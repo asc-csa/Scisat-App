@@ -18,32 +18,11 @@ from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime
 
-#===============================================================================================
-"""
-#Emplacement tomporaire. Permet de régler le slider pour la date. À corriger et mieux placer dans le code ou effacer
-maxmarks=13
-tday=pd.Timestamp.today() #gets timestamp of today
-m1date=tday+DateOffset(months=-maxmarks+1) #first month on slider
-datelist=pd.date_range(m1date, periods=maxmarks, freq='M') # list of months as dates
-dlist=pd.DatetimeIndex(datelist).normalize()
-tags={} #dictionary relating marks on slider to tags. tags are shown as "Apr', "May', etc
-datevalues={} #dictionary relating mark to date value
-x=1
-for i in dlist:
-    tags[x]=(i+DateOffset(months=1)).strftime('%b') #gets the string representation of next month ex:'Apr'
-    datevalues[x]=i
-    x=x+1
-"""
-#==========================================================================================
 
 #==========================================================================================
 # load data and transform as needed
 
 
-"""
-df = pd.read_csv(r'data/final_alouette_data.csv')  # edit for compatibility with CKAN portal (e.g. API to dataframe)
-df['timestamp'] = pd.to_datetime(df['timestamp'])  # converts the timestamp to date_time objects
-"""
 
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
     if type(file)==list:
@@ -214,10 +193,8 @@ gaz_name_options = [
     
    ]
 
-# Getting only the values of the station names
-gaz_values = []
-for gaz in gaz_name_options:
-    gaz_values.append(gaz['value'])
+
+
 
 x_axis_options = [
     {'label': _('Date'), 'value': _('Date')},
@@ -251,7 +228,8 @@ external_scripts = [
     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
     'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
     'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js'
+    'https://cdn.plot.ly/plotly-locale-de-latest.js',
+
 ]
 
 app = dash.Dash(
@@ -399,9 +377,9 @@ def build_filtering():
                                 html.Label(
                                     dcc.Dropdown(
                                         id="gaz_list",
-                                        options= [],
+                                        options= gaz_name_options,
                                         multi=False,
-                                        value=gaz_values,
+                                        value='ACEFTS_L2_v4p0_O3.nc',
                                         className="dcc_control",
                                     ),
                                 ),
@@ -943,32 +921,47 @@ def download_csv():
     return output
 
 
-"""
+
 #============================================================================
-# Selected Data in the Histogram updates the Values in the DatePicker
+# Selected Data by sliding mouse
 #!!!!!!!!!!!!!!!!!!!
 @app.callback(
-    Output("bar-selector", "value"),
-    [Input("histogram", "selectedData"), Input("histogram", "clickData")],
+    [Output("lat_min", "value"),
+    Output("lat_max", "value"),
+    Output("lon_min", "value"),
+    Output("lon_max", "value")],
+    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
 )
 def update_bar_selector(value, clickData):
-    holder = []
+    holder_lat = []
+    holder_lon = []
     if clickData:
-        holder.append(str(int(clickData["points"][0]["x"])))
+        holder_lat.append(str(int(clickData["points"][0]["lat"])))
+        holder_lon.append(str(int(clickData["points"][0]["lon"])))
     if value:
         for x in value["points"]:
-            holder.append(str(int(x["x"])))
-    return list(set(holder))
-
+            holder_lat.append(((x["lat"])))
+            holder_lon.append(((x["lon"])))
+            
+    holder_lat  = np.array( holder_lat)
+    holder_lon  = np.array( holder_lon)
+    if len(holder_lat)!=0 :
+        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
+    else :
+        return -90,90,-180,180
+    
 
 # Clear Selected Data if Click Data is used
-@app.callback(Output("histogram", "selectedData"), [Input("histogram", "clickData")])
+@app.callback(
+    Output("selector_map", "selectedData"),
+    [Input("selector_map", "clickData")]
+    )
 def update_selected_data(clickData):
     if clickData:
         return {"points": []}
     
 #============================================================================   
-"""   
+ 
     
 # Selectors -> count graph
     
@@ -1027,15 +1020,26 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     layout_count = copy.deepcopy(layout)
     data = [
         dict(
+            type="scatter",
             x=xx,
             y=df.columns[0:150],
             error_x=err_xx,#!!!!!!!!!! Ne semble pas marcher
             name="Altitude",
+            #orientation='h',
+            color=xx,
+             colorscale=[[0, 'red'],
+            [1, 'blue']],
+           
+            
             opacity=1,
-            hoverinfo="skip",
-        ),
+          
+        )
+        
+        
         
     ]
+    
+   
 
     layout_count["title"] = _("Mean concentration as a function of altitude")
     layout_count["xaxis"] = {"title": _("Concentration"), "automargin": True}
@@ -1152,9 +1156,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         )
     )
 )
-
- 
-
+    
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
       #  plot_bgcolor="#171b26",
@@ -1167,6 +1169,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         #     y=1,
         #     traceorder="normal",
         # ),
+        
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token
             #bearing=10,
@@ -1178,6 +1181,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex", #!!!!!! changer le stype de la map?
         ),
         transition={'duration': 500},
+        
     )
 
 

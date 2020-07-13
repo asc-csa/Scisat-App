@@ -220,13 +220,13 @@ for gaz in gaz_name_options:
     gaz_values.append(gaz['value'])
 
 x_axis_options = [
-    {'label': _('Date'), 'value': ('timestamp')},
-    {'label': _('Latitude'), 'value': ('latitude')},
-    {'label': _('Longitude'), 'value': ('longitude')}]
+    {'label': _('Date'), 'value': _('Date')},
+    {'label': _('Latitude'), 'value': _('latitude')},
+    {'label': _('Longitude'), 'value': _('longitude')}]
 
 y_axis_options = [
-    {'label': _('Concentration'), 'value': ('Concentration')},
-    {'label': _('Maximum Depth'), 'value': ('max_depth')}]
+    {'label': _('Concentration'), 'value': _('Concentration')},
+    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
 
 year_dict = {}
 for year in range(1962,1974):
@@ -592,7 +592,7 @@ def build_stats():
                                         id="x_axis_selection_1",
                                         options=x_axis_options,
                                         multi=False,
-                                        value='timestamp',
+                                        value=_('Date'),
                                         className="dcc_control",
                                     ),
                                 ),
@@ -605,7 +605,7 @@ def build_stats():
                                         id="y_axis_selection_1",
                                         options=y_axis_options,
                                         multi=False,
-                                        value='Concentration',
+                                        value=_('Concentration'),
                                         className="dcc_control",
                                     ),
                                 ),
@@ -1721,15 +1721,17 @@ def translate_static(x):
     {'label': _('Sulfur dioxide'), 'value':      'ACEFTS_L2_v4p0_SO2.nc'},
      {'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
                    
+    
+     
                 ],
                 [  # x_axis_options
-                    {'label': _('Date'), 'value': 'timestamp'},
-                    {'label': _('Latitude'), 'value': 'latitude'},
-                    {'label': _('Longitude'), 'value': 'longitude'}
+                     {'label': _('Date'), 'value': _('Date')},
+                     {'label': _('Latitude'), 'value': _('latitude')},
+                     {'label': _('Longitude'), 'value': _('longitude')}
                 ],
                 [  # y_axis_options
-                    {'label': _('Minimum Frequency'), 'value': 'fmin'},
-                    {'label': _('Maximum Depth'), 'value': 'max_depth'}
+                    {'label': _('Concentration'), 'value': _('Concentration')},
+                    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
                 ],
                 #[  # y_axis_selection_2
                 #    {'label': _('Minimum Frequency'), 'value': 'fmin'},

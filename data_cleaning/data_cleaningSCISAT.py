@@ -29,22 +29,15 @@ def opendf (path_to_file,file_name,gaz):
     data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
     data_error = np.copy(nc.variables[gaz+'_error'][:])
     data[data == fillvalue] = np.nan #Remplacer les données vides
- #   data_error[data_error == fillvalue] = np.nan #Remplacer les données vides
+    data_error[data_error == fillvalue] = np.nan #Remplacer les données vides
 
     #Initialize Dataframe / Initialisation du DataFrame
-    dfdata = pd.DataFrame(data,columns=alt)
+    df = pd.DataFrame(data,columns=alt)
     dferr = pd.DataFrame(data_error,columns=alt)
-    
-    df = pd.concat([dfdata, dferr], axis=1)
+   # df = pd.concat([df,dferr],axis=1)
+   # df = pd.concat([dfdata, dferr], axis=1)
     #Data cleaning / Nettoyage des données
-    df[df>1e-5]=np.nan
-    std=df.std()
-    mn=df.mean()
-    maxV = mn+3*std
-    minV = mn-3*std
-    df[df>maxV]=np.nan
-    df[df<minV]=np.nan
-
+  
     #Colonne de dates
     date=[]
     for i in range (len(days)):
@@ -52,13 +45,30 @@ def opendf (path_to_file,file_name,gaz):
 
     #Attribution des colonnes
     data_meanAlt = np.nanmean(data,1) #moyenne sur l'altitude
+    data_std = np.nanstd(data,1)
     df['mean O3'] = data_meanAlt
+    df['std O3'] = data_std
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
     #df['error']=data_error
-    return df
+    return df,dferr
 
+#Path to file (change directory)
 path = r'C:\Users\Camille\Documents\Uni\ASC\SciSat\ACE-FTS_L2_v4.0_NETCDF\NETCDF'
 file = 'ACEFTS_L2_v4p0_O3.nc'
-df = opendf(path,file,'O3')
+df,dferr= opendf(path,file,'O3')
+
+dff = df.copy()
+dff.iloc[:,:150][dff.iloc[:,:150]>1e-5]=np.nan
+dff.iloc[:,:150][dff.iloc[:,:150]<-1e-5]=np.nan
+std=dff.iloc[:,:150].std()
+mn=dff.iloc[:,:150].mean()
+maxV = mn+3*std
+minV = mn-3*std
+dff.iloc[:,:150][dff.iloc[:,:150]>maxV]=np.nan
+dff.iloc[:,:150][dff.iloc[:,:150]<minV]=np.nan
+
+
+
+#df.to_csv(r'C:\Users\Camille\Documents\GitHub\Scisat-App\data_cleaning\out.csv',index=False)

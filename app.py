@@ -55,24 +55,18 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df[df>maxV]=np.nan
     df[df<minV]=np.nan
 
-
     #Colonne de dates
-    date=[]
-
-    
+    date=[]    
     for i in range (len(days)):
       
-        date.append(datetime.datetime(years[i],months[i],days[i],hours[i]))
+        date.append(datetime.datetime(years[i],months[i],days[i]))#,hours[i]))  
     
-    
-    data_sumAlt = np.nanmean(data,1) #Somme sur l'altitude #!!! À revérifier scientifiquement
-    
-    df['Sum O3'] = data_sumAlt
+    data_meanAlt = np.nanmean(data,1) #Somme sur l'altitude #!!! À revérifier scientifiquement
+    df['Sum O3'] = data_meanAlt
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
     
-    #filters the data based on the date
     if start_date!=0 and end_date!=0 :
         df=df[np.where(df['date']>start_date,True,False)]
         df=df[np.where(df['date']<end_date,True,False)]
@@ -83,12 +77,6 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['long']>lon_min,True,False)]
     df=df[np.where(df['long']<lon_max,True,False)]
     return df
-
-
-
-
-
-
 
 
 # Dropdown options
@@ -1023,20 +1011,15 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
             type="scatter",
             x=xx,
             y=df.columns[0:150],
-            error_x=err_xx,#!!!!!!!!!! Ne semble pas marcher
+            error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name="Altitude",
             #orientation='h',
             color=xx,
              colorscale=[[0, 'red'],
-            [1, 'blue']],
-           
-            
+            [1, 'blue']],   
             opacity=1,
           
         )
-        
-        
-        
     ]
     
    
@@ -1129,6 +1112,12 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
    #!!!!!!!!!!! si possible se débarasser de la boucle; trop lent
    
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    
+    df=df.groupby('lat').mean()
+    df.reset_index(level=0, inplace=True)  
+    df=df.groupby('long').mean()
+    df.reset_index(level=0,inplace=True)
+    
     
     fig =go.Figure( go.Scattermapbox(
         lat=df['lat'][df['Sum O3']<0.0003],

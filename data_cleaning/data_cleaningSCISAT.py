@@ -42,7 +42,7 @@ def opendf (path_to_file,file_name,gaz):
     #Colonne de dates
     date=[]
     for i in range (len(days)):
-        date.append(datetime.datetime(years[i],months[i],days[i],hour=hours[i]))
+        date.append(datetime.datetime(years[i],months[i],days[i]))#,hour=hours[i]))
 
     #Attribution des colonnes
     data_meanAlt = np.nanmean(data,1) #moyenne sur l'altitude
@@ -53,6 +53,11 @@ def opendf (path_to_file,file_name,gaz):
     df['lat'] = lat
     df['long'] = long
     #df['error']=data_error
+    df=df.groupby('lat').mean()
+  #  df=df.groupby(df.index.floor('D')).mean()
+    df.reset_index(level=0, inplace=True)  
+    df=df.groupby('long').mean()
+    df.reset_index(level=0,inplace=True)
     return df,dferr
 
 #Path to file (change directory)
@@ -60,7 +65,7 @@ path = r'C:\Users\Camille\Documents\Uni\ASC\SciSat\ACE-FTS_L2_v4.0_NETCDF\NETCDF
 file = 'ACEFTS_L2_v4p0_O3.nc'
 df,dferr= opendf(path,file,'O3')
 
-
+#%%
 ##############################################################################
 #VisualisationS pour comparer avec et sans les données flaggées
 ##############################################################################

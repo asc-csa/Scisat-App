@@ -1129,7 +1129,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                # x=0.9,
                # len=0.7,
                 title=dict(
-                    text=_("Gaz Concentration [ppv] (mean on altitude and position) "),
+                    text=_("Gaz Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
                  #   font={"color": "#737a8d", "family": "Open Sans"},
                 ),
                 titleside="right",     

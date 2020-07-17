@@ -1025,8 +1025,8 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
    
 
     layout_count["title"] = _("Mean concentration as a function of altitude")
-    layout_count["xaxis"] = {"title": _("Concentration"), "automargin": True}
-    layout_count["yaxis"] = {"title": _("Altitude (km) "), "automargin": True}
+    layout_count["xaxis"] = {"title": _("Mean Concentration [ppv]"), "automargin": True}
+    layout_count["yaxis"] = {"title": _("Altitude [km] "), "automargin": True}
     #layout_count["dragmode"] = "select"
     layout_count['clickmode']="event+select",
     layout_count['hovermode']="closest",
@@ -1102,23 +1102,16 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
     """
-    
-  
-    
-    #df=data_reader(gaz_list[0])
-    
-   
-    
-   #!!!!!!!!!!! si possible se débarasser de la boucle; trop lent
-   
+
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
+    # Group data by latitude and longitude 
     df=df.groupby('lat').mean()
     df.reset_index(level=0, inplace=True)  
     df=df.groupby('long').mean()
     df.reset_index(level=0,inplace=True)
     
-    
+    # Graph
     fig =go.Figure( go.Scattermapbox(
         lat=df['lat'][df['Sum O3']<0.0003],
         lon=df['long'][df['Sum O3']<0.0003],
@@ -1136,7 +1129,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                # x=0.9,
                # len=0.7,
                 title=dict(
-                    text=_("Gaz Concentration (sum on altitude)"),
+                    text=_("Gaz Concentration [ppv] (mean on altitude and position) "),
                  #   font={"color": "#737a8d", "family": "Open Sans"},
                 ),
                 titleside="right",     
@@ -1719,11 +1712,11 @@ def translate_static(x):
                 ],
                 [  # x_axis_options
                      {'label': _('Date'), 'value': _('Date')},
-                     {'label': _('Latitude'), 'value': _('latitude')},
-                     {'label': _('Longitude'), 'value': _('longitude')}
+                     {'label': _('Latitude'), 'value': _('latitude [deg]')},
+                     {'label': _('Longitude'), 'value': _('longitude [deg]')}
                 ],
                 [  # y_axis_options
-                    {'label': _('Concentration'), 'value': _('Concentration')},
+                    {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
                     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
                 ],
                 #[  # y_axis_selection_2
@@ -1787,6 +1780,7 @@ def get_locale():
     if language is not None:
         return language
     return 'en'
+
 
 
 @app.server.route('/language/<language>')

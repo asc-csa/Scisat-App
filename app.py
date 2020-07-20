@@ -1229,16 +1229,11 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
-    
-    
-    
     concentration =df.groupby('date')['Sum O3'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()
    
-
-
     # bucketing the data
     """
     if x_axis_selection == 'timestamp':

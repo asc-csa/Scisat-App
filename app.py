@@ -186,11 +186,11 @@ gaz_name_options = [
 
 x_axis_options = [
     {'label': _('Date'), 'value': _('Date')},
-    {'label': _('Latitude'), 'value': _('latitude')},
-    {'label': _('Longitude'), 'value': _('longitude')}]
+    {'label': _('Latitude'), 'value': _('latitude [deg]')},
+    {'label': _('Longitude'), 'value': _('longitude [deg]')}]
 
 y_axis_options = [
-    {'label': _('Concentration'), 'value': _('Concentration')},
+    {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
 
 year_dict = {}
@@ -571,7 +571,7 @@ def build_stats():
                                         id="y_axis_selection_1",
                                         options=y_axis_options,
                                         multi=False,
-                                        value=_('Concentration'),
+                                        value=_('Concentration [ppv]'),
                                         className="dcc_control",
                                     ),
                                 ),

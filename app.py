@@ -23,6 +23,33 @@ import datetime
 # load data and transform as needed
 
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
+    """
+
+    Parameters
+    ----------
+    file : String
+        Name of data file.
+    path_to_files : String
+        Path to the data files.
+    start_date : Datetime, optional
+        DESCRIPTION. The default is 0.
+    end_date : Datetime, optional
+        DESCRIPTION. The default is 0.
+    lat_min : TYPE, optional
+        DESCRIPTION. The default is -90.
+    lat_max : TYPE, optional
+        DESCRIPTION. The default is 90.
+    lon_min : TYPE, optional
+        DESCRIPTION. The default is -180.
+    lon_max : TYPE, optional
+        DESCRIPTION. The default is 180.
+
+    Returns
+    -------
+    df : TYPE
+        Dataframe of all the gas concentrations .
+
+    """
     if type(file)==list:
         file=file[0]
     name=path_to_files+'//'+file
@@ -1095,11 +1122,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
     # Group data by latitude and longitude 
-    df=df.groupby('lat').mean()
-    df.reset_index(level=0, inplace=True)  
-    df=df.groupby('long').mean()
-    df.reset_index(level=0,inplace=True)
-    
+    df=df.groupby(['lat','long']).mean().reset_index()
+
     # Graph
     fig =go.Figure( go.Scattermapbox(
         lat=df['lat'][df['Sum O3']<0.0003],

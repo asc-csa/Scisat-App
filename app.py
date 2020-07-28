@@ -29,19 +29,26 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     ----------
     file : String
         Name of data file.
+        
     path_to_files : String
         Path to the data files.
+        
     start_date : Datetime, optional
-        First day in the date range selected by user. The default is 0.
+        First day in the date range selected by user. The default is the first day of data available.
+    
     end_date : Datetime, optional
-        Last day in the date range selected by user. The default is 0.
-    lat_min : Float, optional
+        Last day in the date range selected by user. The default is the last day of data available.
+    
+    lat_min : float, optional
         Minimum latitude selected by user. The default is -90.
-    lat_max : Float, optional
+    
+    lat_max : float, optional
         Maximum latitude selected by user. The default is 90.
-    lon_min : Float, optional
+    
+    lon_min : float, optional
         Minimum longitude selected by user. The default is -180.
-    lon_max : Float, optional
+    
+    lon_max : float, optional
         Maximum longitude selected by user. The default is 180.
 
     Returns
@@ -450,14 +457,7 @@ def build_filtering():
                                             id="longitude-text",
                                             className="control_label",
                                         ),
-                                        # dcc.RangeSlider(
-                                        #     id="lon_slider",
-                                        #     min=-180.0,
-                                        #     max=180.0,
-                                        #     value=[-180.0, 180.0],
-                                        #     className="dcc_control",
-                                        #     marks=lon_dict,
-                                        # ),
+     
                                         dcc.Input(
                                             id="lon_min",
                                             type='number',
@@ -504,14 +504,7 @@ def build_filtering():
                                     id="yearslider-text",
                                     className="control_label",
                                 ),
-                                # dcc.RangeSlider(
-                                #     id="year_slider",
-                                #     min=1962,
-                                #     max=1973,
-                                #     value=[1962, 1973],
-                                #     className="dcc_control",
-                                #     marks=year_dict
-                                # ),
+
                                 html.Div([
                                     html.Label(
                                         dcc.DatePickerRange(
@@ -706,8 +699,7 @@ app.layout = html.Div(
 # Helper functions
 
 
-
-# Selectors -> ionogram count
+# Selectors -> !!! À voir ce qu'on veut rajouter ? 
 @app.callback(
     Output("ionograms_text", "children"),
     [
@@ -725,20 +717,23 @@ def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
 
     Parameters
     ----------
-    date : str
-         date stored as a str
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+    lat_min : float
+        Minimum value of the latitude stored as a float.
         
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
         
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
         
-    lon_max : double
-        Maximum value of the longitude stored as a double.
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Gaz names strings stored in a list (e.g. ['Ozone'])
@@ -766,7 +761,6 @@ def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
 
 def update_picker(gaz_list):
      df =data_reader(gaz_list,r'data')
-     
      return df.date.min().to_pydatetime(),df.date.max().to_pydatetime(),df.date.min().to_pydatetime(),df.date.max().to_pydatetime()
  
     
@@ -858,7 +852,31 @@ def download_images():  #!!!!! à corriger selon donnée
 )
 def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max):
     """Updates the link to the CSV download
-
+    
+    Parameters
+    ----------
+    
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
+    
+    lat_min : float
+        Minimum value of the latitude stored as a float.
+        
+    lat_max : float
+        Maximum value of the latitude stored as a float.
+        
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+        
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+    
+    gaz_list : list
+        Gaz names strings stored in a list (e.g. ['Ozone'])
+        
     Returns
     -------
     link : str
@@ -885,20 +903,24 @@ def download_csv():
     args
     ----------
    
-    date : str
-        date stored as a str
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
         
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
         
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
         
-    lon_max : double
-        Maximum value of the longitude stored as a double.
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Gaz name strings stored in a list (e.g. ['Ozone'])
@@ -909,8 +931,6 @@ def download_csv():
         CSV file based on the applied filters
     """
 
-   
-    
 
     lat_min    = float(flask.request.args.get('lat_min'))
     lat_max    = float(flask.request.args.get('lat_max'))
@@ -999,20 +1019,24 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     ----------
     
 
-    date : str
-        Ending date stored as a str
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
         
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
         
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
         
-    lon_max : double
-        Maximum value of the longitude stored as a double.
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Ground station name strings stored in a list (e.g. ['Ozone'])
@@ -1084,38 +1108,32 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
 )
 
 def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max):
-    """Create and update the map of gaz concetrations for selected variables.
-
- 
+    """Create and update the map of gaz concentrations for selected variables.
 
     The color of the data points indicates the mean gaz concentration at that coordinate.
 
- 
 
     Parameters
     ----------
    
 
- 
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-    date : str
-        Ending date stored as a str
-
- 
-
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+    lat_min : float
+        Minimum value of the latitude stored as a float.
         
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
         
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
         
-    lon_max : double
-        Maximum value of the longitude stored as a double.
-
- 
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Gas name strings stored in a list (e.g. ['Ozone'])
@@ -1149,11 +1167,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             
             size=5,
             colorbar=dict(
-               # x=0.9,
-               # len=0.7,
                 title=dict(
                     text=_("Gaz Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
-                 #   font={"color": "#737a8d", "family": "Open Sans"},
                 ),
                 titleside="right",     
                 
@@ -1165,29 +1180,14 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
-      #  plot_bgcolor="#171b26",
-      #  paper_bgcolor="#171b26",
         clickmode="event+select",
         hovermode="closest",
-        showlegend=False,
-        # legend=go.layout.Legend(
-        #     x=1,
-        #     y=1,
-        #     traceorder="normal",
-        # ),
-        
+        showlegend=False,  
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token
-            #bearing=10,
-            #center=go.layout.mapbox.Center(
-            #    lat=df_stations.lat.mean(), lon=df_stations.lon.mean()
-            #),
-            #pitch=5,
-            #zoom=1,
             #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex", #!!!!!! changer le stype de la map?
         ),
         transition={'duration': 500},
-        
     )
     
     return fig
@@ -1217,8 +1217,11 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     Parameters
     ----------
    
-    date : str
-        Ending date stored as a str
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+    
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
     x_axis_selection : string
         The chart's x-axis parameter selected by the dropdown stored as a string (e.g 'timestamp')
@@ -1226,17 +1229,17 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     y_axis_selection : string
         The chart's y-axis parameter selected by the dropdown stored as a string (e.g 'max_depth')
 
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+    lat_min : float
+        Minimum value of the latitude stored as a float.
 
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
 
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
 
-    lon_max : double
-        Maximum value of the longitude stored as a double.
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Gas name strings stored in a list (e.g. ['Ozone'])
@@ -1327,31 +1330,6 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
             connectgaps=True,
             showlegend=False,
         ),
-       
-        #dict(
-        #    fill="tonexty",
-        #    mode="none",
-        #    name="95% Confidence Interval",
-        #    type="scatter",
-        #    x=bins,
-        #    #y=ci_lower_limits,
-        #    fillcolor="rgba(18,99,168,0.25)",
-        #    #line_color="rgba(255,255,255,0)",
-        #    line={'width': '5px'},
-        #    connectgaps=True,
-        #    showlegend=True,
-        #),
-        #dict(
-        #    type="scatter",
-        #    mode="lines+markers",
-        #    x=bins,
-        #    #y=estimated_means,
-        #    name="Estimated Mean",
-        #    line={'color': 'rgb(18,99,168)'},
-        #    marker={'size': 2.5},
-        #    connectgaps=False,
-        #    showlegend=True,
-        #),
    
     ]
 
@@ -1743,7 +1721,6 @@ def translate_static(x):
                 #    {'label': _('Mean'), 'value': 'mean'},
                 #    {'label': _('Median'), 'value': 'median'}
                 #],
-
     ]
 
 

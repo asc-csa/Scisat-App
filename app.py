@@ -22,8 +22,6 @@ import datetime
 #==========================================================================================
 # load data and transform as needed
 
-
-
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
     if type(file)==list:
         file=file[0]
@@ -241,8 +239,8 @@ layout = dict(
     hovermode="closest",
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
-    # legend=dict(font=dict(size=10), orientation="h"),
-    title="Ground Station Overview",
+    legend=dict(font=dict(size=10), orientation="h"),
+    title="Gas Concentration Overview",
     mapbox=dict(
         accesstoken=mapbox_access_token,
         style="light",

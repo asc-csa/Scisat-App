@@ -1123,10 +1123,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     
     # Group data by latitude and longitude 
     df=df.groupby(['lat','long']).mean().reset_index()
-    # df.reset_index(level=0, inplace=True)  
-    # df=df.groupby('long').mean()
-    # df.reset_index(level=0,inplace=True)
-    
+
     # Graph
     fig =go.Figure( go.Scattermapbox(
         lat=df['lat'][df['Sum O3']<0.0003],

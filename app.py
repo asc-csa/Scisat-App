@@ -205,8 +205,6 @@ for lon in range(-180, 180+1, 30):
 
 #======================================================================================
 
-
-
 external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
@@ -293,7 +291,7 @@ def build_header():
                         ),
                         html.A(
                             html.Button('FR', id='language-button', className="dash_button"),
-                            href='https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp', id='language-link'
+                            href='/language/fr', id='language-link'
                         ),
                     ],
                     className="four columns",
@@ -688,7 +686,7 @@ app.layout = html.Div(
     ],
 )
 def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list):
-    """Update the component that counts the number of ionograms selected.
+    """Update the component that counts the number of data points selected.
 
     Parameters
     ----------
@@ -707,26 +705,19 @@ def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     lon_max : double
         Maximum value of the longitude stored as a double.
 
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Gaz names strings stored in a list (e.g. ['Ozone'])
 
     Returns
     -------
     int
-        The number of ionograms present in the dataframe after filtering
+        The number of data points present in the dataframe after filtering
     """
-   
 
-    
-   
 
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
-    
-
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
-
-
 
 
 @app.callback(
@@ -874,8 +865,8 @@ def download_csv():
     lon_max : double
         Maximum value of the longitude stored as a double.
 
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Gaz name strings stored in a list (e.g. ['Ozone'])
 
     Returns
     -------
@@ -967,7 +958,7 @@ def update_selected_data(clickData):
     ],
 )
 def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
-    """Create and update the histogram of selected iongograms over the given time range.
+    """Create and update the Gaz Concentration vs Altitude over the given time range.
 
     Parameters
     ----------
@@ -988,14 +979,14 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     lon_max : double
         Maximum value of the longitude stored as a double.
 
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Ground station name strings stored in a list (e.g. ['Ozone'])
 
     Returns
     -------
     dict
-        A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the histogram's
-        layout as as a Plotly layout graph object.
+        A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
+        layout as as a Plotly layout graph object. 
     """
     
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
@@ -1058,11 +1049,11 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
 )
 
 def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max):
-    """Create and update the map of ground stations for selected iongograms.
+    """Create and update the map of gaz concetrations for selected variables.
 
  
 
-    The size of the ground station marker indicates the number of ionograms from that ground station.
+    The color of the data points indicates the mean gaz concentration at that coordinate.
 
  
 
@@ -1091,8 +1082,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
 
  
 
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
 
  
 
@@ -1165,8 +1156,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         transition={'duration': 500},
         
     )
-
-
+    
     return fig
 
 
@@ -1188,10 +1178,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     ],
 )
 def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, gaz_list):
-    """Create and update the chart for visualizing selected iongograms based on varying x and y-axis selection.
+    """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
 
-    Displays the mean value from the selected x-axis with a calculated 95% confidence interval, displaying the
-    boundaries with a lighter coloured ribbon.
 
     Parameters
     ----------
@@ -1217,8 +1205,8 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     lon_max : double
         Maximum value of the longitude stored as a double.
 
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
 
     Returns
     -------
@@ -1599,7 +1587,7 @@ def translate_static(x):
                 _("Filter by latitude:"),
                 _("Filter by longitude:"),
                 _("select date:"),
-                _("Select gaz:"),
+                _("Select gas:"),
                 _('Download Summary Data as CSV'),
                 #_('Download full data as netcdf'),
                 _("Select x-axis:"),

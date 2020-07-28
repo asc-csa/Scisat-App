@@ -1122,6 +1122,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                  #   font={"color": "#737a8d", "family": "Open Sans"},
                 ),
                 titleside="right",     
+                
         ),
         opacity=0.8,
         )

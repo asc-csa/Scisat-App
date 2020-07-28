@@ -47,7 +47,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     Returns
     -------
     df : TYPE
-        DESCRIPTION.
+        Dataframe of all the gas concentrations .
 
     """
     if type(file)==list:

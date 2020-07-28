@@ -33,7 +33,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     months=np.copy(nc.variables['month'][:])
     years = np.copy(nc.variables['year'][:])
     days = np.copy(nc.variables['day'][:])
-    hours = np.copy(nc.variables['hour'][:])
+    #hours = np.copy(nc.variables['hour'][:])
     
     lat = np.copy(nc.variables['latitude'][:])
     long =np.copy( nc.variables['longitude'][:])
@@ -285,7 +285,7 @@ def build_header():
                     [
                         html.A(
                             html.Button("", id="learn-more-button", className="dash_button"),
-                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp"
+                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp",id='learn-more-link'
                         ),
                         html.A(
                             html.Button('FR', id='language-button', className="dash_button"),
@@ -1737,6 +1737,7 @@ def translate_header_footer(x):
     [
         Output('language-button', 'children'),
         Output('language-link', 'href'),
+        Output("learn-more-link", 'href')
     ],
     [Input('none2', 'children')]
 )
@@ -1746,9 +1747,9 @@ def update_language_button(x):
 
     language = session['language']
     if language == 'fr':
-        return 'EN', '/language/en'
+        return 'EN', '/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
     else:
-        return 'FR', '/language/fr'
+        return 'FR', '/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
 
 
 @babel.localeselector

@@ -289,11 +289,11 @@ def build_header():
                     [
                         html.A(
                             html.Button("", id="learn-more-button", className="dash_button"),
-                            href="http://www.asc-csa.gc.ca/eng/satellites/alouette.asp"
+                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp"
                         ),
                         html.A(
                             html.Button('FR', id='language-button', className="dash_button"),
-                            href='/language/fr', id='language-link'
+                            href='https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp', id='language-link'
                         ),
                     ],
                     className="four columns",

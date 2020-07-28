@@ -32,26 +32,36 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     path_to_files : String
         Path to the data files.
     start_date : Datetime, optional
-        DESCRIPTION. The default is 0.
+        First day in the date range selected by user. The default is 0.
     end_date : Datetime, optional
-        DESCRIPTION. The default is 0.
-    lat_min : TYPE, optional
-        DESCRIPTION. The default is -90.
-    lat_max : TYPE, optional
-        DESCRIPTION. The default is 90.
-    lon_min : TYPE, optional
-        DESCRIPTION. The default is -180.
-    lon_max : TYPE, optional
-        DESCRIPTION. The default is 180.
+        Last day in the date range selected by user. The default is 0.
+    lat_min : Float, optional
+        Minimum latitude selected by user. The default is -90.
+    lat_max : Float, optional
+        Maximum latitude selected by user. The default is 90.
+    lon_min : Float, optional
+        Minimum longitude selected by user. The default is -180.
+    lon_max : Float, optional
+        Maximum longitude selected by user. The default is 180.
 
     Returns
     -------
-    df : TYPE
-        Dataframe of all the gas concentrations .
+    df : DATAFRAME
+        Dataframe of all the gas concentrations with columns : 
+            altitudes (from 0.5 to 149.5), Mean on altitude (Alt_Mean), date, 
+            Latitude (lat) and Longitude (long) 
+            
 
     """
     if type(file)==list:
         file=file[0]
+    
+    gaz = file.strip().split('.')[0].strip().split('_')[3:]
+    if len(gaz)>1:
+        gaz = gaz[0]+'_'+gaz[1]
+    else:
+        gaz=gaz[0]
+    
     name=path_to_files+'//'+file
     nc = netcdf.netcdf_file(name,'r')
     
@@ -66,7 +76,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     long =np.copy( nc.variables['longitude'][:])
     alt = np.copy(nc.variables['altitude'][:])
     
-    data = np.copy(nc.variables['O3'][:]) #valeurs de concentration [ppv]
+    data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
     data[data == fillvalue1] = np.nan #Remplacer les données vides
     
     df = pd.DataFrame(data,columns=alt)
@@ -87,7 +97,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
         date.append(datetime.datetime(years[i],months[i],days[i]))#,hours[i]))  
     
     data_meanAlt = np.nanmean(data,1) #Somme sur l'altitude #!!! À revérifier scientifiquement
-    df['Sum O3'] = data_meanAlt
+    df['Alt_Mean'] = data_meanAlt
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
@@ -1119,22 +1129,22 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         and the map's layout as a Plotly layout graph object.
     """
 
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
     # Group data by latitude and longitude 
     df=df.groupby(['lat','long']).mean().reset_index()
 
     # Graph
     fig =go.Figure( go.Scattermapbox(
-        lat=df['lat'][df['Sum O3']<0.0003],
-        lon=df['long'][df['Sum O3']<0.0003],
+        lat=df['lat'][df['Alt_Mean']<0.0003],
+        lon=df['long'][df['Alt_Mean']<0.0003],
         mode="markers",
         marker=dict(
-            color=df['Sum O3'][df['Sum O3']<0.0003],
+            color=df['Alt_Mean'][df['Alt_Mean']<0.0003],
             colorscale=[[0, 'blue'],
             [1, 'red']],
             cmin=0,
-            cmax=max(df['Sum O3'][df['Sum O3']<0.0003]),
+            cmax=max(df['Alt_Mean'][df['Alt_Mean']<0.0003]),
             showscale=True,
             
             size=5,
@@ -1240,7 +1250,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
     
-    concentration =df.groupby('date')['Sum O3'].mean()
+    concentration =df.groupby('date')['Alt_Mean'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()

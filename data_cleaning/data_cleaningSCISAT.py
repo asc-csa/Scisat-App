@@ -53,11 +53,11 @@ def opendf (path_to_file,file_name,gaz):
     df['lat'] = lat
     df['long'] = long
     #df['error']=data_error
-    df=df.groupby('lat').mean()
+   # df=df.groupby('lat').mean()
   #  df=df.groupby(df.index.floor('D')).mean()
-    df.reset_index(level=0, inplace=True)  
-    df=df.groupby('long').mean()
-    df.reset_index(level=0,inplace=True)
+    # df.reset_index(level=0, inplace=True)  
+    # df=df.groupby('long').mean()
+    # df.reset_index(level=0,inplace=True)
     return df,dferr
 
 #Path to file (change directory)
@@ -162,6 +162,5 @@ plt.yticks(fontsize=20)
 plt.title('Basic filtering with std',fontsize=20)
 plt.savefig('O3_MaxMin.png')
 plt.show()
-
 
 #df.to_csv(r'C:\Users\Camille\Documents\GitHub\Scisat-App\data_cleaning\out.csv',index=False)

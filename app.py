@@ -125,14 +125,12 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 #======================================================================================
 # Controls for webapp
 gaz_name_options = [ 
-                    
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p0_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p0_C2H6.nc'},
     {'label': _('dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p0_CCl2F2.nc'},
     {'label': _('trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p0_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p0_CCl4.nc'},
-    
     
     {'label': _('Carbon tetrafluoride'), 'value':  'ACEFTS_L2_v4p0_CF4.nc'},
     {'label': _('Trichlorotrifluoroethane'), 'value':  'ACEFTS_L2_v4p0_CFC113.nc'},
@@ -219,10 +217,9 @@ gaz_name_options = [
     {'label': _('Polyacrylonitrile'), 'value':    'ACEFTS_L2_v4p0_PAN.nc'},
     {'label': _('Sulfur hexafluoride'), 'value':      'ACEFTS_L2_v4p0_SF6.nc'},
     {'label': _('Sulfur dioxide'), 'value':      'ACEFTS_L2_v4p0_SO2.nc'},
-     {'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
+ #    {'label': _('Temperature'), 'value':    'ACEFTS_L2_v4p0_T.nc'} #!!! Est ce qu'on la met? 
     
    ]
-
 
 
 
@@ -235,15 +232,15 @@ y_axis_options = [
     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
 
-year_dict = {}
-for year in range(1962,1974):
-    year_dict[year] = str(year)
-lat_dict = {}
-for lat in range(-90, 90+1, 15):
-    lat_dict[lat] = str(lat)
-lon_dict = {}
-for lon in range(-180, 180+1, 30):
-    lon_dict[lon] = str(lon)
+# year_dict = {}
+# for year in range(2004,2020):
+#     year_dict[year] = str(year)
+# lat_dict = {}
+# for lat in range(-90, 90+1, 15):
+#     lat_dict[lat] = str(lat)
+# lon_dict = {}
+# for lon in range(-180, 180+1, 30):
+#     lon_dict[lon] = str(lon)
 
 #======================================================================================
 
@@ -347,15 +344,15 @@ def build_header():
         )
 
 
-# Builds the layout and components for the inputs to filter the data, as well as the ionograms/month graph and the ground stations map
+# Builds the layout and components for the inputs to filter the data
 def build_filtering():
     return html.Div([
         html.Div(
             [
                 html.Div(
                     [
-                        html.H3(id="ionograms_text"),
-                        html.P(id="ionograms-ratio")
+                        html.H3(id="filtering_text"),
+                        html.P(id="data-ratio")
                     ],
                     id="info-container",
                     className="mini_container three columns",
@@ -393,13 +390,10 @@ def build_filtering():
             [
                 html.Div(
                     [
-                        html.Div(
-                            [dcc.Graph(id="selector_map")],
-                        ),
-                        html.Div(
+                        html.Div(   #Gas Picker
                             [
                                 html.P(
-                                    id="groundstations-text",
+                                    id="gas-text",
                                     className="control_label",
                                 ),
                                 html.Label(
@@ -410,21 +404,20 @@ def build_filtering():
                                         value='ACEFTS_L2_v4p0_O3.nc',
                                         className="dcc_control",
                                     ),
-                                ),
-                                html.Div(
+                                )]),                        
+                        html.Div(
+                            [dcc.Graph(id="selector_map")],
+                        ),
+                        html.Div (['Caption explication']),   #!!!!!!! Tesssst
+                        html.Div(
+                            [
+
+                                html.Div( #Lat and Long picker
                                     [
                                         html.P(
                                             id="latitude-text",
                                             className="control_label",
                                         ),
-                                        # dcc.RangeSlider(
-                                        #     id="lat_slider",
-                                        #     min=-90.0,
-                                        #     max=90.0,
-                                        #     value=[-90.0, 90.0],
-                                        #     className="dcc_control",
-                                        #     marks=lat_dict,
-                                        # ),
                                         dcc.Input(
                                             id="lat_min",
                                             type='number',
@@ -480,40 +473,37 @@ def build_filtering():
                                         ),
                                     ],
                                     className="one-half column"
-                                ),
+                                    ),
+                                
                                 html.H5(
                                     "", style={"margin-top": "10px"}
-                                ),
+                                    ),
                             ],
                             id="map-options",
-                        ),
+                            ),
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
                     className="six columns",
-                ),
+                    ),
                 html.Div(
                     [
-                        html.Div(
-                            [dcc.Graph(id="count_graph")],
-                            id="countGraphContainer",
-                        ),
-                        html.Div(
-                            [
+                    html.Div(
+                        [
                                 html.P(
                                     id="yearslider-text",
                                     className="control_label",
                                 ),
-
+                               
                                 html.Div([
                                     html.Label(
                                         dcc.DatePickerRange(
                                             id='date_picker_range',
-                                            min_date_allowed=dt.datetime(1962, 9, 29),
-                                            max_date_allowed=dt.datetime(1972, 12, 31),
+                                            # min_date_allowed=dt.datetime(2004, 9, 29),
+                                            # max_date_allowed=dt.datetime(1972, 12, 31),
                                             #initial_visible_month=dt.datetime(1962, 9, 29),
-                                            start_date=dt.datetime(1962, 9, 29),
-                                            end_date=dt.datetime(1972, 12, 31),
+                                            start_date=dt.datetime(2004, 2, 1),
+                                            end_date=dt.datetime(2020, 5, 5),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
                                             style={"margin-top": "5px"}
@@ -521,6 +511,78 @@ def build_filtering():
                                     ),
                                     html.Div(id='output-container-date-picker-range')
                                 ]),
+                        ]),
+                       
+                        #Graphique
+                        html.Div([
+                            html.H5(
+                                    "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
+                                ),
+                            html.Div([dcc.Graph(id="count_graph")],
+                            id="countGraphContainer",
+                            ),
+                            html.H5(
+                                    "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
+                                )
+                            ]),
+                        
+                        html.Div(
+                            [
+                                # html.P(
+                                #     id="yearslider-text",
+                                #     className="control_label",
+                                # ),
+                               
+                                # html.Div([
+                                #     html.Label(
+                                #         dcc.DatePickerRange(
+                                #             id='date_picker_range',
+                                #             min_date_allowed=dt.datetime(1962, 9, 29),
+                                #             max_date_allowed=dt.datetime(1972, 12, 31),
+                                #             #initial_visible_month=dt.datetime(1962, 9, 29),
+                                #             start_date=dt.datetime(1962, 9, 29),
+                                #             end_date=dt.datetime(1972, 12, 31),
+                                #             start_date_placeholder_text='Select start date',
+                                #             end_date_placeholder_text='Select end date',
+                                #             style={"margin-top": "5px"}
+                                #         ),
+                                #     ),
+                                #     html.Div(id='output-container-date-picker-range')
+                                # ]),
+                               html.Div(
+                                   [
+                                html.P(
+                                        id="altitude-text",
+                                        className="control_label",
+                                        ),
+                                        dcc.Input(
+                                            id="alt_min",
+                                            type='number',
+                                            value=0.5,
+                                            placeholder="Min altitude",
+                                            min=0,
+                                            max=150,
+                                            step=5,
+                                            style={"margin-left": "5px"}
+                                        ),
+                                        dcc.Input(
+                                            id="alt_max",
+                                            type='number',
+                                            value=149.5,
+                                            placeholder="Max altitude",
+                                            min=0,
+                                            max=150,
+                                            step=5,
+                                            style={"margin-left": "5px"}
+                                        ),
+                                        html.H5(
+                                            "", style={"margin-top": "30px"}
+                                        ),
+                                    ],
+                                    className="one-half column"
+                                ),
+                        
+                        
                                 html.H5(
                                     "", style={"margin-top": "30px", "margin-bottom": "25px"}
                                 ),
@@ -701,7 +763,7 @@ app.layout = html.Div(
 
 # Selectors -> !!! À voir ce qu'on veut rajouter ? 
 @app.callback(
-    Output("ionograms_text", "children"),
+    Output("filtering_text", "children"),
     [
         Input('date_picker_range', "start_date"),
         Input('date_picker_range', "end_date"),
@@ -712,7 +774,7 @@ app.layout = html.Div(
         Input("gaz_list", "value"),
     ],
 )
-def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list):
+def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list):
     """Update the component that counts the number of data points selected.
 
     Parameters
@@ -748,6 +810,7 @@ def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
+
 
 
 @app.callback(
@@ -1072,10 +1135,13 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         )
     ]
     
-   
-
     layout_count["title"] = _("Mean concentration as a function of altitude")
-    layout_count["xaxis"] = {"title": _("Mean Concentration [ppv]"), "automargin": True}
+    layout_count["xaxis"] = dict(
+           title = "Mean Concentration [ppv]",
+           automargin=True,     
+           showexponent = 'all',
+           exponentformat = 'e'
+           ), #{"title": _("Mean Concentration [ppv]"), "automargin": True}
     layout_count["yaxis"] = {"title": _("Altitude [km] "), "automargin": True}
     #layout_count["dragmode"] = "select"
     layout_count['clickmode']="event+select",
@@ -1171,18 +1237,24 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                     text=_("Gaz Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
                 ),
                 titleside="right",     
-                
-        ),
+                showexponent = 'all',
+                exponentformat = 'e'        
+            ),
         opacity=0.8,
         )
+      )
     )
-)
     
     fig.update_layout(
-        margin=dict(l=10, r=10, t=20, b=10, pad=5),
+        margin=dict(l=10, r=10, t=20, b=10, pad=5),                    
+        # annotations = [dict(xref='paper',
+        #     yref='paper',
+        #     x=0.5, y=-0.25,
+        #     showarrow=False,
+        #     text ='This is my caption for the Plotly figure')],
         clickmode="event+select",
         hovermode="closest",
-        showlegend=False,  
+       # showlegend=False,  
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token
             #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex", #!!!!!! changer le stype de la map?
@@ -1341,15 +1413,20 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         # legend=dict(font=dict(size=10), orientation="h"),
         title=_("Data Visualization "),
         
-        xaxis={"title": x_axis_selection, "automargin": True},
-        yaxis={"title": y_axis_selection, "automargin": True},
+        xaxis={"title": y_axis_selection, "automargin": True} ,
+
+        yaxis =  dict(
+           title = y_axis_selection,
+           automargin=True,     
+           showexponent = 'all',
+           exponentformat = 'e'
+           ), 
+
         height=500,
         transition={'duration': 500},
     )
 
     figure = dict(data=data, layout=layout)
-
-    
 
     return figure
 """
@@ -1563,14 +1640,15 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
     [
         Output("page-title", "children"),
         Output("learn-more-button", "children"),
-        Output("ionograms-ratio", "children"),
+        Output("data-ratio", "children"),
         Output("description-1", "children"),
         Output("description-2", "children"),
         Output("select-data", "children"),
         Output("latitude-text", "children"),
         Output("longitude-text", "children"),
+        Output("altitude-text","children"),
         Output("yearslider-text", "children"),
-        Output("groundstations-text", "children"),
+        Output("gas-text", "children"),
         Output("download-button-1", "children"),
         #("download-button-2", "children"),
         Output("x-axis-selection-text", "children"),
@@ -1590,23 +1668,23 @@ def translate_static(x):
     return [
                 _("Scisat data visualisation"),
                 _("Learn More About SciSat"),
-                _("data selected"),
-                #_("Launched in 1962, Alouette I sent signals with different frequencies into the topmost layer of the atmosphere, known as the ionosphere, and collected data on the depth these frequencies travelled. The results of this were sent to ground stations around the world and stored in films as ionogram images, which have now been digitized. The ionograms Alouette I provided were used to fuel hundreds of scientific papers at the time. Although ionosphere data from more recent years is readily available, the data from Alouette I’s ionograms are the only ones available for this time period. Barriers for accessing, interpreting and analyzing the data at a larger scale have prevented this data's usage. "),
+                _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize Scisat's data. "),
                 _("Select Data"),
-                _("Filter by latitude:"),
-                _("Filter by longitude:"),
-                _("select date:"),
-                _("Select gas:"),
+                _("Filter by Latitude:"),
+                _("Filter by Longitude:"),
+                _("Select Altitudes"),
+                _("Select Date:"),
+                _("Select Gas:"),
                 _('Download Summary Data as CSV'),
                 #_('Download full data as netcdf'),
                 _("Select x-axis:"),
                 _("Select y-axis:"),
                 #_("Select statistic:"),
                 #_("Select plotted value:"),
-                [  # Ground_station_options
-                     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
+    [  # Gas_options
+    {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p0_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p0_C2H6.nc'},
     {'label': _('dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p0_CCl2F2.nc'},
@@ -1699,16 +1777,14 @@ def translate_static(x):
     {'label': _('Polyacrylonitrile'), 'value':    'ACEFTS_L2_v4p0_PAN.nc'},
     {'label': _('Sulfur hexafluoride'), 'value':      'ACEFTS_L2_v4p0_SF6.nc'},
     {'label': _('Sulfur dioxide'), 'value':      'ACEFTS_L2_v4p0_SO2.nc'},
-     {'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
-                   
+    #{'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
+            ],  #End gas_options
     
-     
-                ],
                 [  # x_axis_options
                      {'label': _('Date'), 'value': _('Date')},
                      {'label': _('Latitude'), 'value': _('latitude [deg]')},
                      {'label': _('Longitude'), 'value': _('longitude [deg]')}
-                ],
+                ], #End x_axis options
                 [  # y_axis_options
                     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
                     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}

@@ -395,12 +395,7 @@ msgid ""
 "This application provides users the ability to select, download and "
 "visualize Scisat's data. "
 msgstr ""
-"Cette application permet aux utilisateurs de sélectionner, télécharger et"
-" visualiser les données d'Alouette I. Veuillez noter que les paramètres "
-"des ionogrammes extraits, tels que la profondeur maximale et la fréquence"
-" minimale, sont fournis principalement à des fins de démonstration. Ces "
-"valeurs sont sujettes à erreur et ne doivent pas être utilisées "
-"directement dans un contexte scientifique."
+
 
 #: app.py:1617
 msgid "Select Data"

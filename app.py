@@ -549,38 +549,64 @@ def build_filtering():
                                 #     ),
                                 #     html.Div(id='output-container-date-picker-range')
                                 # ]),
-                               html.Div(
-                                   [
+                               # html.Div(
+                               #     [
+                                       
+                            html.Div([
                                 html.P(
                                         id="altitude-text",
                                         className="control_label",
                                         ),
-                                        dcc.Input(
-                                            id="alt_min",
-                                            type='number',
-                                            value=0.5,
-                                            placeholder="Min altitude",
-                                            min=0,
-                                            max=150,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        dcc.Input(
-                                            id="alt_max",
-                                            type='number',
-                                            value=149.5,
-                                            placeholder="Max altitude",
-                                            min=0,
-                                            max=150,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        html.H5(
-                                            "", style={"margin-top": "30px"}
-                                        ),
-                                    ],
-                                    className="one-half column"
-                                ),
+                                # dcc.Slider(
+                                #     id = "slider_1",
+                                #     updatemode = "drag",
+                                #     #vertical = True,
+                                #     marks = {i: "{}".format(i) for i in [10, 20, 30, 40]},
+                                #     min = 0,
+                                #     max = 150,
+                                #     step = 1,
+                                #     value = 10)], style = {"height": "300px"}),   
+                            
+                                dcc.RangeSlider(
+                                    id='my-range-slider',
+                                    marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
+                                    min=0.5,
+                                    max=149.5,
+                                    step=1,
+                                    value=[0.5, 149.5] ,
+                                    tooltip = { 'always_visible': True })],
+                            ),
+                            
+                                # html.P(
+                                #         id="altitude-text",
+                                #         className="control_label",
+                                #         ),
+                                #         dcc.Input(
+                                #             id="alt_min",
+                                #             type='number',
+                                #             value=0.5,
+                                #             placeholder="Min altitude",
+                                #             min=0,
+                                #             max=150,
+                                #             step=5,
+                                #             style={"margin-left": "5px"}
+                                #         ),
+                                #         dcc.Input(
+                                #             id="alt_max",
+                                #             type='number',
+                                #             value=149.5,
+                                #             placeholder="Max altitude",
+                                #             min=0,
+                                #             max=150,
+                                #             step=5,
+                                #             style={"margin-left": "5px"}
+                                #         ),
+                                #         html.H5(
+                                #             "", style={"margin-top": "30px"}
+                                #         ),
+                                #    ],
+                                #    className="one-half column"
+                                #),
                         
                         
                                 html.H5(

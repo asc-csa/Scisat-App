@@ -90,7 +90,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     data[data == fillvalue1] = np.nan #Remplacer les données vides
     data = data[:,alt_range[0]:alt_range[1]] #Choisir les données dans le range d'altitude
 
-    df = pd.DataFrame(data,columns=alt)
+    df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
     
     #Trie données abérrantes
     df[df>1e-5]=np.nan
@@ -131,7 +131,6 @@ gaz_name_options = [
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p0_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p0_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p0_C2H6.nc'},
-    {'label': _('dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p0_CCl2F2.nc'},
     {'label': _('trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p0_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p0_CCl4.nc'},
     
@@ -568,7 +567,7 @@ def build_filtering():
                                     max=150,
                                     step=1,
                                     value=[0, 150] ,
-                                    tooltip = { 'always_visible': True }
+                                   # tooltip = { 'always_visible': True }
                                    ),
                                 html.Div(id='output-container-alt-picker-range')
                                 # html.H5(
@@ -938,6 +937,7 @@ def download_images():  #!!!!! à corriger selon donnée
         Input("lat_max", "value"),
         Input("lon_min", "value"),
         Input("lon_max", "value"),
+        Input("alt_range","value"),
        
     ],
 )
@@ -975,7 +975,7 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
     """
 
     link = '/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
-            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list)
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range)
             
     
 
@@ -1178,7 +1178,8 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         xaxis=dict(title= "Concentration [ppv]", 
                    automargin= True,
                    showexponent = 'all',
-                   exponentformat = 'e'),
+                   exponentformat = 'e'
+                   ),
 
         yaxis =  dict(
            title = "Altitude [km]",
@@ -1187,7 +1188,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
            exponentformat = 'e'
            ), 
 
-        height=500,
+        height=400,
         transition={'duration': 500},
     )
 

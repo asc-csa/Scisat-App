@@ -22,7 +22,7 @@ import datetime
 #==========================================================================================
 # load data and transform as needed
 
-def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180) :
+def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180,alt_range=[0,150]) :
     """
 
     Parameters
@@ -50,6 +50,9 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     
     lon_max : float, optional
         Maximum longitude selected by user. The default is 180.
+        
+    alt_range : List
+        Range of alitutudes selected. Default is [0,150]
 
     Returns
     -------
@@ -85,7 +88,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     
     data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
     data[data == fillvalue1] = np.nan #Remplacer les données vides
-    
+    data = data[:,alt_range[0]:alt_range[1]] #Choisir les données dans le range d'altitude
+
     df = pd.DataFrame(data,columns=alt)
     
     #Trie données abérrantes
@@ -100,10 +104,9 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #Colonne de dates
     date=[]    
     for i in range (len(days)):
-      
         date.append(datetime.datetime(years[i],months[i],days[i]))#,hours[i]))  
-    
-    data_meanAlt = np.nanmean(data,1) #Somme sur l'altitude #!!! À revérifier scientifiquement
+
+    data_meanAlt = np.nanmean(df,1) #Moyenne sur l'altitude #!!! À revérifier scientifiquement
     df['Alt_Mean'] = data_meanAlt
     df['date'] = date
     df['lat'] = lat
@@ -118,8 +121,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['lat']<lat_max,True,False)]
     df=df[np.where(df['long']>lon_min,True,False)]
     df=df[np.where(df['long']<lon_max,True,False)]
+    
     return df
-
 
 # Dropdown options
 #======================================================================================
@@ -412,7 +415,7 @@ def build_filtering():
                         html.Div(
                             [
 
-                                html.Div( #Lat and Long picker
+                                html.Div( #Latitude picker
                                     [
                                         html.P(
                                             id="latitude-text",
@@ -444,7 +447,7 @@ def build_filtering():
                                     ],
                                     className="one-half column"
                                 ),
-                                html.Div(
+                                html.Div( #longitude picker
                                     [
                                         html.P(
                                             id="longitude-text",
@@ -480,7 +483,7 @@ def build_filtering():
                                     ),
                             ],
                             id="map-options",
-                            ),
+                            ), #End of map options
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -557,25 +560,22 @@ def build_filtering():
                                         id="altitude-text",
                                         className="control_label",
                                         ),
-                                # dcc.Slider(
-                                #     id = "slider_1",
-                                #     updatemode = "drag",
-                                #     #vertical = True,
-                                #     marks = {i: "{}".format(i) for i in [10, 20, 30, 40]},
-                                #     min = 0,
-                                #     max = 150,
-                                #     step = 1,
-                                #     value = 10)], style = {"height": "300px"}),   
                             
                                 dcc.RangeSlider(
-                                    id='my-range-slider',
+                                    id='alt_range',
                                     marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
-                                    min=0.5,
-                                    max=149.5,
+                                    min=0,
+                                    max=150,
                                     step=1,
-                                    value=[0.5, 149.5] ,
-                                    tooltip = { 'always_visible': True })],
-                            ),
+                                    value=[0, 150] ,
+                                    tooltip = { 'always_visible': True }
+                                   ),
+                                html.Div(id='output-container-alt-picker-range')
+                                # html.H5(
+                                #     "", style={"margin-top": "30px", "margin-bottom": "25px"}
+                                #     ),                                
+                                ],
+                                ),
                             
                                 # html.P(
                                 #         id="altitude-text",
@@ -609,9 +609,7 @@ def build_filtering():
                                 #),
                         
                         
-                                html.H5(
-                                    "", style={"margin-top": "30px", "margin-bottom": "25px"}
-                                ),
+
                                 html.Div(
                                     [
                                         html.A(
@@ -798,9 +796,10 @@ app.layout = html.Div(
         Input("lon_min", "value"),
         Input("lon_max", "value"),
         Input("gaz_list", "value"),
+        Input("alt_range","value"),
     ],
 )
-def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list):
+def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list,alt_range):
     """Update the component that counts the number of data points selected.
 
     Parameters
@@ -825,6 +824,9 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
 
     gaz_list : list
         Gaz names strings stored in a list (e.g. ['Ozone'])
+    
+    alt_range : List
+        Range of altitudes
 
     Returns
     -------
@@ -833,7 +835,7 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     """
 
 
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
@@ -939,7 +941,7 @@ def download_images():  #!!!!! à corriger selon donnée
        
     ],
 )
-def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max):
+def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max,alt_range):
     """Updates the link to the CSV download
     
     Parameters
@@ -1014,6 +1016,9 @@ def download_csv():
     gaz_list : list
         Gaz name strings stored in a list (e.g. ['Ozone'])
 
+    alt_range : List
+        Range of altitudes
+
     Returns
     -------
     output : CSV
@@ -1032,7 +1037,7 @@ def download_csv():
    
     #start_date =pd.Timestamp(parse(start_date))
     #end_date   =pd.Timestamp(parse(end_date))
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -1098,15 +1103,14 @@ def update_selected_data(clickData):
         Input("lat_max", "value"),
         Input("lon_min", "value"),
         Input("lon_max", "value"),
-        Input("gaz_list", "value"),
+        Input("alt_range","value"),
     ],
 )
-def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
+def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
     """Create and update the Gaz Concentration vs Altitude over the given time range.
 
     Parameters
-    ----------
-    
+    ----------    
 
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
@@ -1130,55 +1134,67 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     gaz_list : list
         Ground station name strings stored in a list (e.g. ['Ozone'])
 
+    alt_range : List
+        Range of altitudes
+
     Returns
     -------
     dict
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object. 
     """
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    concentration=df[alt_range[0]:alt_range[1]]
+    # concentration=np.array(concentration,dtype=np.float32)
+    # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
+    xx=concentration.mean(axis=0)
+    err_xx=concentration.std(axis=0)
     
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
-    concentration=df.values[:,0:150]
-    concentration=np.array(concentration,dtype=np.float32)
-    concentration=np.ma.masked_array(concentration, np.isnan(concentration))
-    xx=concentration.mean(axis=0).data
-    err_xx=concentration.std(axis=0).data
-    
-    layout_count = copy.deepcopy(layout)
+    # layout_count = copy.deepcopy(layout)
     data = [
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[0:150],
-            error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
+            y=df.columns[alt_range[0]:alt_range[1]],
+            # error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name="Altitude",
             #orientation='h',
-            color=xx,
-             colorscale=[[0, 'red'],
-            [1, 'blue']],   
-            opacity=1,
+            # color=xx,
+             # colorscale=[[0, 'red'],
+            # [1, 'blue']],   
+            # opacity=1,
           
         )
     ]
     
-    layout_count["title"] = _("Mean concentration as a function of altitude")
-    layout_count["xaxis"] = dict(
-           title = "Mean Concentration [ppv]",
+    layout = dict(
+        autosize=True,
+        automargin=True,
+        plot_bgcolor="#F9F9F9",
+        paper_bgcolor="#F9F9F9",
+        # legend=dict(font=dict(size=10), orientation="h"),
+        title=_("Data Visualization "),
+        
+        xaxis=dict(title= "Concentration [ppv]", 
+                   automargin= True,
+                   showexponent = 'all',
+                   exponentformat = 'e'),
+
+        yaxis =  dict(
+           title = "Altitude [km]",
            automargin=True,     
            showexponent = 'all',
            exponentformat = 'e'
-           ), #{"title": _("Mean Concentration [ppv]"), "automargin": True}
-    layout_count["yaxis"] = {"title": _("Altitude [km] "), "automargin": True}
-    #layout_count["dragmode"] = "select"
-    layout_count['clickmode']="event+select",
-    layout_count['hovermode']="closest",
-    layout_count["showlegend"] = False
-    layout_count["autosize"] = True
-    layout_count["transition"] = {'duration': 500}
+           ), 
 
-    fig = dict(data=data, layout=layout_count)
+        height=500,
+        transition={'duration': 500},
+    )
 
-    return fig
+    figure = dict(data=data, layout=layout)
+
+    return figure
+
 
 
 #=====================================================================
@@ -1195,11 +1211,12 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         Input("lat_max", "value"),
         Input("lon_min", "value"),#!!!!!! à remplacer lorsque le click-select est pret
         Input("lon_max", "value"),
-       
+        Input("alt_range","value"),
+     
     ],
 )
 
-def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max):
+def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
     """Create and update the map of gaz concentrations for selected variables.
 
     The color of the data points indicates the mean gaz concentration at that coordinate.
@@ -1230,6 +1247,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     gaz_list : list
         Gas name strings stored in a list (e.g. ['Ozone'])
 
+    alt_range : List
+        Range of altitudes
  
 
     Returns
@@ -1239,22 +1258,22 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         and the map's layout as a Plotly layout graph object.
     """
 
-    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
     
     # Group data by latitude and longitude 
     df=df.groupby(['lat','long']).mean().reset_index()
 
     # Graph
     fig =go.Figure( go.Scattermapbox(
-        lat=df['lat'][df['Alt_Mean']<0.0003],
-        lon=df['long'][df['Alt_Mean']<0.0003],
+        lat=df['lat'],#[df['Alt_Mean']<0.0003],
+        lon=df['long'],#[df['Alt_Mean']<0.0003],
         mode="markers",
         marker=dict(
-            color=df['Alt_Mean'][df['Alt_Mean']<0.0003],
+            color=df['Alt_Mean'],#[df['Alt_Mean']<0.0003],
             colorscale=[[0, 'blue'],
             [1, 'red']],
             cmin=0,
-            cmax=max(df['Alt_Mean'][df['Alt_Mean']<0.0003]),
+            cmax=max(df['Alt_Mean']),#[df['Alt_Mean']<0.0003]),
             showscale=True,
             
             size=5,
@@ -1306,9 +1325,10 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         Input("lon_min", "value"),
         Input("lon_max", "value"),
         Input("gaz_list", "value"),
+        Input("alt_range","value"),
     ],
 )
-def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, gaz_list):
+def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
 
 
@@ -1342,6 +1362,10 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
     gaz_list : list
         Gas name strings stored in a list (e.g. ['Ozone'])
 
+    alt_range : List
+        Range of altitudes
+
+
     Returns
     -------
     dict
@@ -1349,7 +1373,7 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         as a Plotly layout graph object.
     """
     
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
     
     concentration =df.groupby('date')['Alt_Mean'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
@@ -1700,7 +1724,7 @@ def translate_static(x):
                 _("Select Data"),
                 _("Filter by Latitude:"),
                 _("Filter by Longitude:"),
-                _("Select Altitudes"),
+                _("Select Altitude Range:"),
                 _("Select Date:"),
                 _("Select Gas:"),
                 _('Download Summary Data as CSV'),

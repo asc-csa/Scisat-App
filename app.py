@@ -410,7 +410,7 @@ def build_filtering():
                         html.Div(
                             [dcc.Graph(id="selector_map")],
                         ),
-                        html.Div (['Caption explication']),   #!!!!!!! Tesssst
+                        html.Div (['Graphique montrant la concentration du gaz sur une carte du monde. Chaque point est une moyenne sur les dates choisies, la colone d\'altitude ainsi que la position, et la couleur indique la concentration moyenne.']),   #!!!!!!! Tesssst
                         html.Div(
                             [
 
@@ -490,12 +490,11 @@ def build_filtering():
                     ),
                 html.Div(
                     [
-                    html.Div(
-                        [
+                    html.Div([
                                 html.P(
                                     id="yearslider-text",
                                     className="control_label",
-                                ),
+                                    ),
                                
                                 html.Div([
                                     html.Label(
@@ -509,11 +508,11 @@ def build_filtering():
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
                                             style={"margin-top": "5px"}
+                                            ),
                                         ),
-                                    ),
                                     html.Div(id='output-container-date-picker-range')
-                                ]),
-                        ]),
+                                    ]),
+                            ]),
                        
                         #Graphique
                         html.Div([
@@ -521,43 +520,18 @@ def build_filtering():
                                     "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
                                 ),
                             html.Div([dcc.Graph(id="count_graph")],
-                            id="countGraphContainer",
-                            ),
+                                     id="countGraphContainer",
+                                     ),
                             html.H5(
                                     "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
-                                )
+                                    )
                             ]),
-                        
-                        html.Div(
-                            [
-                                # html.P(
-                                #     id="yearslider-text",
-                                #     className="control_label",
-                                # ),
-                               
-                                # html.Div([
-                                #     html.Label(
-                                #         dcc.DatePickerRange(
-                                #             id='date_picker_range',
-                                #             min_date_allowed=dt.datetime(1962, 9, 29),
-                                #             max_date_allowed=dt.datetime(1972, 12, 31),
-                                #             #initial_visible_month=dt.datetime(1962, 9, 29),
-                                #             start_date=dt.datetime(1962, 9, 29),
-                                #             end_date=dt.datetime(1972, 12, 31),
-                                #             start_date_placeholder_text='Select start date',
-                                #             end_date_placeholder_text='Select end date',
-                                #             style={"margin-top": "5px"}
-                                #         ),
-                                #     ),
-                                #     html.Div(id='output-container-date-picker-range')
-                                # ]),
-                               # html.Div(
-                               #     [
-                                       
+                            html.Div (['Graphique montrant la concentration du gaz selon l\'altitude. La moyenne est faite sur toutes les positions ainsi que toutes les dates sélectionnées.']),   #!!!!!!! Tesssst
+
+                        html.Div([
                             html.Div([
-                                html.P(
-                                        id="altitude-text",
-                                        className="control_label",
+                                html.P(id="altitude-text",
+                                        className="control_label"
                                         ),
                             
                                 dcc.RangeSlider(
@@ -570,73 +544,29 @@ def build_filtering():
                                    # tooltip = { 'always_visible': True }
                                    ),
                                 html.Div(id='output-container-alt-picker-range')
-                                # html.H5(
-                                #     "", style={"margin-top": "30px", "margin-bottom": "25px"}
-                                #     ),                                
-                                ],
-                                ),
-                            
-                                # html.P(
-                                #         id="altitude-text",
-                                #         className="control_label",
-                                #         ),
-                                #         dcc.Input(
-                                #             id="alt_min",
-                                #             type='number',
-                                #             value=0.5,
-                                #             placeholder="Min altitude",
-                                #             min=0,
-                                #             max=150,
-                                #             step=5,
-                                #             style={"margin-left": "5px"}
-                                #         ),
-                                #         dcc.Input(
-                                #             id="alt_max",
-                                #             type='number',
-                                #             value=149.5,
-                                #             placeholder="Max altitude",
-                                #             min=0,
-                                #             max=150,
-                                #             step=5,
-                                #             style={"margin-left": "5px"}
-                                #         ),
-                                #         html.H5(
-                                #             "", style={"margin-top": "30px"}
-                                #         ),
-                                #    ],
-                                #    className="one-half column"
-                                #),
-                        
-                        
-
-                                html.Div(
-                                    [
-                                        html.A(
-                                            html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                            id='download-link-1',
-                                            # download='rawdata.csv',
-                                            href="",
-                                            target="_blank",
-                                        ),
-                                       # html.A(
-                                       #     html.Button(id='download-button-2',  n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                       #     id='download-link-2',
-                                       #     style={"margin-left": "5px"},
-                                       # )
-                                    ],
-                                ),
-                            ],
-                            id="cross-filter-options",
-                        ),
+                                ]),
+                     
+                            html.Div([
+                                html.A(
+                                    html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                    id='download-link-1',
+                                    # download='rawdata.csv',
+                                    href="",
+                                    target="_blank",
+                                    ),
+                                ]),
+                            ], 
+                            id="cross-filter-options"
+                            ),
                     ],
                     id="right-column-1",
                     style={"flex-grow": 1},
                     className="six columns",
-                ),
+                    ),
             ],
             className="row flex-display pretty_container twelve columns",
             style={"justify-content": "space-evenly"}
-        ),
+            ),
     ])
 
 
@@ -656,6 +586,8 @@ def build_stats():
                     id="left-column-3",
                     className="nine columns",
                 ),
+      #  html.Div (['Série temporelle montrant la concentration du gaz sur les dates sélectionnées. Chaque point est une moyenne quotidienne sur l\'altitude ainsi que la position.']),   #!!!!!!! Tesssst
+
                 html.Div(
                     [
                         html.Div(
@@ -839,7 +771,6 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
 
-
 @app.callback(
     [Output('date_picker_range', 'min_date_allowed'),
     Output('date_picker_range', 'max_date_allowed'),
@@ -975,9 +906,7 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
     """
 
     link = '/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
-            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range)
-            
-    
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range) 
 
     return link
 
@@ -1025,14 +954,13 @@ def download_csv():
         CSV file based on the applied filters
     """
 
-
     lat_min    = float(flask.request.args.get('lat_min'))
     lat_max    = float(flask.request.args.get('lat_max'))
     lon_min    = float(flask.request.args.get('lon_min'))
     lon_max    = float(flask.request.args.get('lon_max'))
     start_date = flask.request.args.get('start_date')
     end_date   = flask.request.args.get('end_date')
-    
+    alt_range   = flask.request.args.get('alt_range')
     gaz_list= flask.request.args.get('gaz_list')
    
     #start_date =pd.Timestamp(parse(start_date))
@@ -1156,7 +1084,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
             type="scatter",
             x=xx,
             y=df.columns[alt_range[0]:alt_range[1]],
-            # error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
+            error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name="Altitude",
             #orientation='h',
             # color=xx,
@@ -1184,8 +1112,6 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         yaxis =  dict(
            title = "Altitude [km]",
            automargin=True,     
-           showexponent = 'all',
-           exponentformat = 'e'
            ), 
 
         height=400,
@@ -1286,11 +1212,11 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
                 showexponent = 'all',
                 exponentformat = 'e'        
             ),
-        opacity=0.8,
+        opacity=0.6,
         )
       )
-    )
     
+    )
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),                    
         # annotations = [dict(xref='paper',
@@ -1462,9 +1388,9 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Data Visualization "),
+        title=_("Time Series"),
         
-        xaxis={"title": y_axis_selection, "automargin": True} ,
+        xaxis={"title": x_axis_selection, "automargin": True} ,
 
         yaxis =  dict(
            title = y_axis_selection,
@@ -1838,7 +1764,7 @@ def translate_static(x):
                 ], #End x_axis options
                 [  # y_axis_options
                     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
-                    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
+                #    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
                 ],
                 #[  # y_axis_selection_2
                 #    {'label': _('Minimum Frequency'), 'value': 'fmin'},
@@ -1908,7 +1834,6 @@ def get_locale():
 def set_language(language=None):
     """Sets the session language, then refreshes the page
     """
-
     session['language'] = language
 
     return redirect(url_for('/'))

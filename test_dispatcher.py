@@ -7,8 +7,8 @@ Created on Thu Aug 20 10:59:37 2020
 from werkzeug.middleware.dispatcher  import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from flask_app import flask_app
-import scisat_app.scisat 
-import alouette_app.alouette 
+import scisat_app.scisat as scisat
+import alouette_app.alouette as alouette
 
 # app1.enable_dev_tools(debug=True)
 # app2.enable_dev_tools(debug=True)

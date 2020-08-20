@@ -13,7 +13,7 @@ import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for
-from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+from scisat_app.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime

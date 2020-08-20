@@ -21,7 +21,7 @@ import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, request
-from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+from alouette_app.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
 
 
 

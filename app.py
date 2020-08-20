@@ -18,7 +18,6 @@ from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime
 
-
 #==========================================================================================
 # load data and transform as needed
 
@@ -225,14 +224,14 @@ gaz_name_options = [
 
 
 
-x_axis_options = [
-    {'label': _('Date'), 'value': _('Date')},
-    {'label': _('Latitude'), 'value': _('latitude [deg]')},
-    {'label': _('Longitude'), 'value': _('longitude [deg]')}]
+# x_axis_options = [
+#     {'label': _('Date'), 'value': _('Date')},
+#     {'label': _('Latitude'), 'value': _('latitude [deg]')},
+#     {'label': _('Longitude'), 'value': _('longitude [deg]')}]
 
-y_axis_options = [
-    {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
-    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
+# y_axis_options = [
+#     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
+#     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
 
 # year_dict = {}
 # for year in range(2004,2020):
@@ -406,14 +405,9 @@ def build_filtering():
                                         value='ACEFTS_L2_v4p0_O3.nc',
                                         className="dcc_control",
                                     ),
-                                )]),                        
-                        html.Div(
-                            [dcc.Graph(id="selector_map")],
-                        ),
-                        html.Div (['Graphique montrant la concentration du gaz sur une carte du monde. Chaque point est une moyenne sur les dates choisies, la colone d\'altitude ainsi que la position, et la couleur indique la concentration moyenne.']),   #!!!!!!! Tesssst
-                        html.Div(
-                            [
-
+                                ),
+                                
+                               html.Div([
                                 html.Div( #Latitude picker
                                     [
                                         html.P(
@@ -441,7 +435,7 @@ def build_filtering():
                                             style={"margin-left": "5px"}
                                         ),
                                         html.H5(
-                                            "", style={"margin-top": "30px"}
+                                            "", style={"margin-top": "0px"}
                                         ),
                                     ],
                                     className="one-half column"
@@ -474,23 +468,28 @@ def build_filtering():
                                             style={"margin-left": "5px"}
                                         ),
                                     ],
-                                    className="one-half column"
+                                 #   className="one-half column"
                                     ),
                                 
                                 html.H5(
-                                    "", style={"margin-top": "10px"}
+                                    "", style={"margin-top": "0px"}
                                     ),
                             ],
                             id="map-options",
                             ), #End of map options
+                                ]),                        
+                        html.Div(
+                            [dcc.Graph(id="selector_map")],
+                        ),
+                        html.Div ([_('Graphique montrant la concentration du gaz sur une carte du monde. Chaque point est une moyenne sur les dates choisies, la colone d\'altitude ainsi que la position, et la couleur indique la concentration moyenne.')]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
                     className="six columns",
                     ),
                 html.Div(
-                    [
-                    html.Div([
+                    [  # Right side of container
+                    html.Div([ #Year selection + download button
                                 html.P(
                                     id="yearslider-text",
                                     className="control_label",
@@ -511,29 +510,32 @@ def build_filtering():
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range')
-                                    ]),
+                                    ],
+                                    className="one-half column"),
+                                html.Div([ #Download button
+                                    html.Div([
+                                        html.A(
+                                            html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                            id='download-link-1',
+                                            # download='rawdata.csv',
+                                            href="",
+                                            target="_blank",
+                                            ),
+                                        ],
+                                        
+                                        ),
+                                    ], 
+                                    id="cross-filter-options"
+                                    ),  #End download Button                        
                             ]),
-                       
-                        #Graphique
-                        html.Div([
-                            html.H5(
-                                    "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
-                                ),
-                            html.Div([dcc.Graph(id="count_graph")],
-                                     id="countGraphContainer",
-                                     ),
-                            html.H5(
-                                    "", style={"margin-top": "35px"}#, "margin-bottom": "35px"}
-                                    )
-                            ]),
-                            html.Div (['Graphique montrant la concentration du gaz selon l\'altitude. La moyenne est faite sur toutes les positions ainsi que toutes les dates sélectionnées.']),   #!!!!!!! Tesssst
-
-                        html.Div([
-                            html.Div([
+                        #Graphique Altitude
+                        html.Div([ #Choix altitude
+                                  html.H5(
+                                    "", style={"margin-top": "5px"}#, "margin-bottom": "35px"}
+                                    ),
                                 html.P(id="altitude-text",
                                         className="control_label"
                                         ),
-                            
                                 dcc.RangeSlider(
                                     id='alt_range',
                                     marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
@@ -544,25 +546,28 @@ def build_filtering():
                                    # tooltip = { 'always_visible': True }
                                    ),
                                 html.Div(id='output-container-alt-picker-range')
-                                ]),
-                     
-                            html.Div([
-                                html.A(
-                                    html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                    id='download-link-1',
-                                    # download='rawdata.csv',
-                                    href="",
-                                    target="_blank",
-                                    ),
-                                ]),
-                            ], 
-                            id="cross-filter-options"
-                            ),
+                                ]), #End Altitude Choice
+                        html.Div([ # Altitude graph
+                            html.H5(
+                                    "", style={"margin-top": "25px"}#, "margin-bottom": "35px"}
+                                ),
+                            html.Div([ # Graphique
+                                dcc.Graph(id="count_graph")],
+                                     id="countGraphContainer",
+                                     ),
+                            html.H5(
+                                    "", style={"margin-top": "10px"}#, "margin-bottom": "35px"}
+                                    )
+                            ]), #End Altitude Graph
+                            html.Div ([ #Altitude graph description
+                                _('Graphique montrant la concentration du gaz selon l\'altitude. La moyenne est faite sur toutes les positions ainsi que toutes les dates sélectionnées.')
+                                ]),   #End description
+                            
                     ],
                     id="right-column-1",
                     style={"flex-grow": 1},
                     className="six columns",
-                    ),
+                    ), #End right side of container
             ],
             className="row flex-display pretty_container twelve columns",
             style={"justify-content": "space-evenly"}
@@ -570,126 +575,26 @@ def build_filtering():
     ])
 
 
-# Builds the layout for the map displaying statistics as well as the confidence interval graph
+# Builds the layout for the map displaying the time series
 def build_stats():
     return html.Div([
-        html.Div(
-            [
+        html.Div([
                 html.Div(
                     [
-                        html.Div(
-                            [dcc.Graph(id="viz_chart")],
-                            id="vizChartContainer",
-                            #className="pretty_container",
-                        ),
+                    html.Div([
+                        dcc.Graph(id="viz_chart")
+                            ]),
+                    
+                    html.Div (['Série temporelle montrant la concentration du gaz sur les dates sélectionnées. Chaque point est une moyenne quotidienne sur l\'altitude ainsi que la position.'
+                               ]),   
                     ],
-                    id="left-column-3",
-                    className="nine columns",
-                ),
-      #  html.Div (['Série temporelle montrant la concentration du gaz sur les dates sélectionnées. Chaque point est une moyenne quotidienne sur l\'altitude ainsi que la position.']),   #!!!!!!! Tesssst
+                    id="vizChartContainer",
+                    className="pretty_container",
+                    ),
+            ]),
 
-                html.Div(
-                    [
-                        html.Div(
-                            [
-                                html.P(
-                                    id="x-axis-selection-text",
-                                    className="control_label",
-                                ),
-                                html.Label(
-                                    dcc.Dropdown(
-                                        id="x_axis_selection_1",
-                                        options=x_axis_options,
-                                        multi=False,
-                                        value=_('Date'),
-                                        className="dcc_control",
-                                    ),
-                                ),
-                                html.P(
-                                    id="y-axis-selection-text",
-                                    className="control_label",
-                                ),
-                                html.Label(
-                                    dcc.Dropdown(
-                                        id="y_axis_selection_1",
-                                        options=y_axis_options,
-                                        multi=False,
-                                        value=_('Concentration [ppv]'),
-                                        className="dcc_control",
-                                    ),
-                                ),
-                            ],
-                            #className="pretty_container",
-                            id="viz-chart-options",
-                        ),
-                    ],
-                    id="right-column-3",
-                    className="three columns",
-                ),
-            ],
-            className="row flex-display pretty_container",
-            #style={"height": "500px"},
-        ),
-        html.Div(
-            [
-                html.Div(
-                    [
-                        #html.Div(
-                        #    [dcc.Graph(id="viz_map")],
-                        #    id="vizGraphContainer",
-                        #),
-                    ],
-                    id="left-column-4",
-                    className="nine columns",
-                ),
-                #html.Div(
-                #    [
-                #        html.Div(
-                #            [
-                #                html.P(
-                #                    id="stat-selection-text",
-                #                    className="control_label",
-                #                ),
-                #                html.Label(
-                #                    dcc.Dropdown(
-                #                        id="stat_selection",
-                #                        options=[
-                #                            {'label': 'Mean', 'value': 'mean'},
-                #                            {'label': 'Median', 'value': 'median'}
-                #                        ],
-                #                        multi=False,
-                #                        value='mean',
-                #                        className="dcc_control",
-                #                    ),
-                #               ),
-                #                html.P(
-                #                    id="stat-y-axis-text",
-                #                    className="control_label",
-                #                ),
-                #                html.Label(
-                #                    dcc.Dropdown(
-                #                        id="y_axis_selection_2",
-                #                        options=y_axis_options,
-                #                        multi=False,
-                #                       value='max_depth',
-                #                       className="dcc_control",
-                #                  ),
-                #                ),
-                #            ],
-                #            #className="pretty_container",
-                #            id="map-viz-options",
-                #        ),
-                #   ],
-                #    id="right-column-4",
-                #    className="three columns",
-                #),
-            ],
-            className="row flex-display pretty_container",
-            #style={"height": "500px"},
-        ),
         html.Div(id='none', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
-    ])
-
+        ])
 
 # Create app layout
 app.layout = html.Div(
@@ -714,7 +619,6 @@ app.layout = html.Div(
 
 
 # Helper functions
-
 
 # Selectors -> !!! À voir ce qu'on veut rajouter ? 
 @app.callback(
@@ -1085,7 +989,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
             x=xx,
             y=df.columns[alt_range[0]:alt_range[1]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
-            name="Altitude",
+            name=_("Altitude"),
             #orientation='h',
             # color=xx,
              # colorscale=[[0, 'red'],
@@ -1101,20 +1005,20 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Data Visualization "),
+       # title=_(" "),
         
-        xaxis=dict(title= "Concentration [ppv]", 
+        xaxis=dict(title= _("Concentration [ppv]"), 
                    automargin= True,
                    showexponent = 'all',
                    exponentformat = 'e'
                    ),
 
         yaxis =  dict(
-           title = "Altitude [km]",
+           title = _("Altitude [km]"),
            automargin=True,     
            ), 
 
-        height=400,
+        height=450,
         transition={'duration': 500},
     )
 
@@ -1245,8 +1149,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
        
         Input("date_picker_range", "start_date"),
         Input("date_picker_range", "end_date"),
-        Input("x_axis_selection_1", "value"),
-        Input("y_axis_selection_1", "value"),
+        # Input("x_axis_selection_1", "value"),
+        # Input("y_axis_selection_1", "value"),
         Input("lat_min", "value"),
         Input("lat_max", "value"),
         Input("lon_min", "value"),
@@ -1255,7 +1159,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         Input("alt_range","value"),
     ],
 )
-def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range):
+def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
 
 
@@ -1390,10 +1294,10 @@ def make_viz_chart(start_date,end_date, x_axis_selection, y_axis_selection, lat_
         # legend=dict(font=dict(size=10), orientation="h"),
         title=_("Time Series"),
         
-        xaxis={"title": x_axis_selection, "automargin": True} ,
+        xaxis={"title": _('Date'), "automargin": True} ,
 
         yaxis =  dict(
-           title = y_axis_selection,
+           title = _("Concentration"),
            automargin=True,     
            showexponent = 'all',
            exponentformat = 'e'
@@ -1628,13 +1532,13 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("gas-text", "children"),
         Output("download-button-1", "children"),
         #("download-button-2", "children"),
-        Output("x-axis-selection-text", "children"),
-        Output("y-axis-selection-text", "children"),
+        # Output("x-axis-selection-text", "children"),
+        # Output("y-axis-selection-text", "children"),
         #Output("stat-selection-text", "children"),
         #Output("stat-y-axis-text", "children"),
         Output("gaz_list", "options"),
-        Output("x_axis_selection_1", "options"),
-        Output("y_axis_selection_1", "options"),
+        # Output("x_axis_selection_1", "options"),
+        # Output("y_axis_selection_1", "options"),
         #Output("y_axis_selection_2", "options"),
         #Output("stat_selection", "options"),
     ],
@@ -1643,7 +1547,7 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
 def translate_static(x):
     print('Translating...')
     return [
-                _("Scisat data visualisation"),
+                _("Scisat Data Visualisation"),
                 _("Learn More About SciSat"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
@@ -1656,8 +1560,8 @@ def translate_static(x):
                 _("Select Gas:"),
                 _('Download Summary Data as CSV'),
                 #_('Download full data as netcdf'),
-                _("Select x-axis:"),
-                _("Select y-axis:"),
+                # _("Select x-axis:"),
+                # _("Select y-axis:"),
                 #_("Select statistic:"),
                 #_("Select plotted value:"),
     [  # Gas_options
@@ -1714,8 +1618,6 @@ def translate_static(x):
     {'label': _('Hydrochlorofluorocarbon 142b'), 'value':    'ACEFTS_L2_v4p0_HCFC142b.nc'},
     {'label': _('Hydrochloric acid'), 'value':     'ACEFTS_L2_v4p0_HCl.nc'},
      
-     
-     
     {'label': _('Hydrogen cyanide'), 'value':   'ACEFTS_L2_v4p0_HCN.nc'},
     {'label': _('Formic acid'), 'value':   'ACEFTS_L2_v4p0_HCOOH.nc'},
     {'label': _('Hydrogen fluoride'), 'value':    'ACEFTS_L2_v4p0_HF.nc'},
@@ -1757,15 +1659,15 @@ def translate_static(x):
     #{'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
             ],  #End gas_options
     
-                [  # x_axis_options
-                     {'label': _('Date'), 'value': _('Date')},
-                     {'label': _('Latitude'), 'value': _('latitude [deg]')},
-                     {'label': _('Longitude'), 'value': _('longitude [deg]')}
-                ], #End x_axis options
-                [  # y_axis_options
-                    {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
-                #    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
-                ],
+                # [  # x_axis_options
+                #      {'label': _('Date'), 'value': _('Date')},
+                #      {'label': _('Latitude'), 'value': _('latitude [deg]')},
+                #      {'label': _('Longitude'), 'value': _('longitude [deg]')}
+                # ], #End x_axis options
+                # [  # y_axis_options
+                #     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
+                # #    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
+                # ],
                 #[  # y_axis_selection_2
                 #    {'label': _('Minimum Frequency'), 'value': 'fmin'},
                 #    {'label': _('Maximum Depth'), 'value': 'max_depth'}
@@ -1829,7 +1731,6 @@ def get_locale():
     return 'en'
 
 
-
 @app.server.route('/language/<language>')
 def set_language(language=None):
     """Sets the session language, then refreshes the page
@@ -1837,7 +1738,6 @@ def set_language(language=None):
     session['language'] = language
 
     return redirect(url_for('/'))
-
 
 # Main
 if __name__ == '__main__':

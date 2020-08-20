@@ -14,8 +14,8 @@ import alouette_app.alouette as alouette
 # app2.enable_dev_tools(debug=True)
 
 application = DispatcherMiddleware(flask_app,{
-    '/scisat_app/scisat': scisat.server,
-    '/alouette_app/alouette': alouette.server,
+    '/scisat': scisat.server,
+    '/alouette': alouette.server,
 })
 
 

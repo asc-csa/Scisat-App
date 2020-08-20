@@ -146,7 +146,7 @@ external_scripts = [
 
 app = dash.Dash(
     __name__,
-   
+    requests_pathname_prefix='/alouette/',
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,

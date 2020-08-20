@@ -260,7 +260,7 @@ external_scripts = [
 
 app = dash.Dash(
     __name__,
-   
+    requests_pathname_prefix='/app1/',
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts
@@ -1740,8 +1740,8 @@ def set_language(language=None):
     return redirect(url_for('/'))
 
 # Main
-if __name__ == '__main__':
-    app.run_server(debug=True)  # For development/testing
+# if __name__ == '__main__':
+#     app.run_server(debug=True)  # For development/testing
     # app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
 
 

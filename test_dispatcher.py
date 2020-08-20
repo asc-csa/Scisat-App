@@ -9,6 +9,7 @@ from werkzeug.serving import run_simple
 from flask_app import flask_app
 import app as app1
 
+
 from AlouetteApp_corrigé.AlouetteApp.AlouetteApp import app as app2
 
 # app1.enable_dev_tools(debug=True)

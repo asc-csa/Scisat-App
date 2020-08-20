@@ -1865,9 +1865,9 @@ def update_language_button(x):
 
     language = session['language']
     if language == 'fr':
-        return 'EN', '/language/en'
+        return 'EN', 'app1/language/en'
     else:
-        return 'FR', '/language/fr'
+        return 'FR', 'app1/language/fr'
 
 
 @babel.localeselector

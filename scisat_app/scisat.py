@@ -224,25 +224,6 @@ gaz_name_options = [
 
 
 
-# x_axis_options = [
-#     {'label': _('Date'), 'value': _('Date')},
-#     {'label': _('Latitude'), 'value': _('latitude [deg]')},
-#     {'label': _('Longitude'), 'value': _('longitude [deg]')}]
-
-# y_axis_options = [
-#     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
-#     {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}]
-
-# year_dict = {}
-# for year in range(2004,2020):
-#     year_dict[year] = str(year)
-# lat_dict = {}
-# for lat in range(-90, 90+1, 15):
-#     lat_dict[lat] = str(lat)
-# lon_dict = {}
-# for lon in range(-180, 180+1, 30):
-#     lon_dict[lon] = str(lon)
-
 #======================================================================================
 
 external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
@@ -481,7 +462,7 @@ def build_filtering():
                         html.Div(
                             [dcc.Graph(id="selector_map")],
                         ),
-                        html.Div ([_('Graphique montrant la concentration du gaz sur une carte du monde. Chaque point est une moyenne sur les dates choisies, la colone d\'altitude ainsi que la position, et la couleur indique la concentration moyenne.')]),   #!!!!!!! Tesssst
+                        html.Div ([html.P(id="Map_description")]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -499,9 +480,6 @@ def build_filtering():
                                     html.Label(
                                         dcc.DatePickerRange(
                                             id='date_picker_range',
-                                            # min_date_allowed=dt.datetime(2004, 9, 29),
-                                            # max_date_allowed=dt.datetime(1972, 12, 31),
-                                            #initial_visible_month=dt.datetime(1962, 9, 29),
                                             start_date=dt.datetime(2004, 2, 1),
                                             end_date=dt.datetime(2020, 5, 5),
                                             start_date_placeholder_text='Select start date',
@@ -560,7 +538,7 @@ def build_filtering():
                                     )
                             ]), #End Altitude Graph
                             html.Div ([ #Altitude graph description
-                                _('Graphique montrant la concentration du gaz selon l\'altitude. La moyenne est faite sur toutes les positions ainsi que toutes les dates sélectionnées.')
+                                html.P(id = "Altitude_description")
                                 ]),   #End description
                             
                     ],
@@ -585,7 +563,8 @@ def build_stats():
                         dcc.Graph(id="viz_chart")
                             ]),
                     
-                    html.Div (['Série temporelle montrant la concentration du gaz sur les dates sélectionnées. Chaque point est une moyenne quotidienne sur l\'altitude ainsi que la position.'
+                    html.Div ([
+                       html.P( id = "TimeS_description")
                                ]),   
                     ],
                     id="vizChartContainer",
@@ -1525,22 +1504,16 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("description-1", "children"),
         Output("description-2", "children"),
         Output("select-data", "children"),
+        Output("Map_description","children"),
+        Output("Altitude_description","children"),
+        Output("TimeS_description","children"),
         Output("latitude-text", "children"),
         Output("longitude-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
         Output("gas-text", "children"),
         Output("download-button-1", "children"),
-        #("download-button-2", "children"),
-        # Output("x-axis-selection-text", "children"),
-        # Output("y-axis-selection-text", "children"),
-        #Output("stat-selection-text", "children"),
-        #Output("stat-y-axis-text", "children"),
         Output("gaz_list", "options"),
-        # Output("x_axis_selection_1", "options"),
-        # Output("y_axis_selection_1", "options"),
-        #Output("y_axis_selection_2", "options"),
-        #Output("stat_selection", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
 )
@@ -1553,6 +1526,9 @@ def translate_static(x):
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize Scisat's data. "),
                 _("Select Data"),
+                _("Graph of the gaz concentration visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gaz concentration value."),
+                _("Graph showing the gaz concentration over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
+                _("Time series showing the evolution of the gaz concentration. Each data point represents the daily overall mean concentration."),
                 _("Filter by Latitude:"),
                 _("Filter by Longitude:"),
                 _("Select Altitude Range:"),
@@ -1659,23 +1635,6 @@ def translate_static(x):
     #{'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
             ],  #End gas_options
     
-                # [  # x_axis_options
-                #      {'label': _('Date'), 'value': _('Date')},
-                #      {'label': _('Latitude'), 'value': _('latitude [deg]')},
-                #      {'label': _('Longitude'), 'value': _('longitude [deg]')}
-                # ], #End x_axis options
-                # [  # y_axis_options
-                #     {'label': _('Concentration'), 'value': _('Concentration [ppv]')},
-                # #    {'label': _('Maximum Depth'), 'value': _('Maximum Depth')}
-                # ],
-                #[  # y_axis_selection_2
-                #    {'label': _('Minimum Frequency'), 'value': 'fmin'},
-                #    {'label': _('Maximum Depth'), 'value': 'max_depth'}
-                #],
-                #[  # stat_selection
-                #    {'label': _('Mean'), 'value': 'mean'},
-                #    {'label': _('Median'), 'value': 'median'}
-                #],
     ]
 
 
@@ -1739,7 +1698,7 @@ def set_language(language=None):
 
     return redirect(url_for('/'))
 
-# Main
+# # Main
 # if __name__ == '__main__':
 #     app.run_server(debug=True)  # For development/testing
     # app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server

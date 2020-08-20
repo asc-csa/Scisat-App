@@ -338,7 +338,7 @@ def build_header():
                         ),
                         html.A(
                             html.Button('FR', id='language-button', className="dash_button"),
-                            href='/language/fr', id='language-link'
+                            href='app1/language/fr', id='language-link'
                         ),
                     ],
                     className="four columns",

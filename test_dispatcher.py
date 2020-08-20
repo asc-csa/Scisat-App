@@ -7,17 +7,15 @@ Created on Thu Aug 20 10:59:37 2020
 from werkzeug.middleware.dispatcher  import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from flask_app import flask_app
-import app as app1
-
-
-from AlouetteApp_corrigé.AlouetteApp.AlouetteApp import app as app2
+import scisat_app.scisat 
+import alouette_app.alouette 
 
 # app1.enable_dev_tools(debug=True)
 # app2.enable_dev_tools(debug=True)
 
 application = DispatcherMiddleware(flask_app,{
-    '/app1': app1.server,
-    '/app2': app2.server,
+    '/scisat_app/scisat': scisat.server,
+    '/alouette_app/alouette': alouette.server,
 })
 
 

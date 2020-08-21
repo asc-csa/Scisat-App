@@ -11,4 +11,4 @@ flask_app = Flask(__name__)
 
 @flask_app.route('/')
 def index():
-    return 'Hello Flask app'
+    return 'Welcome! For SCISAT : /scisat. For Alouette: /alouette'

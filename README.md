@@ -1,4 +1,4 @@
-# Scisat-App
+# Multiple-Dash-App
 
 # Application to filter, download and visualize Alouette-I data and SCISAT Data
 

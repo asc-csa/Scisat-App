@@ -35,19 +35,13 @@ For starting the application:
  
  - flask_app.py is the welcoming page when no satellite is specified. It could later be modified to click directly on the links leading to the applications.
  
- - controls.py contains the options for the some of the components (e.g. dropdowns)
-
-- header_footer.py contains the html for the government of Canada header and footer. This html is injected into the main app.
+ - requirements.txt contains the python librairies used for the app.
  
- - /assets contains various files for the styling of the application (images, resizing, css)
+ - /alouette_app contains the files to run the Alouette App.
  
- - /data contains the processed csv data from the feature extraction pipeline
-
- - /data_cleaning contains jupyter notebooks used to clean the extracted ionogram data
-
- - messages.pot and /translations contains translation information
-
- - config.py specifies the languages available for translation
+ - /scisat_app contains the files to run the SCISAT App. 
+ 
+ - /data contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
 
 
 ## Accessibility and branding
@@ -74,7 +68,7 @@ There will need to be changes in scisat.py and alouette.py to change colours and
 
 - For Alouette: The max number of ionograms that can be downloaded at once is 100 as of now. These ionograms are currently stored in memory before being sent to the user as a zip; this method may fail for a larger download.
 
-- For SCISAT : The download button is not yet finished
+- For SCISAT : The download button is not yet activated. 
 
 ## Roadmap
 

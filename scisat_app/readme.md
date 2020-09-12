@@ -1,4 +1,6 @@
-﻿# Application to filter and visualize SCISAT data
+![scisat satellite](SCISAT-banner---1510x423.jpg)
+
+# Application to filter and visualize SCISAT data
 
 Created by Camille Roy & Jonathan Beaulieu-Emond
 

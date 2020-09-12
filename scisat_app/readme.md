@@ -14,8 +14,12 @@ Les commandes suivantes peuvent être exécutées plus facilement dans un enviro
 
 Pour démarrer l'application :
 
+- Dans l'[application dash multiple](Scisat-App)
+
     pip install -r requirements.txt
-    python app.py
+    python run.py
+
+- Ajouter */scisat* dans l'url
 
 ## Construit avec:
 
@@ -31,7 +35,7 @@ Pour démarrer l'application :
  
  - [/assets](assets) contient différents fichiers pour le style de l'application (images, redimensionnement, css)
  
- - [/data][data] contient les données csv traitées provenant du pipeline d'extraction des caractéristiques
+ - [/data](data) contient les données csv traitées provenant du pipeline d'extraction des caractéristiques
 
  - [/data_cleaning](data_cleaning) contient des scripts pythons utilisés pour nettoyer les données extraites
 
@@ -59,15 +63,18 @@ The following commands can be done more easily if in a virtual environment (like
 
 For starting the application:
 
+- Go to the [mutliple dash application](Scisat-App)
+
         pip install -r requirements.txt
-        python app.py
+        python run.py
+
+- Add */scisat* in the url
 
 Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
 
 ## Built with
 
  - [Plotly Dash](https://dash.plot.ly/) - The Python framework built on top of Flask used to develop the application. All components and visualizations on the web application are Dash objects that are created and updated in the callback functions in app.py. I would recommend that you look over Dash's comprehensive documentation (linked) if you are unsure how it works.
-
 
 ## Navigation and files
 

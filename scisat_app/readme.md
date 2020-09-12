@@ -14,7 +14,7 @@ Les commandes suivantes peuvent être exécutées plus facilement dans un enviro
 
 Pour démarrer l'application :
 
-- Dans l'[application dash multiple](../Scisat-App)
+- Dans l'[application dash multiple](Camille-Jonathan-asc-csa/Scisat-App)
 
     pip install -r requirements.txt
     python run.py

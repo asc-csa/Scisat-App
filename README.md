@@ -132,5 +132,4 @@ The current and previous roadmaps can be found on livelink for reference:
  - Etienne Low-Decarie
  - Hansen Liu
  - Wasiq Mohammmad
- - Jenisha Patel
- - Cooper Ang
+

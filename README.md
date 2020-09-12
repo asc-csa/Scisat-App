@@ -1,6 +1,7 @@
-# Multiple-Dash-App
+[Français] (#Application-Dash-multiple-pour-filtrer,-télécharger-et-visualiser-les-données-d'Alouette--I-et-de-SCISAT-sur-le-même-serveur
+[English] (#Multiple-Dash-Application-to-filter,-download-and-visualize-Alouette-I-data-and-SCISAT-Data-on-the-same-server)
 
-# Application pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur
+# Application Dash multiple pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur
 
 ## Contexte
 
@@ -47,7 +48,7 @@ Pour démarrer l'application :
 Traduit avec www.DeepL.com/Translator (version gratuite)
 
 
-# Application to filter, download and visualize Alouette-I data and SCISAT Data on the same server
+# Multiple Dash Application to filter, download and visualize Alouette-I data and SCISAT Data on the same server
 
 ## Background
 

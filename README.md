@@ -1,8 +1,9 @@
-[Français](#français)
+[Français](#application-dash-multiple)
 [English](#english)
 
 # Français
-# Application Dash multiple pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur
+# Application Dash Multiple 
+## Filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur.
 
 ## Contexte
 

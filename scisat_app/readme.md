@@ -9,6 +9,9 @@
 
 Le satellite SCISAT, en orbit depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
 
+
+![interface de l'application](Capture_app.PNG)
+
 ## Démarrage rapide
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 

@@ -1,4 +1,4 @@
-![scisat satellite](SCISAT banner - 1510x423.jpg)
+![scisat satellite](scisat_banner.jpg)
 
 # Application to filter and visualize SCISAT data
 

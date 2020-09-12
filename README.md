@@ -40,6 +40,11 @@ Multiple Dash App
 │   │   alouette.py
 │   |   ...
 │
+└───data
+│   │ final_data_alouette.csv
+│   │ ACEFTS_L2_v4p0_O3.nc
+│   │ ...
+│
 │ ...
 ```
  
@@ -55,7 +60,7 @@ Multiple Dash App
  
  - [/scisat_app](scisat_app) contient les fichiers nécessaires pour rouler l'application SCISAT.
  
- - [/data](data) contient les données csv traitées provenant du pipeline d'extraction des caractéristiques pour Alouette-I ainsi que les données brut pour SCISAT en format NetCDF. 
+ - ***/data*** doit être créée dans le répoitoire principale et contient les données csv traitées provenant du pipeline d'extraction des caractéristiques pour Alouette-I ainsi que les données brut pour SCISAT en format NetCDF. 
 
 
 ## En-tête/pied de page
@@ -94,7 +99,7 @@ For starting the application:
 
 
 ## Navigation and files
-```
+ ```
 Multiple Dash App
 │   run.py
 |   flask_app.py
@@ -109,6 +114,11 @@ Multiple Dash App
 └───alouette_app
 │   │   alouette.py
 │   |   ...
+│
+└───data
+│   │ final_data_alouette.csv
+│   │ ACEFTS_L2_v4p0_O3.nc
+│   │ ...
 │
 │ ...
 ```
@@ -125,7 +135,7 @@ Multiple Dash App
  
  - [/scisat_app](scisat_app) contains the files to run the SCISAT App. 
  
- - [/data](data) contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
+ - ***/data*** has to be added to the main folder and the contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
 
 
 ## Accessibility and branding

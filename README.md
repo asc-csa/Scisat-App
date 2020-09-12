@@ -24,12 +24,31 @@ Pour démarrer l'application :
 
 ## Navigation et fichiers
  
- - [run.py](run.py) contient l'expéditeur pour rouler les deux applications sur le même serveur. 
+ ```
+Multiple Dash App
+│   run.py
+|   flask_app.py
+│   requirements.txt    
+│   readme.md
+│   ...
+|
+└───scisat_app
+│   │   scisat.py
+│   │   ...
+│   
+└───alouette_app
+│   │   alouette.py
+│   |   ...
+│
+│ ...
+```
  
- - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
+ - [run.py](run.py) contient l'expéditeur pour rouler les deux applications sur le même serveur. 
  
  - [flask_app.py](flask_app.py) est la page d'accueil quand aucun satellite n'est spécifié. Elle devrait éventuellement être modifiée pour avoir des liens directs vers les applications.
  
+  - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
+
  - [requirements.txt](requirements.txt) spécifie les versions des librairies python utilisées pour les applications.
  
  - [/alouette_app](alouette_app) contient les fichiers nécessaires pour rouler l'application d'Alouette-I.
@@ -75,6 +94,24 @@ For starting the application:
 
 
 ## Navigation and files
+```
+Multiple Dash App
+│   run.py
+|   flask_app.py
+│   requirements.txt    
+│   readme.md
+│   ...
+|
+└───scisat_app
+│   │   scisat.py
+│   │   ...
+│   
+└───alouette_app
+│   │   alouette.py
+│   |   ...
+│
+│ ...
+```
  
  - [run.py](run.py) contains the dispatcher to run both apps on the same server
  

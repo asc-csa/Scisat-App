@@ -23,19 +23,20 @@ Pour démarrer l'application :
  - [DispatcherMiddleware](https://werkzeug.palletsprojects.com/en/0.14.x/middlewares/) - Utilisé dans run.py pour expédier les deux applications (Alouette-I et SCISAT) sur le même serveur.
 
 ## Navigation et fichiers
- - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
  
  - [run.py](run.py) contient l'expéditeur pour rouler les deux applications sur le même serveur. 
  
+ - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
+ 
  - [flask_app.py](flask_app.py) est la page d'accueil quand aucun satellite n'est spécifié. Elle devrait éventuellement être modifiée pour avoir des liens directs vers les applications.
  
- - requirements.txt spécifie les versions des librairies python utilisées pour les applications.
+ - [requirements.txt](requirements.txt) spécifie les versions des librairies python utilisées pour les applications.
  
- - /alouette_app contient les fichiers nécessaires pour rouler l'application d'Alouette-I.
+ - [/alouette_app](alouette_app) contient les fichiers nécessaires pour rouler l'application d'Alouette-I.
  
- - /scisat_app contient les fichiers nécessaires pour rouler l'application SCISAT.
+ - [/scisat_app](scisat_app) contient les fichiers nécessaires pour rouler l'application SCISAT.
  
- - /data contient les données csv traitées provenant du pipeline d'extraction des caractéristiques pour Alouette-I ainsi que les données brut pour SCISAT en format NetCDF. 
+ - [/data](data) contient les données csv traitées provenant du pipeline d'extraction des caractéristiques pour Alouette-I ainsi que les données brut pour SCISAT en format NetCDF. 
 
 
 ## En-tête/pied de page
@@ -74,20 +75,20 @@ For starting the application:
 
 
 ## Navigation and files
-
- - scisat.py and alouette.py are the main applications where each component and the layout of the application is defined 
  
- - run.py contains the dispatcher to run both apps on the same server
+ - [run.py](run.py) contains the dispatcher to run both apps on the same server
  
- - flask_app.py is the welcoming page when no satellite is specified. It could later be modified to click directly on the links leading to the applications.
+ - [flask_app.py](flask_app.py) is the welcoming page when no satellite is specified. It could later be modified to click directly on the links leading to the applications.
  
- - requirements.txt contains the python librairies used for the app.
+ - [scisat.py](scisat_app/scisat.py) and [alouette.py](alouette_app/alouette.py) are the main applications where each component and the layout of the application is defined 
  
- - /alouette_app contains the files to run the Alouette App.
+ - [requirements.txt](requirements.txt) contains the python librairies used for the app.
  
- - /scisat_app contains the files to run the SCISAT App. 
+ - [/alouette_app](alouette_app) contains the files to run the Alouette App.
  
- - /data contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
+ - [/scisat_app](scisat_app) contains the files to run the SCISAT App. 
+ 
+ - [/data](data) contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
 
 
 ## Accessibility and branding

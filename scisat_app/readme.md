@@ -1,10 +1,45 @@
 ![scisat satellite](scisat_banner.jpg)
 
+- [Français](#application-pour-filtrer-et-visualiser-les-données-de-scisat)
+- [English](#application-to-filter-and-visualize-scisat-data)
+
+# Application pour filtrer et visualiser les données de SCISAT
+
+## Contexte
+
+Le satellite SCISAT, en orbit depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
+
+## Démarrage rapide
+Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
+
+Pour démarrer l'application :
+
+    pip install -r requirements.txt
+    python app.py
+
+## Construit avec:
+
+ - [Plotly Dash](https://dash.plot.ly/) - Le framework Python construit sur Flask a été utilisé pour développer l'application. Tous les composants et visualisations de l'application web sont des objets Dash qui sont créés et mis à jour dans les fonctions de rappel de l'application. Je vous recommande de consulter la documentation complète de Dash (lien) si vous n'êtes pas sûr de son fonctionnement.
+
+## Navigation et fichiers
+
+ - [scisat.py](scisat.py) est l'application principale où chaque composant et la présentation de l'application sont définis 
+ 
+ - [controls.py](controls.py) contient les options pour certains des composants (par exemple, les dropdowns)
+
+ - [header_footer.py](header_footer.py) contient le html pour l'en-tête et le pied de page du gouvernement du Canada. Ce html est injecté dans l'application principale.
+ 
+ - [/assets](assets) contient différents fichiers pour le style de l'application (images, redimensionnement, css)
+ 
+ - [/data][data] contient les données csv traitées provenant du pipeline d'extraction des caractéristiques
+
+ - [/data_cleaning](data_cleaning) contient des scripts pythons utilisés pour nettoyer les données extraites
+
+ - [messages.pot](message.pot) et [/translations](translations) contient des informations sur la traduction
+
+ - [config.py](config.py) précise les langues disponibles pour la traduction
+
 # Application to filter and visualize SCISAT data
-
-Created by Camille Roy & Jonathan Beaulieu-Emond
-
-Last updated on 2020-04-20
 
 ## Background
 
@@ -36,21 +71,21 @@ Separate installation instructions for the production version of the app are pro
 
 ## Navigation and files
 
- - app.py is the main application where each component and the layout of the application is defined 
+ - [scisat.py](scisat.py) is the main application where each component and the layout of the application is defined 
  
- - controls.py contains the options for the some of the components (e.g. dropdowns)
+ - [controls.py](controls.py) contains the options for the some of the components (e.g. dropdowns)
 
- - header_footer.py contains the html for the government of Canada header and footer. This html is injected into the main app.
+ - [header_footer.py](header_footer.py) contains the html for the government of Canada header and footer. This html is injected into the main app.
  
- - /assets contains various files for the styling of the application (images, resizing, css)
+ - [/assets](assets) contains various files for the styling of the application (images, resizing, css)
  
- - /data contains the raw data in NetCDF format
+ - [/data](data) contains the raw data in NetCDF format
 
- - /data_cleaning contains python scripts used to clean the extracted data
+ - [/data_cleaning](data_cleaning) contains python scripts used to clean the extracted data
 
- - messages.pot and /translations contains translation information
+ - [messages.pot](message.pot) and [/translations](translations) contains translation information
 
- - config.py specifies the languages available for translation
+ - [config.py](config.py) specifies the languages available for translation
 
 
 ## Accessibility and branding
@@ -77,11 +112,10 @@ There will need to be changes in app.py to change colours and styles of the inte
 
 - Download button is not effective at the moment. It will need to be modified in order to work properly
 
-
-## Author
+## Authors
  - Camille Roy
-
+ - Jonathan Beaulieu-Emond
+ 
 ## Acknowledgments
  - Etienne Low-Decarie
- - Jonathan Beaulieu-Emond
  - Hansen Liu & Wasiq Mohammad 

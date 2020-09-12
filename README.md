@@ -23,11 +23,11 @@ Pour démarrer l'application :
  - [DispatcherMiddleware](https://werkzeug.palletsprojects.com/en/0.14.x/middlewares/) - Utilisé dans run.py pour expédier les deux applications (Alouette-I et SCISAT) sur le même serveur.
 
 ## Navigation et fichiers
- - scisat.py and alouette.py sont les applications principales où chaque composantes ainsi que la présentation sont définis.
+ - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
  
- - run.py contient l'expéditeur pour rouler les deux applications sur le même serveur. 
+ - [run.py](run.py) contient l'expéditeur pour rouler les deux applications sur le même serveur. 
  
- - flask_app.py est la page d'accueil quand aucun satellite n'est spécifié. Elle devrait éventuellement être modifiée pour avoir des liens directs vers les applications.
+ - [flask_app.py](flask_app.py) est la page d'accueil quand aucun satellite n'est spécifié. Elle devrait éventuellement être modifiée pour avoir des liens directs vers les applications.
  
  - requirements.txt spécifie les versions des librairies python utilisées pour les applications.
  

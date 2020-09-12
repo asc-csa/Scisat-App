@@ -16,8 +16,8 @@ Pour démarrer l'application :
 
 - Dans l'[application dash multiple](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
 
-    pip install -r requirements.txt
-    python run.py
+        pip install -r requirements.txt
+        python run.py
 
 - Ajouter */scisat* dans l'url
 

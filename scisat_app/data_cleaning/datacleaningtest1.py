@@ -124,21 +124,22 @@ def dohist(path,file):
         newdata = df.where(((df > datamean.sub(datastd.mul(2))) & (df < datamean.add(datastd.mul(2))))) #2xSTD
         newdata=newdata.reset_index()
         plt.hist(newdata.iloc[:,3:-2].values.ravel(),bins=100)# HISTOGRAM OF DATA DISTRIBUTION
+        plt.grid()
         plt.xlabel('Concentration [ppv]')
         plt.ylabel('Distribution')
         plt.title(gaz+' Distribution Filter with window=50 and 2 x std ')
         plt.savefig(gaz+' Distribution Filter2xSTD.pdf')
         plt.show()
         
-        newdata = df.where(((df > datamed.sub(datastd.mul(2))) & (df < datamed.add(datastd.mul(2)))))
-        newdata=newdata.reset_index()
-        plt.hist(newdata.iloc[:,3:-2].values.ravel(),bins=100)#,range=(np.nanmin(newdata),np.nanmax(newdata)))
-        plt.grid()
-        plt.xlabel('Concentration [ppv]')
-        plt.ylabel('Distribution')
-        plt.title(gaz+' Distribution Filter with window=50 and 3 x MAD ')
-        plt.savefig(gaz+' Distribution Filter3xMAD.pdf')
-        plt.show()
+        # newdata = df.where(((df > datamed.sub(datastd.mul(3))) & (df < datamed.add(datastd.mul(3)))))
+        # newdata=newdata.reset_index()
+        # plt.hist(newdata.iloc[:,3:-2].values.ravel(),bins=100)#,range=(np.nanmin(newdata),np.nanmax(newdata)))
+        # plt.grid()
+        # plt.xlabel('Concentration [ppv]')
+        # plt.ylabel('Distribution')
+        # plt.title(gaz+' Distribution Filter with window=50 and 3 x MAD ')
+        # plt.savefig(gaz+' Distribution Filter3xMAD.pdf')
+        # plt.show()
         
         
         

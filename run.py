@@ -20,5 +20,8 @@ application = DispatcherMiddleware(flask_app,{
 
 
 if __name__ == '__main__':
-     run_simple('localhost',8888, application)
-    #run_simple('0.0.0.0',8888, application)
+     #run_simple('localhost',8888, application)
+     import logging
+     logging.basicConfig(filename='error.log', level=logging.DEBUG)
+
+     run_simple('0.0.0.0',8888, application)

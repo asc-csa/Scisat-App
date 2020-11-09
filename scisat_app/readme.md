@@ -64,6 +64,8 @@ This project has been developped from the Alouette app, a case study for the dev
 
 The following commands can be done more easily if in a virtual environment (like conda) so it may be a good idea to install [Anaconda](https://www.anaconda.com/distribution/) beforehand. 
 
+![interface de l'application](Capture_app.PNG)
+
 For starting the application:
 
 - Go to the [mutliple dash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)

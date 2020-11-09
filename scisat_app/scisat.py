@@ -378,6 +378,7 @@ def build_filtering():
                                     id="gas-text",
                                     className="control_label",
                                 ),
+                                html.Div(
                                 html.Label(
                                     dcc.Dropdown(
                                         id="gaz_list",
@@ -385,7 +386,10 @@ def build_filtering():
                                         multi=False,
                                         value='ACEFTS_L2_v4p1_O3.nc',
                                         className="dcc_control",
+                                        
                                     ),
+                                ),
+                              
                                 ),
                                 
                                html.Div([
@@ -499,7 +503,7 @@ def build_filtering():
                                             href="",
                                             target="_blank",
                                             ),
-                                        ],
+                                        html.Span(children="some text explaining the action ",className="wb-inv",)]
                                         
                                         ),
                                     ], 
@@ -593,7 +597,7 @@ app.layout = html.Div(
         ),
         html.Div([""], id='gc-footer'),
         html.Div(id='none2', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
-    ],
+    ]
 )
 
 

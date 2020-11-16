@@ -378,7 +378,7 @@ def build_filtering():
                                     id="gas-text",
                                     className="control_label",
                                 ),
-                                html.Div(
+                                html.Div([
                                 html.Label(
                                     dcc.Dropdown(
                                         id="gaz_list",
@@ -390,7 +390,7 @@ def build_filtering():
                                     ),
                                 ),
                               
-                                ),
+                                  html.Span(children=_("Selection of the gaz"),className="wb-inv")]),
                                 
                                html.Div([
                                 html.Div( #Latitude picker
@@ -422,7 +422,7 @@ def build_filtering():
                                         html.H5(
                                             "", style={"margin-top": "0px"}
                                         ),
-                                    ],
+                                      html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
                                     className="one-half column"
                                 ),
                                 html.Div( #longitude picker
@@ -452,7 +452,7 @@ def build_filtering():
                                             step=5,
                                             style={"margin-left": "5px"}
                                         ),
-                                    ],
+                                     html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
                                  #   className="one-half column"
                                     ),
                                 
@@ -492,7 +492,7 @@ def build_filtering():
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range')
-                                    ],
+                                    , html.Span(children=_("Date selection"),className="wb-inv")],
                                     className="one-half column"),
                                 html.Div([ #Download button
                                     html.Div([
@@ -503,7 +503,7 @@ def build_filtering():
                                             href="",
                                             target="_blank",
                                             ),
-                                        html.Span(children="some text explaining the action ",className="wb-inv",)]
+                                        html.Span(children=_("Download the selected dataset"),className="wb-inv")]
                                         
                                         ),
                                     ], 

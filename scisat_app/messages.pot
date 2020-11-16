@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-16 13:02-0500\n"
+"POT-Creation-Date: 2020-11-16 13:37-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,6 +307,26 @@ msgstr ""
 
 #: scisat.py:220 scisat.py:1638
 msgid "Sulfur dioxide"
+msgstr ""
+
+#: scisat.py:393
+msgid "Selection of the gaz"
+msgstr ""
+
+#: scisat.py:425
+msgid "Selection of the range of latitude "
+msgstr ""
+
+#: scisat.py:455
+msgid "Selection of the range of longitude"
+msgstr ""
+
+#: scisat.py:495
+msgid "Date selection"
+msgstr ""
+
+#: scisat.py:506
+msgid "Download the selected dataset"
 msgstr ""
 
 #: scisat.py:975

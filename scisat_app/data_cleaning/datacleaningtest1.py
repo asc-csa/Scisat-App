@@ -19,6 +19,7 @@ def opendf (path_to_file,file_name,gaz):
 
     #aller chercher les variables
     fillvalue = -999.      # Fill value from User Guide
+    fillvalue_error = -888.
     months=np.copy(nc.variables['month'][:])
     years = np.copy(nc.variables['year'][:])
     days = np.copy(nc.variables['day'][:])
@@ -36,7 +37,7 @@ def opendf (path_to_file,file_name,gaz):
     
     else: 
         data[data == fillvalue] = np.nan #Remplacer les données vides
-        data_error[data_error == fillvalue] = np.nan #Remplacer les données vides
+        data_error[data_error == fillvalue_error] = np.nan #Remplacer les données vides
 
         #Initialize Dataframe / Initialisation du DataFrame
         df = pd.DataFrame(data,columns=alt)
@@ -68,11 +69,12 @@ def opendf (path_to_file,file_name,gaz):
 def dohist(path,file):
     #Path to file (change directory)
     
-    gaz = file.strip().split('.')[0].strip().split('_')[3:]
+    gaz = file.strip().split('.')[0].strip().split('_')[3:] #get the gaz name from file
     if len(gaz)>1:
         gaz = gaz[0]+'_'+gaz[1]
     else:
         gaz=gaz[0]
+        
     df,dferr= opendf(path,file,gaz)
     
     if len(df)!=0:
@@ -123,6 +125,7 @@ def dohist(path,file):
       
         newdata = df.where(((df > datamean.sub(datastd.mul(2))) & (df < datamean.add(datastd.mul(2))))) #2xSTD
         newdata=newdata.reset_index()
+        
         plt.hist(newdata.iloc[:,3:-2].values.ravel(),bins=100)# HISTOGRAM OF DATA DISTRIBUTION
         plt.grid()
         plt.xlabel('Concentration [ppv]')
@@ -165,13 +168,13 @@ files = np.array(files)
 files = files[np.where(files!='ACEFTS_L2_v4p0_GLC.nc')] #Take out Geoloc data
 # files = files[np.where(files!='ACEFTS_L2_v4p0_T.nc')] #Take out Temperature data
 
-for file in files[0:1]:
+for file in files:
     dohist(path,file)
 
 
 #%% TEST WITH ONLY 1 FILE
 
-file = 'ACEFTS_L2_v4p0_T.nc'
+file = 'ACEFTS_L2_v4p0_O3.nc'
 
 gaz = file.strip().split('.')[0].strip().split('_')[3:]
 if len(gaz)!=1:

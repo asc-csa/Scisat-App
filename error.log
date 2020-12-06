@@ -12282,3 +12282,653 @@ Traceback (most recent call last):
     self.fp = open(self.filename, '%sb' % omode)
 FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
 INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:39:17] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[32mGET /scisat/language/en HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_renderer/polyfill@7.v1_5_1m1593873890.8.7.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_renderer/react@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_renderer/react-dom@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_renderer/prop-types@15.v1_5_1m1593873890.7.2.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_html_components/dash_html_components.v1_0_3m1593873891.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components.v1_10_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components-shared.v1_10_1m1593873890.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_dangerously_set_inner_html/bundle.v0_0_2m1593870401.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-component-suites/dash_renderer/dash_renderer.v1_5_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-layout HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/_dash-dependencies HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1072, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 671, in update_picker
+    df =data_reader(gaz_list,r'data')
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:26] "[37mGET /scisat/assets/favicon.ico?m=1604944546.4277616 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1072, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 1190, in make_viz_chart
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1072, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 1075, in generate_geo_map
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1072, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 961, in make_count_figure
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1072, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 656, in update_filtering_text
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [16/Nov/2020 13:47:27] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:36] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/assets/compiled.css?m=1595963752.208345 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_renderer/polyfill@7.v1_5_1m1593873890.8.7.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_renderer/react@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_renderer/react-dom@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_renderer/prop-types@15.v1_5_1m1593873890.7.2.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components.v1_10_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components-shared.v1_10_1m1593873890.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_html_components/dash_html_components.v1_0_3m1593873891.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:42] "[37mGET /scisat/_dash-component-suites/dash_dangerously_set_inner_html/bundle.v0_0_2m1593870401.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_renderer/dash_renderer.v1_5_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-layout HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-dependencies HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 671, in update_picker
+    df =data_reader(gaz_list,r'data')
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/assets/csa-logo.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_core_components/async-dropdown.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_core_components/async-plotlyjs.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_core_components/async-graph.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_core_components/async-datepicker.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:43] "[37mGET /scisat/_dash-component-suites/dash_core_components/async-slider.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[37mGET /scisat/assets/favicon.ico?m=1604944546.4277616 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 1190, in make_viz_chart
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 1075, in generate_geo_map
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 961, in make_count_figure
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 656, in update_filtering_text
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:28:44] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:36:28] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:36:34] "[1m[35mGET /alouette/ HTTP/1.1[0m" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 304, in run_wsgi
+    execute(self.server.app)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 292, in execute
+    application_iter = app(environ, start_response)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\middleware\dispatcher.py", line 66, in __call__
+    return app(environ, start_response)
+TypeError: 'module' object is not callable
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:36:39] "[1m[35mGET /scisat/ HTTP/1.1[0m" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 304, in run_wsgi
+    execute(self.server.app)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 292, in execute
+    application_iter = app(environ, start_response)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\middleware\dispatcher.py", line 66, in __call__
+    return app(environ, start_response)
+TypeError: 'module' object is not callable
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/assets/compiled.css?m=1595963752.208345 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_renderer/polyfill@7.v1_5_1m1593873890.8.7.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_renderer/react@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_renderer/react-dom@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_renderer/prop-types@15.v1_5_1m1593873890.7.2.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_dangerously_set_inner_html/bundle.v0_0_2m1593870401.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components.v1_10_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_html_components/dash_html_components.v1_0_3m1593873891.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_core_components/dash_core_components-shared.v1_10_1m1593873890.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:45] "[37mGET /scisat/_dash-component-suites/dash_renderer/dash_renderer.v1_5_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:46] "[37mGET /scisat/_dash-layout HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:46] "[37mGET /scisat/_dash-dependencies HTTP/1.1[0m" 200 -
+ERROR:applications.scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 671, in update_picker
+    df =data_reader(gaz_list,r'data')
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mGET /scisat/assets/csa-logo.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mGET /scisat/assets/favicon.ico?m=1604944546.4277616 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:applications.scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 1190, in make_viz_chart
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:applications.scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 1075, in generate_geo_map
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+ERROR:applications.scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 961, in make_count_figure
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[37mPOST /scisat/_dash-update-component HTTP/1.1[0m" 200 -
+ERROR:applications.scisat_app.scisat:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 656, in update_filtering_text
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\scisat_app\scisat.py", line 75, in data_reader
+    nc = netcdf.netcdf_file(name,'r')
+  File "C:\ProgramData\Anaconda3\lib\site-packages\scipy\io\netcdf.py", line 249, in __init__
+    self.fp = open(self.filename, '%sb' % omode)
+FileNotFoundError: [Errno 2] No such file or directory: 'data//ACEFTS_L2_v4p1_O3.nc'
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:47] "[1m[35mPOST /scisat/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/assets/compiled.css?m=1597940297.2320309 HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_renderer/polyfill@7.v1_5_1m1593873890.8.7.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_renderer/react@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_renderer/react-dom@16.v1_5_1m1593873890.13.0.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_renderer/prop-types@15.v1_5_1m1593873890.7.2.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_dangerously_set_inner_html/bundle.v0_0_2m1593870401.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_html_components/dash_html_components.v1_0_3m1593873891.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_core_components/dash_core_components.v1_10_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_core_components/dash_core_components-shared.v1_10_1m1593873890.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:53] "[37mGET /alouette/_dash-component-suites/dash_renderer/dash_renderer.v1_5_1m1593873890.min.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-layout HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-dependencies HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/assets/csa-logo.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-plotlyjs.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-graph.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-dropdown.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-datepicker.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+ERROR:applications.alouette_app.alouette:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\base.py", line 2895, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas\_libs\index.pyx", line 70, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 101, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 386, in pandas._libs.hashtable.Float64HashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 393, in pandas._libs.hashtable.Float64HashTable.get_item
+KeyError: 0.0
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\alouette_app\alouette.py", line 1458, in make_viz_map
+    mean=filtered_data.groupby(["station_name", "lat", "lon"])[var_selection].mean()[station_details[0]][0],
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\series.py", line 882, in __getitem__
+    return self._get_value(key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\series.py", line 989, in _get_value
+    loc = self.index.get_loc(label)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2701, in get_loc
+    loc = self._get_level_indexer(key, level=0)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2966, in _get_level_indexer
+    code = self._get_loc_single_level_index(level_index, key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2634, in _get_loc_single_level_index
+    return level_index.get_loc(key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\numeric.py", line 424, in get_loc
+    return super().get_loc(key, method=method, tolerance=tolerance)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\base.py", line 2897, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:54] "[1m[35mPOST /alouette/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:55] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:56] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:numexpr.utils:Note: NumExpr detected 16 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+INFO:numexpr.utils:NumExpr defaulting to 8 threads.
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:56] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:56] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:56] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:57] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:43:57] "[37mGET /alouette/assets/favicon.ico?m=1604944546.4277616 HTTP/1.1[0m" 200 -
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:47:48] "[1m[35mGET /alouette/ HTTP/1.1[0m" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 304, in run_wsgi
+    execute(self.server.app)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 292, in execute
+    application_iter = app(environ, start_response)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\middleware\dispatcher.py", line 66, in __call__
+    return app(environ, start_response)
+TypeError: 'module' object is not callable
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 12:47:49] "[1m[35mGET /alouette/ HTTP/1.1[0m" 500 -
+ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 304, in run_wsgi
+    execute(self.server.app)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\serving.py", line 292, in execute
+    application_iter = app(environ, start_response)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\werkzeug\middleware\dispatcher.py", line 66, in __call__
+    return app(environ, start_response)
+TypeError: 'module' object is not callable
+INFO:werkzeug: * Running on http://0.0.0.0:8888/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:31] "[37mGET /alouette/ HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:31] "[37mGET /alouette/_dash-layout HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:31] "[37mGET /alouette/_dash-dependencies HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mGET /alouette/assets/csa-logo.png HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-graph.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mGET /alouette/_dash-component-suites/dash_core_components/async-dropdown.v1_10_1m1592438751.js HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[37mGET /alouette/assets/favicon.ico?m=1604944546.4277616 HTTP/1.1[0m" 200 -
+ERROR:applications.alouette.alouette:Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\base.py", line 2895, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas\_libs\index.pyx", line 70, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 101, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 386, in pandas._libs.hashtable.Float64HashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 393, in pandas._libs.hashtable.Float64HashTable.get_item
+KeyError: 0.0
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1076, in dispatch
+    response.set_data(func(*args, outputs_list=outputs_list))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\dash\dash.py", line 1007, in add_context
+    output_value = func(*args, **kwargs)  # %% callback invoked %%
+  File "C:\Users\joeda\OneDrive\Documents\GitHub\Scisat-App\applications\alouette\alouette.py", line 1458, in make_viz_map
+    mean=filtered_data.groupby(["station_name", "lat", "lon"])[var_selection].mean()[station_details[0]][0],
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\series.py", line 882, in __getitem__
+    return self._get_value(key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\series.py", line 989, in _get_value
+    loc = self.index.get_loc(label)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2701, in get_loc
+    loc = self._get_level_indexer(key, level=0)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2966, in _get_level_indexer
+    code = self._get_loc_single_level_index(level_index, key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\multi.py", line 2634, in _get_loc_single_level_index
+    return level_index.get_loc(key)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\numeric.py", line 424, in get_loc
+    return super().get_loc(key, method=method, tolerance=tolerance)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\indexes\base.py", line 2897, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:32] "[1m[35mPOST /alouette/_dash-update-component HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:33] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:33] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:numexpr.utils:Note: NumExpr detected 16 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+INFO:numexpr.utils:NumExpr defaulting to 8 threads.
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:34] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:34] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:34] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Dec/2020 13:04:34] "[37mPOST /alouette/_dash-update-component HTTP/1.1[0m" 200 -

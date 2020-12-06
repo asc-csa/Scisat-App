@@ -2,21 +2,33 @@
 """
 Created on Thu Aug 20 10:59:37 2020
 
-@author: Camille
+@author: Camille Roy et Jonathan Beaulieu-Emond
 """
+
+import os 
 from werkzeug.middleware.dispatcher  import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from flask_app import flask_app
-import scisat_app.scisat as scisat
-import alouette_app.alouette as alouette
+
+import numpy as np
 
 # app1.enable_dev_tools(debug=True)
 # app2.enable_dev_tools(debug=True)
+liste=os.listdir('applications')
 
-application = DispatcherMiddleware(flask_app,{
-    '/scisat': scisat.server,
-    '/alouette': alouette.server,
-})
+
+
+import importlib
+dict1={}
+for item in liste :
+    	
+    	temp=importlib.import_module(f"applications.{item}.{item}")
+    	dict1['/'+item]=temp.server
+
+
+
+
+application = DispatcherMiddleware(flask_app,dict1)
 
 
 if __name__ == '__main__':

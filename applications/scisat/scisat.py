@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import dash
 
-import copy
+
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_dangerously_set_inner_html
@@ -13,13 +13,67 @@ import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for
-from applications.scisat.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 import datetime
 
 #==========================================================================================
 # load data and transform as needed
+
+
+external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
+                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+                        'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
+                        'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
+
+external_scripts = [
+    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+    'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
+    'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
+    'https://cdn.plot.ly/plotly-locale-de-latest.js',
+
+]
+
+
+if __name__ == '__main__':
+     path_data=r"data"
+     prefixe=""
+#     app.run_server(debug=True)  # For development/testing
+     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+
+
+    
+  
+  
+     app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
+     server = app.server
+     server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+     babel = Babel(server)  # Hook flask-babel to the app
+
+  
+    
+
+else :
+    
+    path_data=r"applications/scisat/data"
+    prefixe="/scisat"
+    from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+  
+    
+    app = dash.Dash(
+    __name__,
+    requests_pathname_prefix='/scisat/',
+    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+    external_stylesheets=external_stylesheets,
+    external_scripts=external_scripts,
+)
+    server = app.server
+    server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+    babel = Babel(server)  # Hook flask-babel to the app
+
+
+
 
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180,alt_range=[0,150]) :
     """
@@ -71,7 +125,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     else:
         gaz=gaz[0]
     
-    name=path_to_files+'//'+file
+    name=path_to_files+'/'+file
     nc = netcdf.netcdf_file(name,'r')
     
     #Trier / définir rapido les donnéeset les variables
@@ -203,7 +257,7 @@ gaz_name_options = [
     {'label': _('Oxygen'), 'value':    'ACEFTS_L2_v4p1_O2.nc'},
     
     
-     {'label': _('Ozone'), 'value':     'ACEFTS_L2_v4p1_O3.nc'},
+     {'label': _('Ozone'), 'value':     'ACEFTS_L2_v4p0_O3.nc'},
     {'label': _('Ozone 667'), 'value':     'ACEFTS_L2_v4p1_O3_667.nc'},
     {'label': _('Ozone 668'), 'value':     'ACEFTS_L2_v4p1_O3_668.nc'},
     {'label': _('Ozone 676'), 'value':   'ACEFTS_L2_v4p1_O3_676.nc'},
@@ -225,31 +279,6 @@ gaz_name_options = [
 
 
 #======================================================================================
-
-external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
-                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
-
-external_scripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js',
-
-]
-
-app = dash.Dash(
-    __name__,
-    requests_pathname_prefix='/scisat/',
-    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    external_stylesheets=external_stylesheets,
-    external_scripts=external_scripts
-)
-
-server = app.server
-server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
-babel = Babel(server)  # Hook flask-babel to the app
 
 
 # Create global chart template
@@ -384,7 +413,7 @@ def build_filtering():
                                         id="gaz_list",
                                         options= gaz_name_options,
                                         multi=False,
-                                        value='ACEFTS_L2_v4p1_O3.nc',
+                                        value='ACEFTS_L2_v4p0_O3.nc',
                                         className="dcc_control",
                                         
                                     ),
@@ -653,7 +682,7 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     """
 
 
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
@@ -798,7 +827,7 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
     return link
 
 from flask import make_response
-from dateutil.parser import parse
+
 
 
 # Flask route that handles the CSV downloads. This allows for larger files to be passed,
@@ -1676,9 +1705,9 @@ def update_language_button(x):
 
     language = session['language']
     if language == 'fr':
-        return 'EN', '/scisat/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
+        return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
     else:
-        return 'FR', '/scisat/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
+        return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
 
 
 @babel.localeselector
@@ -1702,14 +1731,15 @@ def set_language(language=None):
 
     return redirect(url_for('/'))
 
-# # Main
-# if __name__ == '__main__':
-#     app.run_server(debug=True)  # For development/testing
-    # app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
 
 
 
 
+if __name__ == '__main__':
+     #app.run_server(debug=True)  # For development/testing
+    
+     app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
+     
 
 
 

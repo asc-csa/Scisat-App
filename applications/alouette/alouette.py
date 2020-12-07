@@ -11,17 +11,65 @@ import datetime as dt
 from scipy.stats import sem, t
 from scipy import mean
 from dateutil.relativedelta import relativedelta
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 import locale
 import urllib.parse
-import urllib.request
+
 from zipfile import ZipFile
 import os
 import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, request
-from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+
+
+
+external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
+                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+                        'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
+                        'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
+
+external_scripts = [
+    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+    'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
+    'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
+    'https://cdn.plot.ly/plotly-locale-de-latest.js'
+]
+
+
+if __name__ == '__main__':
+     prefixe=""
+#     app.run_server(debug=True)  # For development/testing
+     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+
+
+    
+     df = pd.read_csv(r'data/final_alouette_data.csv')  # edit for compatibility with CKAN portal (e.g. API to dataframe)
+  
+     app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
+     server = app.server
+     server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+     babel = Babel(server)  # Hook flask-babel to the app
+
+  
+    
+
+else :
+    prefixe="/alouette"
+    from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    df = pd.read_csv(r'applications/alouette/data/final_alouette_data.csv')  # edit for compatibility with CKAN portal (e.g. API to dataframe)
+    
+    app = dash.Dash(
+    __name__,
+    requests_pathname_prefix='/alouette/',
+    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+    external_stylesheets=external_stylesheets,
+    external_scripts=external_scripts,
+)
+    server = app.server
+    server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+    babel = Babel(server)  # Hook flask-babel to the app
+
 
 
 
@@ -37,8 +85,6 @@ IONOGRAM_PATH = 'U:/Downloads'  # Directory to Ionogram images for testing
 
 # load data and transform as needed
 #dtypes = {'': 'int', 'file_name': 'str', 'max_depth': 'float', 'decimal_value': 'str'}
-df = pd.read_csv(r'data/final_alouette_data.csv')  # edit for compatibility with CKAN portal (e.g. API to dataframe)
-df['timestamp'] = pd.to_datetime(df['timestamp'])  # converts the timestamp to date_time objects
 
 
 # Dropdown options
@@ -129,32 +175,12 @@ def coords_to_float(coord):
     else:
         return coord
 
+
+
+df['timestamp'] = pd.to_datetime(df['timestamp'])  # converts the timestamp to date_time objects
+ 
 df['lat'] = df.apply(lambda x: coords_to_float(x['lat']), axis=1)
 df['lon'] = df.apply(lambda x: coords_to_float(x['lon']), axis=1)
-
-external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
-                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
-
-external_scripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js'
-]
-
-app = dash.Dash(
-    __name__,
-    requests_pathname_prefix='/alouette/',
-    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    external_stylesheets=external_stylesheets,
-    external_scripts=external_scripts,
-)
-
-server = app.server
-server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
-babel = Babel(server)  # Hook flask-babel to the app
 
 # Create global chart template
 mapbox_access_token = "pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w"
@@ -782,7 +808,7 @@ def update_images_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max,
 
 
 from io import BytesIO
-from zipfile import ZipFile
+
 
 
 @app.server.route('/dash/downloadImages')
@@ -1719,9 +1745,10 @@ def update_language_button(x):
 
     language = session['language']
     if language == 'fr':
-        return 'EN', '/alouette/language/en'
+        return 'EN', prefixe+'/language/en'
     else:
-        return 'FR', '/alouette/language/fr'
+        return 'FR', prefixe+'/language/fr'
+
 
 
 @babel.localeselector
@@ -1747,14 +1774,7 @@ def set_language(language=None):
     return redirect(url_for('/'))
 
 
-# # Main
-# if __name__ == '__main__':
-#     app.run_server(debug=True)  # For development/testing
-    # app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
-
-
-
-
-
-
+if __name__ == '__main__':
+       app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
+       
 

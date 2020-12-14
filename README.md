@@ -2,7 +2,7 @@
 - [English](#multiple-dash-application)
 
 # Application Dash Multiple 
-Pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur.
+Pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur. L'application roule sur http://127.0.0.1:8888/
 
 ## Contexte
 
@@ -75,7 +75,7 @@ Traduit avec www.DeepL.com/Translator (version gratuite)
 
 # English
 # Multiple Dash Application 
-To filter, download and visualize Alouette-I data and SCISAT Data on the same server
+To filter, download and visualize Alouette-I data and SCISAT Data on the same server. Tha app runs on http://127.0.0.1:8888/
 
 ## Background
 

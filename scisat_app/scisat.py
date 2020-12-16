@@ -247,6 +247,7 @@ app = dash.Dash(
     external_scripts=external_scripts
 )
 
+app.title="SciSat : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
 server = app.server
 server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app

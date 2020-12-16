@@ -151,7 +151,7 @@ app = dash.Dash(
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,
 )
-
+app.title="Alouette: application d’exploration des données d’ionogrammes historiques | data exploration application for historic ionograms"
 server = app.server
 server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
@@ -377,7 +377,9 @@ def build_filtering():
                             ],
                             id="map-options",
                         ),
+                    html.P(id="Map_description-1"),
                     ],
+
                     id="left-column-1",
                     style={"flex-grow": 1},
                     className="six columns",
@@ -440,6 +442,7 @@ def build_filtering():
                             ],
                             id="cross-filter-options",
                         ),
+                    html.Div ([html.P(id="Graph_description-1")]),
                     ],
                     id="right-column-1",
                     style={"flex-grow": 1},
@@ -449,6 +452,7 @@ def build_filtering():
             className="row flex-display pretty_container twelve columns",
             style={"justify-content": "space-evenly"}
         ),
+
     ])
 
 
@@ -502,6 +506,7 @@ def build_stats():
                             #className="pretty_container",
                             id="viz-chart-options",
                         ),
+                        html.Div ([html.P(id="Map_description-2")]),
                     ],
                     id="right-column-3",
                     className="three columns",
@@ -559,6 +564,7 @@ def build_stats():
                             #className="pretty_container",
                             id="map-viz-options",
                         ),
+                        html.Div ([html.P(id="Graph_description-2")]),
                     ],
                     id="right-column-4",
                     className="three columns",
@@ -612,13 +618,13 @@ def filter_dataframe(df, start_date_dt, end_date_dt, lat_min, lat_max, lon_min, 
 
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -679,13 +685,13 @@ def update_ionograms_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
 
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -726,13 +732,13 @@ def update_ground_station_list(lat_min, lat_max, lon_min, lon_max):
     ----------
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -870,13 +876,13 @@ def download_csv():
 
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -939,13 +945,13 @@ def make_count_figure(start_date, end_date, lat_min, lat_max, lon_min, lon_max, 
 
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -1032,13 +1038,13 @@ def generate_geo_map(start_date, end_date, lat_min, lat_max, lon_min, lon_max, g
 
     lat_min : double
         Minimum value of the latitude stored as a double.
-        
+
     lat_max : double
         Maximum value of the latitude stored as a double.
-        
+
     lon_min : double
         Minimum value of the longitude stored as a double.
-        
+
     lon_max : double
         Maximum value of the longitude stored as a double.
 
@@ -1597,18 +1603,22 @@ def make_viz_map(start_date, end_date, stat_selection, var_selection, lat_min, l
         Output("select-data", "children"),
         Output("latitude-text", "children"),
         Output("longitude-text", "children"),
+        Output("Map_description-1", "children"),
         Output("yearslider-text", "children"),
         Output("groundstations-text", "children"),
         Output("download-button-1", "children"),
         Output("download-button-2", "children"),
+        Output("Graph_description-1", "children"),
         Output("x-axis-selection-text", "children"),
         Output("y-axis-selection-text", "children"),
+        Output("Graph_description-2", "children"),
         Output("stat-selection-text", "children"),
         Output("stat-y-axis-text", "children"),
         Output("ground_station_list", "options"),
         Output("x_axis_selection_1", "options"),
         Output("y_axis_selection_1", "options"),
         Output("y_axis_selection_2", "options"),
+        Output("Map_description-2", "children"),
         Output("stat_selection", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
@@ -1624,12 +1634,15 @@ def translate_static(x):
                 _("Select Data"),
                 _("Filter by ground station latitude:"),
                 _("Filter by ground station longitude:"),
+                _("Map of the world showing ground stations. Each station is represented by a circle, the size of which depends on the number of ionograms at each station."),
                 _("Filter by date:"),
                 _("Select ground stations:"),
                 _('Download Summary Data as CSV'),
                 _('Download Selected Ionogram Images'),
+                _("Graph showing the number of ionograms captured during each month. The X-axis presents the date and the Y-axis presents the number of ionograms."),
                 _("Select x-axis:"),
                 _("Select y-axis:"),
+                _("Graph visualizing the mean maximum depth over time. The variables can be changed using the dropdown. By default the X-axis represents time while the Y-axis represents mean maximum depth (Km)."),
                 _("Select statistic:"),
                 _("Select plotted value:"),
                 [  # Ground_station_options
@@ -1678,6 +1691,7 @@ def translate_static(x):
                     {'label': _('Minimum Frequency'), 'value': 'fmin'},
                     {'label': _('Maximum Depth'), 'value': 'max_depth'}
                 ],
+                _("Map showing mean maximum depth at each ground station. Each station is represented by a circle, the size of which depends on the mean maximum depth."),
                 [  # stat_selection
                     {'label': _('Mean'), 'value': 'mean'},
                     {'label': _('Median'), 'value': 'median'}
@@ -1751,10 +1765,3 @@ def set_language(language=None):
 # if __name__ == '__main__':
 #     app.run_server(debug=True)  # For development/testing
     # app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
-
-
-
-
-
-
-

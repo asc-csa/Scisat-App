@@ -405,9 +405,8 @@ def build_filtering():
                             ],
                             id="map-options",
                         ),
-                     html.P(id="Map_description-1"),
+                    html.P(id="Map_description-1"),
                     ],
-
 
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -471,7 +470,7 @@ def build_filtering():
                             ],
                             id="cross-filter-options",
                         ),
-                         html.Div ([html.P(id="Graph_description-1")]),
+                    html.Div ([html.P(id="Graph_description-1")]),
                     ],
                     id="right-column-1",
                     style={"flex-grow": 1},
@@ -481,6 +480,7 @@ def build_filtering():
             className="row flex-display pretty_container twelve columns",
             style={"justify-content": "space-evenly"}
         ),
+
     ])
 
 
@@ -534,7 +534,7 @@ def build_stats():
                             #className="pretty_container",
                             id="viz-chart-options",
                         ),
-                         html.Div ([html.P(id="Map_description-2")]),
+                        html.Div ([html.P(id="Map_description-2")]),
                     ],
                     id="right-column-3",
                     className="three columns",
@@ -592,6 +592,7 @@ def build_stats():
                             #className="pretty_container",
                             id="map-viz-options",
                         ),
+                        html.Div ([html.P(id="Graph_description-2")]),
                     ],
                     id="right-column-4",
                     className="three columns",
@@ -624,6 +625,7 @@ app.layout = html.Div(
         html.Div(id='none2', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
     ],
 )
+
 
 
 # Helper functions
@@ -1663,7 +1665,6 @@ def translate_static(x):
                 _("Filter by ground station longitude:"),
                 _("Map of the world showing ground stations. Each station is represented by a circle, the size of which depends on the number of ionograms at each station."),
                 _("Filter by date:"),
-                _("Filter by date:"),
                 _("Select ground stations:"),
                 _('Download Summary Data as CSV'),
                 _('Download Selected Ionogram Images'),
@@ -1726,7 +1727,6 @@ def translate_static(x):
                 ],
 
     ]
-
 
 # Translate the header and the footer by injecting raw HTML
 @app.callback(
@@ -1791,6 +1791,6 @@ def set_language(language=None):
 
 
 if __name__ == '__main__':
-       app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
+       app.run_server(debug=True, host='0.0.0.0', port=8888)  # For the server
        
 

@@ -16,7 +16,7 @@ Le satellite SCISAT, en orbit depuis le 12 août 2003, aide des équipes de scie
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
 Pour démarrer l'application :
-
+- Créer un dossier nommé "data" et y mettre les fichiers .he5 des données de SCISAT
 - Dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
 
         pip install -r requirements.txt
@@ -65,7 +65,7 @@ The following commands can be done more easily if in a virtual environment (like
 ![interface de l'application](Capture_app.PNG)
 
 For starting the application:
-
+- Create a folder nammed "data" and put the .he5 files containing the SCISAT data
 - Go to the [ash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
 
         pip install -r requirements.txt

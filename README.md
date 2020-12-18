@@ -1,141 +1,99 @@
-- [Français](#application-dash-multiple)
-- [English](#multiple-dash-application)
+![scisat satellite](scisat_banner.jpg)
 
-# Application Dash Multiple 
-Pour filtrer, télécharger et visualiser les données d'Alouette-I et de SCISAT sur le même serveur. L'application roule sur http://127.0.0.1:8888/
+- [Français](#application-pour-filtrer-et-visualiser-les-données-de-scisat)
+- [English](#application-to-filter-and-visualize-scisat-data)
+
+# Application pour filtrer et visualiser les données de SCISAT
 
 ## Contexte
 
-Ce projet est une application qui permet aux utilisateurs de visualiser les données des satellites SCISAT et Alouette-I sans avoir besoin de télécharger les données préalablement. Cette application rend les données de ces satellites plus facilement accessible et elles peuvent donc être analysées sur une plus grande échelle. Pour plus d'information sur les satellites, voir le sous-dossier SCISAT ou voir https://github.com/asc-csa/AlouetteApp.
+Le satellite SCISAT, en orbit depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
+
+
+![interface de l'application](Capture_app.PNG)
 
 ## Démarrage rapide
-
-Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda] (https://www.anaconda.com/distribution/) au préalable.
+Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
 Pour démarrer l'application :
 
+- Dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
+
         pip install -r requirements.txt
-        python run.py
-## Construit avec
+        python scisat.py
+
+## Construit avec:
 
  - [Plotly Dash](https://dash.plot.ly/) - Le framework Python construit sur Flask a été utilisé pour développer l'application. Tous les composants et visualisations de l'application web sont des objets Dash qui sont créés et mis à jour dans les fonctions de rappel de l'application. Je vous recommande de consulter la documentation complète de Dash (lien) si vous n'êtes pas sûr de son fonctionnement.
- 
- - [DispatcherMiddleware](https://werkzeug.palletsprojects.com/en/0.14.x/middlewares/) - Utilisé dans run.py pour expédier les deux applications (Alouette-I et SCISAT) sur le même serveur.
 
 ## Navigation et fichiers
+
+ - [scisat.py](scisat.py) est l'application principale où chaque composant et la présentation de l'application sont définis 
  
- ```
-Multiple Dash App
-│   run.py
-|   flask_app.py
-│   requirements.txt    
-│   readme.md
-│   ...
-|
-└───scisat_app
-│   │   scisat.py
-│   │   ...
-│   
-└───alouette_app
-│   │   alouette.py
-│   |   ...
-│
-└───data
-│   │ final_data_alouette.csv
-│   │ ACEFTS_L2_v4p0_O3.nc
-│   │ ...
-│
-│ ...
-```
+ - [controls.py](controls.py) contient les options pour certains des composants (par exemple, les dropdowns)
+
+ - [header_footer.py](header_footer.py) contient le html pour l'en-tête et le pied de page du gouvernement du Canada. Ce html est injecté dans l'application principale.
  
- - [run.py](run.py) contient l'expéditeur pour rouler les deux applications sur le même serveur. 
+ - [/assets](assets) contient différents fichiers pour le style de l'application (images, redimensionnement, css)
  
- - [flask_app.py](flask_app.py) est la page d'accueil quand aucun satellite n'est spécifié. Elle devrait éventuellement être modifiée pour avoir des liens directs vers les applications.
- 
-  - [scisat.py](scisat_app/scisat.py) and [alouette.py](/alouette_app/alouette.py) sont les applications principales où chaque composantes ainsi que la présentation sont définis.
+ - [/data](data) contient les données csv traitées provenant du pipeline d'extraction des caractéristiques
 
- - [requirements.txt](requirements.txt) spécifie les versions des librairies python utilisées pour les applications.
- 
- - [/alouette_app](alouette_app) contient les fichiers nécessaires pour rouler l'application d'Alouette-I.
- 
- - [/scisat_app](scisat_app) contient les fichiers nécessaires pour rouler l'application SCISAT.
- 
- - **/data** doit être créée dans le répoitoire principale et contient les données csv traitées provenant du pipeline d'extraction des caractéristiques pour Alouette-I ainsi que les données brut pour SCISAT en format NetCDF. 
+ - [/data_cleaning](data_cleaning) contient des scripts pythons utilisés pour nettoyer les données extraites
 
+ - [messages.pot](message.pot) et [/translations](translations) contient des informations sur la traduction
 
-## En-tête/pied de page
+ - [config.py](config.py) précise les langues disponibles pour la traduction
 
-- Le code de l'en-tête/du pied de page du gouvernement est enregistré dans un fichier séparé (header_footer.py), et est directement injecté dans l'application du tiret.
-
-## Traductions
-
- - Les traductions sont délicates avec Dash en raison de la façon dont il rend la page. Pour savoir comment faire de nouvelles traductions, consultez [https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n]([https://blog.miguelgrinberg.com/post/the-flask-
-
-Traduit avec www.DeepL.com/Translator (version gratuite)
-
-# English
-# Multiple Dash Application 
-To filter, download and visualize Alouette-I data and SCISAT Data on the same server. Tha app runs on http://127.0.0.1:8888/
+# Application to filter and visualize SCISAT data
 
 ## Background
 
-This project is an application that allows users to visualize satellite data from SCISAT and Alouette-I, without needing to download the data.
- It makes the data from these satellites more easily accessible and can be analyzed at a larger scale and in a more user-friendly way. For more information on the satellites, see the folder SCISAT or visit https://github.com/asc-csa/AlouetteApp.
+Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, 
+ with a special emphasis on the changes occurring over Canada and in the Arctic.
+
+This project is an application that allows users to filter through the SCISAT data on
+ multiple parameters and allows users to visualize a summary of the data from their selected parameters on a
+ world map, a graph on the altitude, a time series, forgoing the need for downloading the data for simple insights. 
+
+This project has been developped from the Alouette app, a case study for the development of future satellite data applications so that the data from
+ from these satellites are able to be obtained and analyzed at a larger scale and in a more user-friendly way.
 
 ## Quick start
 
 The following commands can be done more easily if in a virtual environment (like conda) so it may be a good idea to install [Anaconda](https://www.anaconda.com/distribution/) beforehand. 
 
+![interface de l'application](Capture_app.PNG)
+
 For starting the application:
 
+- Go to the [ash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
+
         pip install -r requirements.txt
-        python run.py
+        python scisat.py
+
+Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
 
 ## Built with
 
  - [Plotly Dash](https://dash.plot.ly/) - The Python framework built on top of Flask used to develop the application. All components and visualizations on the web application are Dash objects that are created and updated in the callback functions in app.py. I would recommend that you look over Dash's comprehensive documentation (linked) if you are unsure how it works.
- 
- - [DispatcherMiddleware](https://werkzeug.palletsprojects.com/en/0.14.x/middlewares/) - Used in run.py to dispatch both apps (SCISAT and Alouette-I) on the same server. 
-
 
 ## Navigation and files
- ```
-Multiple Dash App
-│   run.py
-|   flask_app.py
-│   requirements.txt    
-│   readme.md
-│   ...
-|
-└───scisat_app
-│   │   scisat.py
-│   │   ...
-│   
-└───alouette_app
-│   │   alouette.py
-│   |   ...
-│
-└───data
-│   │ final_data_alouette.csv
-│   │ ACEFTS_L2_v4p0_O3.nc
-│   │ ...
-│
-│ ...
-```
+
+ - [scisat.py](scisat.py) is the main application where each component and the layout of the application is defined 
  
- - [run.py](run.py) contains the dispatcher to run both apps on the same server
+ - [controls.py](controls.py) contains the options for the some of the components (e.g. dropdowns)
+
+ - [header_footer.py](header_footer.py) contains the html for the government of Canada header and footer. This html is injected into the main app.
  
- - [flask_app.py](flask_app.py) is the welcoming page when no satellite is specified. It could later be modified to click directly on the links leading to the applications.
+ - [/assets](assets) contains various files for the styling of the application (images, resizing, css)
  
- - [scisat.py](scisat_app/scisat.py) and [alouette.py](alouette_app/alouette.py) are the main applications where each component and the layout of the application is defined 
- 
- - [requirements.txt](requirements.txt) contains the python librairies used for the app.
- 
- - [/alouette_app](alouette_app) contains the files to run the Alouette App.
- 
- - [/scisat_app](scisat_app) contains the files to run the SCISAT App. 
- 
- - **/data** has to be added to the main folder and the contains the processed csv data from the feature extraction pipeline for Alouette as well as the NetCDF data for SCISAT.
+ - [/data](data) contains the raw data in NetCDF format
+
+ - [/data_cleaning](data_cleaning) contains python scripts used to clean the extracted data
+
+ - [messages.pot](message.pot) and [/translations](translations) contains translation information
+
+ - [config.py](config.py) specifies the languages available for translation
 
 
 ## Accessibility and branding
@@ -146,7 +104,7 @@ Multiple Dash App
     - The [Web Experience Toolkit](https://wet-boew.github.io/v4.0-ci/index-en.html) can be used to help reach this standard, but it is not necessary
     - More notes on accessibility can be found here: [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader]([http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader])
  
-There will need to be changes in scisat.py and alouette.py to change colours and styles of the interactive visualizations as well as the HTML layout of the page. Most other changes will just be CSS.
+There will need to be changes in app.py to change colours and styles of the interactive visualizations as well as the HTML layout of the page.
 
 ## Header/Footer
 
@@ -160,23 +118,12 @@ There will need to be changes in scisat.py and alouette.py to change colours and
 
 ## Downloads
 
-- For Alouette: The max number of ionograms that can be downloaded at once is 100 as of now. These ionograms are currently stored in memory before being sent to the user as a zip; this method may fail for a larger download.
-
-- For SCISAT : The download button is not yet activated. 
-
-## Roadmap
-
-The current and previous roadmaps can be found on livelink for reference:
-[http://livelink/livelink/llisapi.dll?func=ll&objId=39628342&objAction=viewheader]([http://livelink/livelink/llisapi.dll?func=ll&objId=39628342&objAction=viewheader])
-
-
+- Download button is not effective at the moment. It will need to be modified in order to work properly
 
 ## Authors
-- Camille Roy
-- Jonathan Beaulieu-Emond
-
+ - Camille Roy
+ - Jonathan Beaulieu-Emond
+ 
 ## Acknowledgments
  - Etienne Low-Decarie
- - Hansen Liu
- - Wasiq Mohammmad
-
+ - Hansen Liu & Wasiq Mohammad 

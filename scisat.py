@@ -47,7 +47,7 @@ if __name__ == '__main__':
   
   
      app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
-     app.title="SciSat : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
+     app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
      server = app.server
      server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
      babel = Babel(server)  # Hook flask-babel to the app
@@ -69,7 +69,7 @@ else :
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,
 )
-    app.title="SciSat : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
+    app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
     server = app.server
     server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
     babel = Babel(server)  # Hook flask-babel to the app
@@ -186,7 +186,7 @@ gaz_name_options = [
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p1_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p1_C2H6.nc'},
-    {'label': _('trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
+    {'label': _('Trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p1_CCl4.nc'},
     
     {'label': _('Carbon tetrafluoride'), 'value':  'ACEFTS_L2_v4p1_CF4.nc'},
@@ -200,7 +200,7 @@ gaz_name_options = [
     {'label': _('Methane 311'), 'value':  'ACEFTS_L2_v4p1_CH4_311.nc'},
     {'label': _('Difluorochloromethane'), 'value':   'ACEFTS_L2_v4p1_CHF2Cl.nc'},
     {'label': _('Trifluoromethane'), 'value':  'ACEFTS_L2_v4p1_CHF3.nc'},
-    {'label': _('chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
+    {'label': _('Chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
     {'label': _('Chlorine nitrate'), 'value':  'ACEFTS_L2_v4p1_ClONO2.nc'},
     
     {'label': _('Carbon monoxide'), 'value':  'ACEFTS_L2_v4p1_CO.nc'},
@@ -244,10 +244,10 @@ gaz_name_options = [
     {'label': _('Nitric acid 156'), 'value':  'ACEFTS_L2_v4p1_HNO3_156.nc'},
     
     
-    {'label': _('peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
+    {'label': _('Peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  'ACEFTS_L2_v4p1_N2.nc'},
     {'label': _('Nitrous oxide'), 'value':  'ACEFTS_L2_v4p1_N2O.nc'},
-    {'label': _('dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
+    {'label': _('Dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
     {'label': _('Nitrous oxide 447'), 'value':   'ACEFTS_L2_v4p1_N2O_447.nc'},
     {'label': _('Nitrous oxide 448'), 'value':    'ACEFTS_L2_v4p1_N2O_448.nc'},
     
@@ -421,7 +421,7 @@ def build_filtering():
                                     ),
                                 ),
                               
-                                  html.Span(children=_("Selection of the gaz"),className="wb-inv")]),
+                                  html.Span(children=_("Selection of the gas"),className="wb-inv")]),
                                 
                                html.Div([
                                 html.Div( #Latitude picker
@@ -672,7 +672,7 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
         Maximum value of the longitude stored as a float.
 
     gaz_list : list
-        Gaz names strings stored in a list (e.g. ['Ozone'])
+        Gas names strings stored in a list (e.g. ['Ozone'])
     
     alt_range : List
         Range of altitudes
@@ -815,7 +815,7 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
         Maximum value of the longitude stored as a float.
     
     gaz_list : list
-        Gaz names strings stored in a list (e.g. ['Ozone'])
+        Gas names strings stored in a list (e.g. ['Ozone'])
         
     Returns
     -------
@@ -861,7 +861,7 @@ def download_csv():
         Maximum value of the longitude stored as a float.
 
     gaz_list : list
-        Gaz name strings stored in a list (e.g. ['Ozone'])
+        Gas name strings stored in a list (e.g. ['Ozone'])
 
     alt_range : List
         Range of altitudes
@@ -953,7 +953,7 @@ def update_selected_data(clickData):
     ],
 )
 def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
-    """Create and update the Gaz Concentration vs Altitude over the given time range.
+    """Create and update the Gas Concentration vs Altitude over the given time range.
 
     Parameters
     ----------    
@@ -1062,9 +1062,9 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
 )
 
 def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
-    """Create and update the map of gaz concentrations for selected variables.
+    """Create and update the map of gas concentrations for selected variables.
 
-    The color of the data points indicates the mean gaz concentration at that coordinate.
+    The color of the data points indicates the mean gas concentration at that coordinate.
 
 
     Parameters
@@ -1124,7 +1124,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             size=5,
             colorbar=dict(
                 title=dict(
-                    text=_("Gaz Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
+                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
                 ),
                 titleside="right",     
                 showexponent = 'all',
@@ -1311,7 +1311,7 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
         xaxis={"title": _('Date'), "automargin": True} ,
 
         yaxis =  dict(
-           title = _("Concentration"),
+           title = _("Concentration [ppv]"),
            automargin=True,     
            showexponent = 'all',
            exponentformat = 'e'
@@ -1555,15 +1555,15 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
 def translate_static(x):
     print('Translating...')
     return [
-                _("Scisat Data Visualisation"),
-                _("Learn More About SciSat"),
+                _("SCISAT Data Visualisation"),
+                _("Learn More About SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
-                _("This application provides users the ability to select, download and visualize Scisat's data. "),
+                _("This application provides users the ability to select, download and visualize SCISAT's data. "),
                 _("Select Data"),
-                _("Graph of the gaz concentration visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gaz concentration value."),
-                _("Graph showing the gaz concentration over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
-                _("Time series showing the evolution of the gaz concentration. Each data point represents the daily overall mean concentration."),
+                _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
+                _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
+                _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
                 _("Filter by Latitude:"),
                 _("Filter by Longitude:"),
                 _("Select Altitude Range:"),
@@ -1579,8 +1579,8 @@ def translate_static(x):
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p1_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p1_C2H6.nc'},
-    {'label': _('dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl2F2.nc'},
-    {'label': _('trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
+    {'label': _('Dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl2F2.nc'},
+    {'label': _('Trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p1_CCl4.nc'},
     
     
@@ -1595,7 +1595,7 @@ def translate_static(x):
     {'label': _('Methane 311'), 'value':  'ACEFTS_L2_v4p1_CH4_311.nc'},
     {'label': _('Difluorochloromethane'), 'value':   'ACEFTS_L2_v4p1_CHF2Cl.nc'},
     {'label': _('Trifluoromethane'), 'value':  'ACEFTS_L2_v4p1_CHF3.nc'},
-    {'label': _('chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
+    {'label': _('Chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
     {'label': _('Chlorine nitrate'), 'value':  'ACEFTS_L2_v4p1_ClONO2.nc'},
     
     {'label': _('Carbon monoxide'), 'value':  'ACEFTS_L2_v4p1_CO.nc'},
@@ -1608,7 +1608,7 @@ def translate_static(x):
     
     {'label': _('Carbon dioxide 638'), 'value':   'ACEFTS_L2_v4p1_CO2_638.nc'},
     {'label': _('Phosgene'), 'value':  'ACEFTS_L2_v4p1_COCl2.nc'},
-    {'label': _('Carbonyl chlorine fluoride'), 'value':  'ACEFTS_L2_v4p1_COClF.nc'},
+    {'label': _('Carbonyl chlorofluoride'), 'value':  'ACEFTS_L2_v4p1_COClF.nc'},
     {'label': _('Carbonyl fluoride'), 'value':   'ACEFTS_L2_v4p1_COF2.nc'},
     {'label': _('Carbon monoxide 27'), 'value':  'ACEFTS_L2_v4p1_CO_27.nc'},
     {'label': _('Carbon monoxide 28'), 'value':   'ACEFTS_L2_v4p_CO_28.nc'},
@@ -1637,10 +1637,10 @@ def translate_static(x):
     {'label': _('Nitric acid 156'), 'value':  'ACEFTS_L2_v4p1_HNO3_156.nc'},
     
     
-    {'label': _('peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
+    {'label': _('Peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  'ACEFTS_L2_v4p1_N2.nc'},
     {'label': _('Nitrous oxide'), 'value':  'ACEFTS_L2_v4p1_N2O.nc'},
-    {'label': _('dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
+    {'label': _('Dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
     {'label': _('Nitrous oxide 447'), 'value':   'ACEFTS_L2_v4p1_N2O_447.nc'},
     {'label': _('Nitrous oxide 448'), 'value':    'ACEFTS_L2_v4p1_N2O_448.nc'},
     

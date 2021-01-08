@@ -415,7 +415,7 @@ def build_filtering():
                                         id="gaz_list",
                                         options= gaz_name_options,
                                         multi=False,
-                                        value='ACEFTS_L2_v4p0_O3.nc',
+                                        value='ACEFTS_L2_v4p1_O3.nc',
                                         className="dcc_control",
                                         
                                     ),
@@ -495,7 +495,12 @@ def build_filtering():
                             ), #End of map options
                                 ]),                        
                         html.Div(
-                            [dcc.Graph(id="selector_map")],
+                            [dcc.Graph(id="selector_map",
+                                       config={
+                                           "displaylogo": False,
+                                           "displayModeBar": False
+                                       }
+                                       )],
                         ),
                         html.Div ([html.P(id="Map_description")]),   #!!!!!!! Tesssst
                     ],
@@ -565,7 +570,12 @@ def build_filtering():
                                     "", style={"margin-top": "25px"}#, "margin-bottom": "35px"}
                                 ),
                             html.Div([ # Graphique
-                                dcc.Graph(id="count_graph")],
+                                dcc.Graph(id="count_graph",
+                                          config={
+                                              "displaylogo": False,
+                                              "displayModeBar": False
+                                          }
+                                          )],
                                      id="countGraphContainer",
                                      ),
                             html.H5(
@@ -595,7 +605,12 @@ def build_stats():
                 html.Div(
                     [
                     html.Div([
-                        dcc.Graph(id="viz_chart")
+                        dcc.Graph(id="viz_chart",
+                                  config={
+                                      "displaylogo": False,
+                                      "displayModeBar": False
+                                  }
+                                  )
                             ]),
                     
                     html.Div ([
@@ -1576,7 +1591,7 @@ def translate_static(x):
                 #_("Select statistic:"),
                 #_("Select plotted value:"),
     [  # Gas_options
-    {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_acetone.nc'},
+    {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_C3H6O.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p1_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p1_C2H6.nc'},
     {'label': _('Dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl2F2.nc'},

@@ -183,7 +183,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 #======================================================================================
 # Controls for webapp
 gaz_name_options = [ 
-    {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_C3H6O.nc'},
+    {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p1_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p1_C2H6.nc'},
     {'label': _('Trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},

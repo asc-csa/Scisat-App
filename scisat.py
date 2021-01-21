@@ -143,6 +143,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
     data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
     data[data == fillvalue1] = np.nan #Remplacer les données vides
+
     data = data[:,alt_range[0]:alt_range[1]] #Choisir les données dans le range d'altitude
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
@@ -378,6 +379,11 @@ def build_filtering():
                                  html.H6(id="description"),
                                  html.P(id="description-1"),
                                  html.P(id="description-2"),
+                                 html.A(
+                                    html.P(id="github-link"),
+                                    href = "https://github.com/asc-csa",
+                                    title = "ASC-CSA Github"
+                                 )
                             ],
                             id="description_div",
                         ),
@@ -838,7 +844,7 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
 
-    link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
+    link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
             .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range)
 
     return link
@@ -898,6 +904,12 @@ def download_csv():
 
     #start_date =pd.Timestamp(parse(start_date))
     #end_date   =pd.Timestamp(parse(end_date))
+
+    #Pre-processing of alt_range
+    alt_range = alt_range.replace(" ", "")
+    alt_range = alt_range[1:-1].split(',')
+    alt_range[0] = int(alt_range[0])
+    alt_range[1] = int(alt_range[1])
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
@@ -1553,6 +1565,7 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("data-ratio", "children"),
         Output("description-1", "children"),
         Output("description-2", "children"),
+        Output("github-link", "children"),
         Output("select-data", "children"),
         Output("Map_description","children"),
         Output("Altitude_description","children"),
@@ -1575,6 +1588,7 @@ def translate_static(x):
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. "),
+                _("Visit our Github page to learn more about our applications."),
                 _("Select Data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),

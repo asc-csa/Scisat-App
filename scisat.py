@@ -43,25 +43,25 @@ if __name__ == '__main__':
      from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
 
 
-    
-  
-  
+
+
+
      app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
      app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
      server = app.server
      server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
      babel = Babel(server)  # Hook flask-babel to the app
 
-  
-    
+
+
 
 else :
-    
+
     path_data=r"applications/scisat/data"
     prefixe="/scisat"
     from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-  
-    
+
+
     app = dash.Dash(
     __name__,
     requests_pathname_prefix='/scisat/',
@@ -84,69 +84,69 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     ----------
     file : String
         Name of data file.
-        
+
     path_to_files : String
         Path to the data files.
-        
+
     start_date : Datetime, optional
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime, optional
         Last day in the date range selected by user. The default is the last day of data available.
-    
+
     lat_min : float, optional
         Minimum latitude selected by user. The default is -90.
-    
+
     lat_max : float, optional
         Maximum latitude selected by user. The default is 90.
-    
+
     lon_min : float, optional
         Minimum longitude selected by user. The default is -180.
-    
+
     lon_max : float, optional
         Maximum longitude selected by user. The default is 180.
-        
+
     alt_range : List
         Range of alitutudes selected. Default is [0,150]
 
     Returns
     -------
     df : DATAFRAME
-        Dataframe of all the gas concentrations with columns : 
-            altitudes (from 0.5 to 149.5), Mean on altitude (Alt_Mean), date, 
-            Latitude (lat) and Longitude (long) 
-            
+        Dataframe of all the gas concentrations with columns :
+            altitudes (from 0.5 to 149.5), Mean on altitude (Alt_Mean), date,
+            Latitude (lat) and Longitude (long)
+
 
     """
     if type(file)==list:
         file=file[0]
-    
+
     gaz = file.strip().split('.')[0].strip().split('_')[3:]
     if len(gaz)>1:
         gaz = gaz[0]+'_'+gaz[1]
     else:
         gaz=gaz[0]
-    
+
     name=path_to_files+'/'+file
     nc = netcdf.netcdf_file(name,'r')
-    
+
     #Trier / définir rapido les donnéeset les variables
     fillvalue1 = -999.
     months=np.copy(nc.variables['month'][:])
     years = np.copy(nc.variables['year'][:])
     days = np.copy(nc.variables['day'][:])
     #hours = np.copy(nc.variables['hour'][:])
-    
+
     lat = np.copy(nc.variables['latitude'][:])
     long =np.copy( nc.variables['longitude'][:])
     alt = np.copy(nc.variables['altitude'][:])
-    
+
     data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
     data[data == fillvalue1] = np.nan #Remplacer les données vides
     data = data[:,alt_range[0]:alt_range[1]] #Choisir les données dans le range d'altitude
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
-    
+
     #Trie données abérrantes
     df[df>1e-5]=np.nan
     std=df.std()
@@ -157,16 +157,16 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df[df<minV]=np.nan
 
     #Colonne de dates
-    date=[]    
+    date=[]
     for i in range (len(days)):
-        date.append(datetime.datetime(years[i],months[i],days[i]))#,hours[i]))  
+        date.append(datetime.datetime(years[i],months[i],days[i]))#,hours[i]))
 
     data_meanAlt = np.nanmean(df,1) #Moyenne sur l'altitude #!!! À revérifier scientifiquement
     df['Alt_Mean'] = data_meanAlt
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
-    
+
     if start_date!=0 and end_date!=0 :
         df=df[np.where(df['date']>start_date,True,False)]
         df=df[np.where(df['date']<end_date,True,False)]
@@ -176,56 +176,56 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['lat']<lat_max,True,False)]
     df=df[np.where(df['long']>lon_min,True,False)]
     df=df[np.where(df['long']<lon_max,True,False)]
-    
+
     return df
 
 # Dropdown options
 #======================================================================================
 # Controls for webapp
-gaz_name_options = [ 
+gaz_name_options = [
     {'label': _('Acetone'), 'value': 'ACEFTS_L2_v4p1_acetone.nc'},
     {'label': _('Acetylene'), 'value': 'ACEFTS_L2_v4p1_C2H2.nc'},
     {'label': _('Ethane'), 'value':  'ACEFTS_L2_v4p1_C2H6.nc'},
     {'label': _('Trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p1_CCl4.nc'},
-    
+
     {'label': _('Carbon tetrafluoride'), 'value':  'ACEFTS_L2_v4p1_CF4.nc'},
     {'label': _('Trichlorotrifluoroethane'), 'value':  'ACEFTS_L2_v4p1_CFC113.nc'},
     {'label': _('Chloromethane'), 'value':  'ACEFTS_L2_v4p1_CH3Cl.nc'},
     {'label': _('Acetonitrite'), 'value':  'ACEFTS_L2_v4p1_CH3CN.nc'},
     {'label': _('Methanol'), 'value':  'ACEFTS_L2_v4p1_CH3OH.nc'},
     {'label': _('Methane'), 'value':  'ACEFTS_L2_v4p1_CH4.nc'},
-    
+
     {'label': _('Methane 212'), 'value':  'ACEFTS_L2_v4p1_CH4_212.nc'},
     {'label': _('Methane 311'), 'value':  'ACEFTS_L2_v4p1_CH4_311.nc'},
     {'label': _('Difluorochloromethane'), 'value':   'ACEFTS_L2_v4p1_CHF2Cl.nc'},
     {'label': _('Trifluoromethane'), 'value':  'ACEFTS_L2_v4p1_CHF3.nc'},
     {'label': _('Chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
     {'label': _('Chlorine nitrate'), 'value':  'ACEFTS_L2_v4p1_ClONO2.nc'},
-    
+
     {'label': _('Carbon monoxide'), 'value':  'ACEFTS_L2_v4p1_CO.nc'},
     {'label': _('Carbon dioxide'), 'value':  'ACEFTS_L2_v4p1_CO2.nc'},
     {'label': _('Carbon dioxide 627'), 'value':   'ACEFTS_L2_v4p1_CO2_627.nc'},
     {'label': _('Carbon dioxide 628'), 'value':  'ACEFTS_L2_v4p1_CO2_628.nc'},
     {'label': _('Carbon dioxide 636'), 'value':  'ACEFTS_L2_v4p1_CO2_636.nc'},
     {'label': _('Carbon dioxide 637'), 'value':  'ACEFTS_L2_v4p1_CO2_637.nc'},
-    
-    
+
+
     {'label': _('Carbon dioxide 638'), 'value':   'ACEFTS_L2_v4p1_CO2_638.nc'},
     {'label': _('Phosgene'), 'value':  'ACEFTS_L2_v4p1_COCl2.nc'},
     {'label': _('Carbonyl chlorine fluoride'), 'value':  'ACEFTS_L2_v4p1_COClF.nc'},
     {'label': _('Carbonyl fluoride'), 'value':   'ACEFTS_L2_v4p1_COF2.nc'},
     {'label': _('Carbon monoxide 27'), 'value':  'ACEFTS_L2_v4p1_CO_27.nc'},
     {'label': _('Carbon monoxide 28'), 'value':   'ACEFTS_L2_v4p1_CO_28.nc'},
-    
+
      {'label': _('Carbon monoxide 36'), 'value':   'ACEFTS_L2_v4p1_CO_36.nc'},
     {'label': _('Carbon monoxide 38'), 'value':   'ACEFTS_L2_v4p1_CO_38.nc'},
     {'label': _('GLC'), 'value':    'ACEFTS_L2_v4p1_GLC.nc'},
     {'label': _('Formaldehyde'), 'value':   'ACEFTS_L2_v4p1_H2CO.nc'},
     {'label': _('Water'), 'value':   'ACEFTS_L2_v4p1_H2O.nc'},
     {'label': _('Hydrogen peroxide'), 'value':   'ACEFTS_L2_v4p1_H2O2.nc'},
-    
-    
+
+
      {'label': _('Water 162'), 'value':    'ACEFTS_L2_v4p1_H2O_162.nc'},
     {'label': _('Water 171'), 'value':    'ACEFTS_L2_v4p1_H2O_171.nc'},
     {'label': _('Water 181'), 'value':     'ACEFTS_L2_v4p1_H2O_181.nc'},
@@ -233,32 +233,32 @@ gaz_name_options = [
     {'label': _('Hydrochlorofluorocarbon 141b'), 'value':    'ACEFTS_L2_v4p1_HCFC141b.nc'},
     {'label': _('Hydrochlorofluorocarbon 142b'), 'value':    'ACEFTS_L2_v4p1_HCFC142b.nc'},
     {'label': _('Hydrochloric acid'), 'value':     'ACEFTS_L2_v4p1_HCl.nc'},
-     
-     
-     
+
+
+
     {'label': _('Hydrogen cyanide'), 'value':   'ACEFTS_L2_v4p1_HCN.nc'},
     {'label': _('Formic acid'), 'value':   'ACEFTS_L2_v4p1_HCOOH.nc'},
     {'label': _('Hydrogen fluoride'), 'value':    'ACEFTS_L2_v4p1_HF.nc'},
     {'label': _('Hydrofluorocarbon 134a'), 'value':   'ACEFTS_L2_v4p1_HFC134a.nc'},
     {'label': _('Nitric acid'), 'value':  'ACEFTS_L2_v4p1_HNO3.nc'},
     {'label': _('Nitric acid 156'), 'value':  'ACEFTS_L2_v4p1_HNO3_156.nc'},
-    
-    
+
+
     {'label': _('Peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  'ACEFTS_L2_v4p1_N2.nc'},
     {'label': _('Nitrous oxide'), 'value':  'ACEFTS_L2_v4p1_N2O.nc'},
     {'label': _('Dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
     {'label': _('Nitrous oxide 447'), 'value':   'ACEFTS_L2_v4p1_N2O_447.nc'},
     {'label': _('Nitrous oxide 448'), 'value':    'ACEFTS_L2_v4p1_N2O_448.nc'},
-    
+
      {'label': _('Nitrous oxide 456'), 'value':    'ACEFTS_L2_v4p1_N2O_456.nc'},
     {'label': _('Nitrous oxide 546'), 'value':   'ACEFTS_L2_v4p1_N2O_546.nc'},
     {'label': _('Nitrous monoxide 447'), 'value':     'ACEFTS_L2_v4p1_NO.nc'},
     {'label': _('Nitrogen dioxide'), 'value':    'ACEFTS_L2_v4p1_NO2.nc'},
     {'label': _('Nitrogen dioxide 656'), 'value':    'ACEFTS_L2_v4p1_NO2_656.nc'},
     {'label': _('Oxygen'), 'value':    'ACEFTS_L2_v4p1_O2.nc'},
-    
-    
+
+
      {'label': _('Ozone'), 'value':     'ACEFTS_L2_v4p1_O3.nc'},
     {'label': _('Ozone 667'), 'value':     'ACEFTS_L2_v4p1_O3_667.nc'},
     {'label': _('Ozone 668'), 'value':     'ACEFTS_L2_v4p1_O3_668.nc'},
@@ -266,16 +266,16 @@ gaz_name_options = [
     {'label': _('Ozone 686'), 'value':     'ACEFTS_L2_v4p1_O3_686.nc'},
     {'label': _('Carbonyl sulfide'), 'value':     'ACEFTS_L2_v4p1_OCS.nc'},
      {'label': _('Carbonyl sulfide 623'), 'value':      'ACEFTS_L2_v4p1_OCS_623.nc'},
-     
-     
+
+
      {'label': _('Carbonyl sulfide 624'), 'value':      'ACEFTS_L2_v4p1_OCS_624.nc'},
     {'label': _('Carbonyl sulfide 632'), 'value':      'ACEFTS_L2_v4p1_OCS_632.nc'},
     {'label': _('Phosphorus'), 'value':      'ACEFTS_L2_v4p1_P.nc'},
     {'label': _('Polyacrylonitrile'), 'value':    'ACEFTS_L2_v4p1_PAN.nc'},
     {'label': _('Sulfur hexafluoride'), 'value':      'ACEFTS_L2_v4p1_SF6.nc'},
     {'label': _('Sulfur dioxide'), 'value':      'ACEFTS_L2_v4p1_SO2.nc'},
- #    {'label': _('Temperature'), 'value':    'ACEFTS_L2_v4p0_T.nc'} #!!! Est ce qu'on la met? 
-    
+ #    {'label': _('Temperature'), 'value':    'ACEFTS_L2_v4p0_T.nc'} #!!! Est ce qu'on la met?
+
    ]
 
 
@@ -417,12 +417,12 @@ def build_filtering():
                                         multi=False,
                                         value='ACEFTS_L2_v4p1_O3.nc',
                                         className="dcc_control",
-                                        
+
                                     ),
                                 ),
-                              
+
                                   html.Span(children=_("Selection of the gas"),className="wb-inv")]),
-                                
+
                                html.Div([
                                 html.Div( #Latitude picker
                                     [
@@ -462,7 +462,7 @@ def build_filtering():
                                             id="longitude-text",
                                             className="control_label",
                                         ),
-     
+
                                         dcc.Input(
                                             id="lon_min",
                                             type='number',
@@ -486,14 +486,14 @@ def build_filtering():
                                      html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
                                  #   className="one-half column"
                                     ),
-                                
+
                                 html.H5(
                                     "", style={"margin-top": "0px"}
                                     ),
                             ],
                             id="map-options",
                             ), #End of map options
-                                ]),                        
+                                ]),
                         html.Div(
                             [dcc.Graph(id="selector_map",
                                        config={
@@ -515,7 +515,7 @@ def build_filtering():
                                     id="yearslider-text",
                                     className="control_label",
                                     ),
-                               
+
                                 html.Div([
                                     html.Label(
                                         dcc.DatePickerRange(
@@ -540,11 +540,11 @@ def build_filtering():
                                             target="_blank",
                                             ),
                                         html.Span(children=_("Download the selected dataset"),className="wb-inv")]
-                                        
+
                                         ),
-                                    ], 
+                                    ],
                                     id="cross-filter-options"
-                                    ),  #End download Button                        
+                                    ),  #End download Button
                             ]),
                         #Graphique Altitude
                         html.Div([ #Choix altitude
@@ -585,7 +585,7 @@ def build_filtering():
                             html.Div ([ #Altitude graph description
                                 html.P(id = "Altitude_description")
                                 ]),   #End description
-                            
+
                     ],
                     id="right-column-1",
                     style={"flex-grow": 1},
@@ -612,10 +612,10 @@ def build_stats():
                                   }
                                   )
                             ]),
-                    
+
                     html.Div ([
                        html.P( id = "TimeS_description")
-                               ]),   
+                               ]),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -649,7 +649,7 @@ app.layout = html.Div(
 
 # Helper functions
 
-# Selectors -> !!! À voir ce qu'on veut rajouter ? 
+# Selectors -> !!! À voir ce qu'on veut rajouter ?
 @app.callback(
     Output("filtering_text", "children"),
     [
@@ -670,25 +670,25 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     ----------
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
 
     lat_min : float
         Minimum value of the latitude stored as a float.
-        
+
     lat_max : float
         Maximum value of the latitude stored as a float.
-        
+
     lon_min : float
         Minimum value of the longitude stored as a float.
-        
+
     lon_max : float
         Maximum value of the longitude stored as a float.
 
     gaz_list : list
         Gas names strings stored in a list (e.g. ['Ozone'])
-    
+
     alt_range : List
         Range of altitudes
 
@@ -709,16 +709,16 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     Output('date_picker_range', 'max_date_allowed'),
     Output('date_picker_range', 'start_date'),
     Output('date_picker_range', 'end_date')],
-    
+
     [ Input("gaz_list", "value")]
     )
 
 def update_picker(gaz_list):
      df =data_reader(gaz_list,r'data')
      return df.date.min().to_pydatetime(),df.date.max().to_pydatetime(),df.date.min().to_pydatetime(),df.date.max().to_pydatetime()
- 
-    
- 
+
+
+
 # Selectors -> Image download link
 #
 #@app.callback(
@@ -731,7 +731,7 @@ def update_picker(gaz_list):
 #        Input("lat_max", "value"),
 #        Input("lon_min", "value"),
 #        Input("lon_max", "value"),
-#        
+#
 #    ],
 #)
 #def update_images_link(gaz,date, lat_min, lat_max, lon_min, lon_max):
@@ -746,7 +746,7 @@ def update_picker(gaz_list):
     link = '/dash/downloadImages?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&ground_stations={}'\
         .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ground_stations)  #!!!!! à corriger selon donnée
 
-    return link 
+    return link
 
 
 from io import BytesIO
@@ -765,11 +765,11 @@ def download_images():  #!!!!! à corriger selon donnée
     lon_max = flask.request.args.get('lon_max')
 
     gaz_list = flask.request.args.get('gaz_list') # parses a string representation of ground_stations
-  
+
 
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
 
-  
+
 
     # Store the zip in memory
     memory_file = BytesIO()
@@ -802,44 +802,44 @@ def download_images():  #!!!!! à corriger selon donnée
         Input("lon_min", "value"),
         Input("lon_max", "value"),
         Input("alt_range","value"),
-       
+
     ],
 )
 def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max,alt_range):
     """Updates the link to the CSV download
-    
+
     Parameters
     ----------
-    
+
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
-    
+
     lat_min : float
         Minimum value of the latitude stored as a float.
-        
+
     lat_max : float
         Maximum value of the latitude stored as a float.
-        
+
     lon_min : float
         Minimum value of the longitude stored as a float.
-        
+
     lon_max : float
         Maximum value of the longitude stored as a float.
-    
+
     gaz_list : list
         Gas names strings stored in a list (e.g. ['Ozone'])
-        
+
     Returns
     -------
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
 
-    link = '/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
-            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range) 
+    link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}' \
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range)
 
     return link
 
@@ -855,23 +855,23 @@ def download_csv():
 
     args
     ----------
-   
+
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
 
 
     lat_min : float
         Minimum value of the latitude stored as a float.
-        
+
     lat_max : float
         Maximum value of the latitude stored as a float.
-        
+
     lon_min : float
         Minimum value of the longitude stored as a float.
-        
+
     lon_max : float
         Maximum value of the longitude stored as a float.
 
@@ -895,7 +895,7 @@ def download_csv():
     end_date   = flask.request.args.get('end_date')
     alt_range   = flask.request.args.get('alt_range')
     gaz_list= flask.request.args.get('gaz_list')
-   
+
     #start_date =pd.Timestamp(parse(start_date))
     #end_date   =pd.Timestamp(parse(end_date))
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
@@ -931,14 +931,14 @@ def update_bar_selector(value, clickData):
         for x in value["points"]:
             holder_lat.append(((x["lat"])))
             holder_lon.append(((x["lon"])))
-            
+
     holder_lat  = np.array( holder_lat)
     holder_lon  = np.array( holder_lon)
     if len(holder_lat)!=0 :
         return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
     else :
         return -90,90,-180,180
-    
+
 
 # Clear Selected Data if Click Data is used
 @app.callback(
@@ -948,12 +948,12 @@ def update_bar_selector(value, clickData):
 def update_selected_data(clickData):
     if clickData:
         return {"points": []}
-    
-#============================================================================   
- 
-    
+
+#============================================================================
+
+
 # Selectors -> count graph
-    
+
 @app.callback(
     Output("count_graph", "figure"),
     # [Input("visualize-button", "n_clicks")],
@@ -971,24 +971,24 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     """Create and update the Gas Concentration vs Altitude over the given time range.
 
     Parameters
-    ----------    
+    ----------
 
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
 
 
     lat_min : float
         Minimum value of the latitude stored as a float.
-        
+
     lat_max : float
         Maximum value of the latitude stored as a float.
-        
+
     lon_min : float
         Minimum value of the longitude stored as a float.
-        
+
     lon_max : float
         Maximum value of the longitude stored as a float.
 
@@ -1002,7 +1002,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     -------
     dict
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
-        layout as as a Plotly layout graph object. 
+        layout as as a Plotly layout graph object.
     """
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
     concentration=df[alt_range[0]:alt_range[1]]
@@ -1010,7 +1010,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
     err_xx=concentration.std(axis=0)
-    
+
     # layout_count = copy.deepcopy(layout)
     data = [
         dict(
@@ -1022,12 +1022,12 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
             #orientation='h',
             # color=xx,
              # colorscale=[[0, 'red'],
-            # [1, 'blue']],   
+            # [1, 'blue']],
             # opacity=1,
-          
+
         )
     ]
-    
+
     layout = dict(
         autosize=True,
         automargin=True,
@@ -1035,8 +1035,8 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
        # title=_(" "),
-        
-        xaxis=dict(title= _("Concentration [ppv]"), 
+
+        xaxis=dict(title= _("Concentration [ppv]"),
                    automargin= True,
                    showexponent = 'all',
                    exponentformat = 'e'
@@ -1044,8 +1044,8 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
 
         yaxis =  dict(
            title = _("Altitude [km]"),
-           automargin=True,     
-           ), 
+           automargin=True,
+           ),
 
         height=450,
         transition={'duration': 500},
@@ -1072,7 +1072,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         Input("lon_min", "value"),#!!!!!! à remplacer lorsque le click-select est pret
         Input("lon_max", "value"),
         Input("alt_range","value"),
-     
+
     ],
 )
 
@@ -1084,23 +1084,23 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
 
     Parameters
     ----------
-   
+
 
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
 
     lat_min : float
         Minimum value of the latitude stored as a float.
-        
+
     lat_max : float
         Maximum value of the latitude stored as a float.
-        
+
     lon_min : float
         Minimum value of the longitude stored as a float.
-        
+
     lon_max : float
         Maximum value of the longitude stored as a float.
 
@@ -1109,7 +1109,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
 
     alt_range : List
         Range of altitudes
- 
+
 
     Returns
     -------
@@ -1119,8 +1119,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     """
 
     df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-    
-    # Group data by latitude and longitude 
+
+    # Group data by latitude and longitude
     df=df.groupby(['lat','long']).mean().reset_index()
 
     # Graph
@@ -1135,23 +1135,23 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             cmin=0,
             cmax=max(df['Alt_Mean']),#[df['Alt_Mean']<0.0003]),
             showscale=True,
-            
+
             size=5,
             colorbar=dict(
                 title=dict(
                     text=_("Gas Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
                 ),
-                titleside="right",     
+                titleside="right",
                 showexponent = 'all',
-                exponentformat = 'e'        
+                exponentformat = 'e'
             ),
         opacity=0.6,
         )
       )
-    
+
     )
     fig.update_layout(
-        margin=dict(l=10, r=10, t=20, b=10, pad=5),                    
+        margin=dict(l=10, r=10, t=20, b=10, pad=5),
         # annotations = [dict(xref='paper',
         #     yref='paper',
         #     x=0.5, y=-0.25,
@@ -1159,14 +1159,14 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         #     text ='This is my caption for the Plotly figure')],
         clickmode="event+select",
         hovermode="closest",
-       # showlegend=False,  
+       # showlegend=False,
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token
             #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex", #!!!!!! changer le stype de la map?
         ),
         transition={'duration': 500},
     )
-    
+
     return fig
 
 
@@ -1175,7 +1175,7 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
     Output("viz_chart", "figure"),
     # [Input("visualize-button", "n_clicks")],
     [
-       
+
         Input("date_picker_range", "start_date"),
         Input("date_picker_range", "end_date"),
         # Input("x_axis_selection_1", "value"),
@@ -1194,10 +1194,10 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
 
     Parameters
     ----------
-   
+
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
-    
+
     end_date : Datetime
         Last day in the date range selected by user. The default is the last day of data available.
 
@@ -1232,14 +1232,14 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the chart's layout
         as a Plotly layout graph object.
     """
-    
+
     df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-    
+
     concentration =df.groupby('date')['Alt_Mean'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()
-   
+
     # bucketing the data
     """
     if x_axis_selection == 'timestamp':
@@ -1312,7 +1312,7 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
             connectgaps=True,
             showlegend=False,
         ),
-   
+
     ]
 
     layout = dict(
@@ -1322,15 +1322,15 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
         title=_("Time Series"),
-        
+
         xaxis={"title": _('Date'), "automargin": True} ,
 
         yaxis =  dict(
            title = _("Concentration [ppv]"),
-           automargin=True,     
+           automargin=True,
            showexponent = 'all',
            exponentformat = 'e'
-           ), 
+           ),
 
         height=500,
         transition={'duration': 500},
@@ -1345,7 +1345,7 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
     Output("viz_map", "figure"),
     # [Input("visualize-button", "n_clicks")],
     [
-      
+
         Input('date_picker_range', "value"),
         Input("stat_selection", "value"),
         Input("y_axis_selection_2", "value"),
@@ -1367,7 +1367,7 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
 
     Parameters
     ----------
-   
+
     date : str
         Ending date stored as a str
 
@@ -1406,7 +1406,7 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
     date = dt.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
 
     df =data_reader(gaz_list,r'data',start_date,end_date)
-    
+
     traces = []
     for station_details, dfff in filtered_data.groupby(["station_name", "lat", "lon"]):
         trace = dict(
@@ -1597,45 +1597,45 @@ def translate_static(x):
     {'label': _('Dichlorodifluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl2F2.nc'},
     {'label': _('Trichlorofluoromethane'), 'value': 'ACEFTS_L2_v4p1_CCl3F.nc'},
     {'label': _('Carbon tetrachloride'), 'value':  'ACEFTS_L2_v4p1_CCl4.nc'},
-    
-    
+
+
     {'label': _('Carbon tetrafluoride'), 'value':  'ACEFTS_L2_v4p1_CF4.nc'},
     {'label': _('Trichlorotrifluoroethane'), 'value':  'ACEFTS_L2_v4p1_CFC113.nc'},
     {'label': _('Chloromethane'), 'value':  'ACEFTS_L2_v4p1_CH3Cl.nc'},
     {'label': _('Acetonitrite'), 'value':  'ACEFTS_L2_v4p1_CH3CN.nc'},
     {'label': _('Methanol'), 'value':  'ACEFTS_L2_v4p1_CH3OH.nc'},
     {'label': _('Methane'), 'value':  'ACEFTS_L2_v4p1_CH4.nc'},
-    
+
     {'label': _('Methane 212'), 'value':  'ACEFTS_L2_v4p1_CH4_212.nc'},
     {'label': _('Methane 311'), 'value':  'ACEFTS_L2_v4p1_CH4_311.nc'},
     {'label': _('Difluorochloromethane'), 'value':   'ACEFTS_L2_v4p1_CHF2Cl.nc'},
     {'label': _('Trifluoromethane'), 'value':  'ACEFTS_L2_v4p1_CHF3.nc'},
     {'label': _('Chlorine monoxide'), 'value':  'ACEFTS_L2_v4p1_ClO.nc'},
     {'label': _('Chlorine nitrate'), 'value':  'ACEFTS_L2_v4p1_ClONO2.nc'},
-    
+
     {'label': _('Carbon monoxide'), 'value':  'ACEFTS_L2_v4p1_CO.nc'},
     {'label': _('Carbon dioxide'), 'value':  'ACEFTS_L2_v4p1_CO2.nc'},
     {'label': _('Carbon dioxide 627'), 'value':   'ACEFTS_L2_v4p1_CO2_627.nc'},
     {'label': _('Carbon dioxide 628'), 'value':  'ACEFTS_L2_v4p1_CO2_628.nc'},
     {'label': _('Carbon dioxide 636'), 'value':  'ACEFTS_L2_v4p1_CO2_636.nc'},
     {'label': _('Carbon dioxide 637'), 'value':  'ACEFTS_L2_v4p1_CO2_637.nc'},
-    
-    
+
+
     {'label': _('Carbon dioxide 638'), 'value':   'ACEFTS_L2_v4p1_CO2_638.nc'},
     {'label': _('Phosgene'), 'value':  'ACEFTS_L2_v4p1_COCl2.nc'},
     {'label': _('Carbonyl chlorofluoride'), 'value':  'ACEFTS_L2_v4p1_COClF.nc'},
     {'label': _('Carbonyl fluoride'), 'value':   'ACEFTS_L2_v4p1_COF2.nc'},
     {'label': _('Carbon monoxide 27'), 'value':  'ACEFTS_L2_v4p1_CO_27.nc'},
     {'label': _('Carbon monoxide 28'), 'value':   'ACEFTS_L2_v4p_CO_28.nc'},
-    
+
      {'label': _('Carbon monoxide 36'), 'value':   'ACEFTS_L2_v4p1_CO_36.nc'},
     {'label': _('Carbon monoxide 38'), 'value':   'ACEFTS_L2_v4p1_CO_38.nc'},
     {'label': _('GLC'), 'value':    'ACEFTS_L2_v4p1_GLC.nc'},
     {'label': _('Formaldehyde'), 'value':   'ACEFTS_L2_v4p1_H2CO.nc'},
     {'label': _('Water'), 'value':   'ACEFTS_L2_v4p1_H2O.nc'},
     {'label': _('Hydrogen peroxide'), 'value':   'ACEFTS_L2_v4p1_H2O2.nc'},
-    
-    
+
+
      {'label': _('Water 162'), 'value':    'ACEFTS_L2_v4p1_H2O_162.nc'},
     {'label': _('Water 171'), 'value':    'ACEFTS_L2_v4p1_H2O_171.nc'},
     {'label': _('Water 181'), 'value':     'ACEFTS_L2_v4p1_H2O_181.nc'},
@@ -1643,30 +1643,30 @@ def translate_static(x):
     {'label': _('Hydrochlorofluorocarbon 141b'), 'value':    'ACEFTS_L2_v4p1_HCFC141b.nc'},
     {'label': _('Hydrochlorofluorocarbon 142b'), 'value':    'ACEFTS_L2_v4p1_HCFC142b.nc'},
     {'label': _('Hydrochloric acid'), 'value':     'ACEFTS_L2_v4p1_HCl.nc'},
-     
+
     {'label': _('Hydrogen cyanide'), 'value':   'ACEFTS_L2_v4p1_HCN.nc'},
     {'label': _('Formic acid'), 'value':   'ACEFTS_L2_v4p1_HCOOH.nc'},
     {'label': _('Hydrogen fluoride'), 'value':    'ACEFTS_L2_v4p1_HF.nc'},
     {'label': _('Hydrofluorocarbon 134a'), 'value':   'ACEFTS_L2_v4p1_HFC134a.nc'},
     {'label': _('Nitric acid'), 'value':  'ACEFTS_L2_v4p1_HNO3.nc'},
     {'label': _('Nitric acid 156'), 'value':  'ACEFTS_L2_v4p1_HNO3_156.nc'},
-    
-    
+
+
     {'label': _('Peroxynitric acid'), 'value':   'ACEFTS_L2_v4p1_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  'ACEFTS_L2_v4p1_N2.nc'},
     {'label': _('Nitrous oxide'), 'value':  'ACEFTS_L2_v4p1_N2O.nc'},
     {'label': _('Dinitrogen pentaoxide'), 'value':    'ACEFTS_L2_v4p1_N2O5.nc'},
     {'label': _('Nitrous oxide 447'), 'value':   'ACEFTS_L2_v4p1_N2O_447.nc'},
     {'label': _('Nitrous oxide 448'), 'value':    'ACEFTS_L2_v4p1_N2O_448.nc'},
-    
+
      {'label': _('Nitrous oxide 456'), 'value':    'ACEFTS_L2_v4p1_N2O_456.nc'},
     {'label': _('Nitrous oxide 546'), 'value':   'ACEFTS_L2_v4p1_N2O_546.nc'},
     {'label': _('Nitrous monoxide 447'), 'value':     'ACEFTS_L2_v4p1_NO.nc'},
     {'label': _('Nitrogen dioxide'), 'value':    'ACEFTS_L2_v4p1_NO2.nc'},
     {'label': _('Nitrogen dioxide 656'), 'value':    'ACEFTS_L2_v4p1_NO2_656.nc'},
     {'label': _('Oxygen'), 'value':    'ACEFTS_L2_v4p1_O2.nc'},
-    
-    
+
+
      {'label': _('Ozone'), 'value':     'ACEFTS_L2_v4p1_O3.nc'},
     {'label': _('Ozone 667'), 'value':     'ACEFTS_L2_v4p1_O3_667.nc'},
     {'label': _('Ozone 668'), 'value':     'ACEFTS_L2_v4p1_O3_668.nc'},
@@ -1674,8 +1674,8 @@ def translate_static(x):
     {'label': _('Ozone 686'), 'value':     'ACEFTS_L2_v4p1_O3_686.nc'},
     {'label': _('Carbonyl sulfide'), 'value':     'ACEFTS_L2_v4p1_OCS.nc'},
      {'label': _('Carbonyl sulfide 623'), 'value':      'ACEFTS_L2_v4p1_OCS_623.nc'},
-     
-     
+
+
      {'label': _('Carbonyl sulfide 624'), 'value':      'ACEFTS_L2_v4p1_OCS_624.nc'},
     {'label': _('Carbonyl sulfide 632'), 'value':      'ACEFTS_L2_v4p1_OCS_632.nc'},
     {'label': _('Phosphorus'), 'value':      'ACEFTS_L2_v4p1_P.nc'},
@@ -1684,7 +1684,7 @@ def translate_static(x):
     {'label': _('Sulfur dioxide'), 'value':      'ACEFTS_L2_v4p1_SO2.nc'},
     #{'label': _('T'), 'value':       'ACEFTS_L2_v4p0_T.nc'}#!!!!!
             ],  #End gas_options
-    
+
     ]
 
 
@@ -1754,9 +1754,5 @@ def set_language(language=None):
 
 if __name__ == '__main__':
      #app.run_server(debug=True)  # For development/testing
-    
+
      app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
-     
-
-
-

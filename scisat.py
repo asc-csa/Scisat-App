@@ -1758,7 +1758,8 @@ def get_locale():
         language = None
     if language is not None:
         return language
-    return 'en'
+    else:
+        return 'en'
 
 
 @app.server.route('/language/<language>')

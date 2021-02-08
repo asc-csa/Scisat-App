@@ -916,7 +916,14 @@ def download_csv():
     csv_buffer = StringIO()
     df.to_csv(csv_buffer, index=False)
     output = make_response(csv_buffer.getvalue())
-    output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
+    try:
+        language = session['language']
+    except KeyError:
+        language = 'en'
+    if language == 'fr':
+        output.headers["Content-Disposition"] = "attachment; filename=résumé_données.csv"
+    else:
+        output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
     output.headers["Content-type"] = "text/csv"
 
     return output
@@ -1751,7 +1758,8 @@ def get_locale():
         language = None
     if language is not None:
         return language
-    return 'en'
+    else:
+        return 'en'
 
 
 @app.server.route('/language/<language>')

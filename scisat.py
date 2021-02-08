@@ -1741,7 +1741,10 @@ def update_language_button(x):
     """Updates the button to switch languages
     """
 
-    language = session['language']
+    try:
+        language = session['language']
+    except KeyError:
+        language = None
     if language == 'fr':
         return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
     else:

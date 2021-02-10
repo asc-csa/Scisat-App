@@ -7,7 +7,7 @@
 
 ## Contexte
 
-Le satellite SCISAT, en orbit depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
+Le satellite SCISAT, en orbite depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
 
 
 ![interface de l'application](Capture_app.PNG)
@@ -43,6 +43,34 @@ Pour démarrer l'application :
  - [messages.pot](message.pot) et [/translations](translations) contient des informations sur la traduction
 
  - [config.py](config.py) précise les langues disponibles pour la traduction
+
+## Accessibilité et Marque
+ - En raison des [exigences relatives à la marque Canada.ca] (https://wet-boew.github.io/themes-dist/GCWeb/index-en.html), une grande partie du CSS de l'application devra être modifiée et l'en-tête et le pied de page du gouvernement du Canada devront être ajoutés
+    - Les exigences du gouvernement du Canada seront plus strictes lorsque le site Web de la CSA sera fusionné avec Canada.ca en mars 2020
+    - Pour plus d'informations sur l'image de marque du gouvernement du Canada, cliquez ici : [http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader](http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader)
+ - En raison de la [norme du gouvernement du Canada sur l'accessibilité du Web] (https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=23601), il faudra probablement apporter des modifications au frontal ou au CSS
+    - Le [Web Experience Toolkit] (https://wet-boew.github.io/v4.0-ci/index-en.html) peut être utilisé pour aider à atteindre cette norme, mais il n'est pas nécessaire
+    - Vous trouverez ici d'autres notes sur l'accessibilité : [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader]([http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader])
+ 
+Il faudra apporter des modifications à app.py pour changer les couleurs et les styles des visualisations interactives ainsi que la mise en page HTML de la page.
+
+## En-tête/Pied de page
+
+- Le code de l'en-tête/du pied de page du gouvernement est enregistré dans un fichier séparé (header_footer.py), et est directement injecté dans l'application Dash.
+
+## Traductions
+
+ - Les traductions sont délicates avec Dash en raison de la façon dont Dash rend la page. Pour savoir comment faire de nouvelles traductions, consultez [https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n]([https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n])
+
+ - Chaque élément de texte à traduire dans Dash doit recevoir un identifiant de composant (voir la documentation sur Dash pour plus de détails à ce sujet). Le composant est ensuite rendu à nouveau lors du changement de langue. 
+
+## Auteurs
+ - Camille Roy
+ - Jonathan Beaulieu-Emond
+ 
+## Remerciements
+ - Etienne Low-Decarie
+ - Hansen Liu & Wasiq Mohammad 
 
 # Application to filter and visualize SCISAT data
 
@@ -115,10 +143,6 @@ There will need to be changes in app.py to change colours and styles of the inte
  - Translations are tricky with Dash due to the way it renders the page. To learn how to make new translations, consult [https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n]([https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n])
 
  - Each text element to be translated in dash has to be given a component ID (see Dash documentation for more details on this). The component is subsequently re-rendered on language switch. 
-
-## Downloads
-
-- Download button is not effective at the moment. It will need to be modified in order to work properly
 
 ## Authors
  - Camille Roy

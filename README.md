@@ -49,8 +49,8 @@ Pour démarrer l'application :
     - Les exigences du gouvernement du Canada seront plus strictes lorsque le site Web de la CSA sera fusionné avec Canada.ca en mars 2020
     - Pour plus d'informations sur l'image de marque du gouvernement du Canada, cliquez ici : [http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader](http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader)
  - En raison de la [norme du gouvernement du Canada sur l'accessibilité du Web](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=23601), il faudra probablement apporter des modifications au frontal ou au CSS
-    - Le [Web Experience Toolkit](https://wet-boew.github.io/v4.0-ci/index-en.html) peut être utilisé pour aider à atteindre cette norme, mais il n'est pas nécessaire
-    - Vous trouverez ici d'autres notes sur l'accessibilité : [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader]([http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader])
+    - Le [Web Experience Toolkit](https://wet-boew.github.io/wet-boew/docs/versions/dwnld-fr.html) peut être utilisé pour aider à atteindre cette norme, mais il n'est pas nécessaire
+    - Vous trouverez ici d'autres notes sur l'accessibilité : [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader](http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader)
  
 Il faudra apporter des modifications à app.py pour changer les couleurs et les styles des visualisations interactives ainsi que la mise en page HTML de la page.
 
@@ -129,8 +129,8 @@ Separate installation instructions for the production version of the app are pro
     - There will be stricter Government of Canada requirements when the CSA website gets merged with Canada.ca in March of 2020
     - More note on Government of Canada branding can be found here: [http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader](http://livelink/livelink/llisapi.dll?func=ll&objId=43843079&objAction=viewheader)
  - Due to the [Government of Canada Standard on Web Accessibility](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=23601), there will likely need to be changes to the frontend or CSS
-    - The [Web Experience Toolkit](https://wet-boew.github.io/v4.0-ci/index-en.html) can be used to help reach this standard, but it is not necessary
-    - More notes on accessibility can be found here: [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader]([http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader])
+    - The [Web Experience Toolkit](https://wet-boew.github.io/wet-boew/docs/versions/dwnld-en.html) can be used to help reach this standard, but it is not necessary
+    - More notes on accessibility can be found here: [http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader](http://livelink/livelink/llisapi.dll?func=ll&objId=43801583&objAction=viewheader)
  
 There will need to be changes in app.py to change colours and styles of the interactive visualizations as well as the HTML layout of the page.
 

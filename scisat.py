@@ -376,7 +376,6 @@ def build_filtering():
                     [
                         html.Div(
                             [
-                                 html.H6(id="description"),
                                  html.P(id="description-1"),
                                  html.P(id="description-2"),
                                  html.A(
@@ -424,7 +423,7 @@ def build_filtering():
                                         value='ACEFTS_L2_v4p1_O3.nc',
                                         className="dcc_control",
 
-                                    ),
+                                    )
                                 ),
 
                                   html.Span(children=_("Selection of the gas"),className="wb-inv")]),
@@ -436,29 +435,38 @@ def build_filtering():
                                             id="latitude-text",
                                             className="control_label",
                                         ),
-                                        dcc.Input(
-                                            id="lat_min",
-                                            type='number',
-                                            value=-90.0,
-                                            placeholder="Min Latitude",
-                                            min=-90.0,
-                                            max=90.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        dcc.Input(
-                                            id="lat_max",
-                                            type='number',
-                                            value=90.0,
-                                            placeholder="Max Latitude",
-                                            min=-90.0,
-                                            max=90.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        html.H5(
-                                            "", style={"margin-top": "0px"}
-                                        ),
+                                        html.Div([
+                                            html.Label(
+                                                id = "lat_min-text",
+                                                htmlFor = "lat_min",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lat_min",
+                                                type='number',
+                                                value=-90.0,
+                                                placeholder="Min Latitude",
+                                                min=-90.0,
+                                                max=90.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                            html.Label(
+                                                id = "lat_max-text",
+                                                htmlFor = "lat_max",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lat_max",
+                                                type='number',
+                                                value=90.0,
+                                                placeholder="Max Latitude",
+                                                min=-90.0,
+                                                max=90.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            )
+                                        ]),
                                       html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
                                     className="one-half column"
                                 ),
@@ -468,33 +476,40 @@ def build_filtering():
                                             id="longitude-text",
                                             className="control_label",
                                         ),
-
-                                        dcc.Input(
-                                            id="lon_min",
-                                            type='number',
-                                            value=-180.0,
-                                            placeholder="Min Longitude",
-                                            min=-180.0,
-                                            max=180.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        dcc.Input(
-                                            id="lon_max",
-                                            type='number',
-                                            value=180.0,
-                                            placeholder="Max Longitude",
-                                            min=-180.0,
-                                            max=180.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
+                                        html.Div([
+                                            html.Label(
+                                                htmlFor="lon_min",
+                                                id= "lon_min-text",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lon_min",
+                                                type='number',
+                                                value=-180.0,
+                                                placeholder="Min Longitude",
+                                                min=-180.0,
+                                                max=180.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                            html.Label(
+                                                htmlFor="lon_max",
+                                                id= "lon_max-text",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lon_max",
+                                                type='number',
+                                                value=180.0,
+                                                placeholder="Max Longitude",
+                                                min=-180.0,
+                                                max=180.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                        ]),
                                      html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
                                  #   className="one-half column"
-                                    ),
-
-                                html.H5(
-                                    "", style={"margin-top": "0px"}
                                     ),
                             ],
                             id="map-options",
@@ -508,7 +523,7 @@ def build_filtering():
                                        }
                                        )],
                         ),
-                        html.Div ([html.P(id="Map_description")]),   #!!!!!!! Tesssst
+                        html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -554,9 +569,6 @@ def build_filtering():
                             ]),
                         #Graphique Altitude
                         html.Div([ #Choix altitude
-                                  html.H5(
-                                    "", style={"margin-top": "5px"}#, "margin-bottom": "35px"}
-                                    ),
                                 html.P(id="altitude-text",
                                         className="control_label"
                                         ),
@@ -572,9 +584,6 @@ def build_filtering():
                                 html.Div(id='output-container-alt-picker-range')
                                 ]), #End Altitude Choice
                         html.Div([ # Altitude graph
-                            html.H5(
-                                    "", style={"margin-top": "25px"}#, "margin-bottom": "35px"}
-                                ),
                             html.Div([ # Graphique
                                 dcc.Graph(id="count_graph",
                                           config={
@@ -584,12 +593,9 @@ def build_filtering():
                                           )],
                                      id="countGraphContainer",
                                      ),
-                            html.H5(
-                                    "", style={"margin-top": "10px"}#, "margin-bottom": "35px"}
-                                    )
                             ]), #End Altitude Graph
                             html.Div ([ #Altitude graph description
-                                html.P(id = "Altitude_description")
+                                html.P(id = "Altitude_description", style={"margin-top":"2em"})
                                 ]),   #End description
 
                     ],
@@ -620,7 +626,7 @@ def build_stats():
                             ]),
 
                     html.Div ([
-                       html.P( id = "TimeS_description")
+                       html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
                     ],
                     id="vizChartContainer",
@@ -1578,7 +1584,11 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("Altitude_description","children"),
         Output("TimeS_description","children"),
         Output("latitude-text", "children"),
+        Output("lat_min-text", "children"),
+        Output("lat_max-text", "children"),
         Output("longitude-text", "children"),
+        Output("lon_min-text", "children"),
+        Output("lon_max-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
         Output("gas-text", "children"),
@@ -1601,7 +1611,11 @@ def translate_static(x):
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
                 _("Filter by Latitude:"),
+                _("Minimum latitude"),
+                _("Maximum latitude"),
                 _("Filter by Longitude:"),
+                _("Minimum longitude"),
+                _("Maximum longitude"),
                 _("Select Altitude Range:"),
                 _("Select Date:"),
                 _("Select Gas:"),

@@ -376,7 +376,6 @@ def build_filtering():
                     [
                         html.Div(
                             [
-                                 html.H6(id="description"),
                                  html.P(id="description-1"),
                                  html.P(id="description-2"),
                                  html.A(
@@ -468,9 +467,6 @@ def build_filtering():
                                                 style={"margin-left": "5px"}
                                             )
                                         ]),
-                                        html.H5(
-                                            "", style={"margin-top": "0px"}
-                                        ),
                                       html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
                                     className="one-half column"
                                 ),
@@ -515,10 +511,6 @@ def build_filtering():
                                      html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
                                  #   className="one-half column"
                                     ),
-
-                                html.H5(
-                                    "", style={"margin-top": "0px"}
-                                    ),
                             ],
                             id="map-options",
                             ), #End of map options
@@ -531,7 +523,7 @@ def build_filtering():
                                        }
                                        )],
                         ),
-                        html.Div ([html.P(id="Map_description")]),   #!!!!!!! Tesssst
+                        html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -577,9 +569,6 @@ def build_filtering():
                             ]),
                         #Graphique Altitude
                         html.Div([ #Choix altitude
-                                  html.H5(
-                                    "", style={"margin-top": "5px"}#, "margin-bottom": "35px"}
-                                    ),
                                 html.P(id="altitude-text",
                                         className="control_label"
                                         ),
@@ -595,9 +584,6 @@ def build_filtering():
                                 html.Div(id='output-container-alt-picker-range')
                                 ]), #End Altitude Choice
                         html.Div([ # Altitude graph
-                            html.H5(
-                                    "", style={"margin-top": "25px"}#, "margin-bottom": "35px"}
-                                ),
                             html.Div([ # Graphique
                                 dcc.Graph(id="count_graph",
                                           config={
@@ -607,12 +593,9 @@ def build_filtering():
                                           )],
                                      id="countGraphContainer",
                                      ),
-                            html.H5(
-                                    "", style={"margin-top": "10px"}#, "margin-bottom": "35px"}
-                                    )
                             ]), #End Altitude Graph
                             html.Div ([ #Altitude graph description
-                                html.P(id = "Altitude_description")
+                                html.P(id = "Altitude_description", style={"margin-top":"2em"})
                                 ]),   #End description
 
                     ],
@@ -643,7 +626,7 @@ def build_stats():
                             ]),
 
                     html.Div ([
-                       html.P( id = "TimeS_description")
+                       html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
                     ],
                     id="vizChartContainer",

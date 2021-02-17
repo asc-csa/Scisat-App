@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-02-17 09:46-0500\n"
+"POT-Creation-Date: 2021-02-17 15:57-0500\n"
 "PO-Revision-Date: 2020-07-10 16:35-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,103 +18,103 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: scisat.py:187 scisat.py:1700
+#: scisat.py:187 scisat.py:1703
 msgid "Acetone"
 msgstr "Acétone"
 
-#: scisat.py:188 scisat.py:1701
+#: scisat.py:188 scisat.py:1704
 msgid "Acetylene"
 msgstr "Acétylène"
 
-#: scisat.py:189 scisat.py:1702
+#: scisat.py:189 scisat.py:1705
 msgid "Ethane"
 msgstr "Éthane"
 
-#: scisat.py:190 scisat.py:1704
+#: scisat.py:190 scisat.py:1707
 msgid "Trichlorofluoromethane"
 msgstr "Trichlorofluorométhane"
 
-#: scisat.py:191 scisat.py:1705
+#: scisat.py:191 scisat.py:1708
 msgid "Carbon tetrachloride"
 msgstr "Tétrachlorure de carbone"
 
-#: scisat.py:193 scisat.py:1708
+#: scisat.py:193 scisat.py:1711
 msgid "Carbon tetrafluoride"
 msgstr "Tétrafluorure de carbone"
 
-#: scisat.py:194 scisat.py:1709
+#: scisat.py:194 scisat.py:1712
 msgid "Trichlorotrifluoroethane"
 msgstr "Trichlorotrifluoroéthane"
 
-#: scisat.py:195 scisat.py:1710
+#: scisat.py:195 scisat.py:1713
 msgid "Chloromethane"
 msgstr "Chlorométhane"
 
-#: scisat.py:196 scisat.py:1711
+#: scisat.py:196 scisat.py:1714
 msgid "Acetonitrite"
 msgstr "Acétonitrile"
 
-#: scisat.py:197 scisat.py:1712
+#: scisat.py:197 scisat.py:1715
 msgid "Methanol"
 msgstr "Méthanol"
 
-#: scisat.py:198 scisat.py:1713
+#: scisat.py:198 scisat.py:1716
 msgid "Methane"
 msgstr "Méthane"
 
-#: scisat.py:200 scisat.py:1715
+#: scisat.py:200 scisat.py:1718
 msgid "Methane 212"
 msgstr "Méthane 212"
 
-#: scisat.py:201 scisat.py:1716
+#: scisat.py:201 scisat.py:1719
 msgid "Methane 311"
 msgstr "Méthane 311"
 
-#: scisat.py:202 scisat.py:1717
+#: scisat.py:202 scisat.py:1720
 msgid "Difluorochloromethane"
 msgstr "Difluorochlorométhane"
 
-#: scisat.py:203 scisat.py:1718
+#: scisat.py:203 scisat.py:1721
 msgid "Trifluoromethane"
 msgstr "Trifluorométhane"
 
-#: scisat.py:204 scisat.py:1719
+#: scisat.py:204 scisat.py:1722
 msgid "Chlorine monoxide"
 msgstr "Monoxyde de chlore"
 
-#: scisat.py:205 scisat.py:1720
+#: scisat.py:205 scisat.py:1723
 msgid "Chlorine nitrate"
 msgstr "Nitrate de chlore"
 
-#: scisat.py:207 scisat.py:1722
+#: scisat.py:207 scisat.py:1725
 msgid "Carbon monoxide"
 msgstr "Monoxyde de carbone"
 
-#: scisat.py:208 scisat.py:1723
+#: scisat.py:208 scisat.py:1726
 msgid "Carbon dioxide"
 msgstr "Dioxyde de carbone"
 
-#: scisat.py:209 scisat.py:1724
+#: scisat.py:209 scisat.py:1727
 msgid "Carbon dioxide 627"
 msgstr "Dioxyde de carbone 627"
 
-#: scisat.py:210 scisat.py:1725
+#: scisat.py:210 scisat.py:1728
 msgid "Carbon dioxide 628"
 msgstr "Dioxyde de carbone 628"
 
-#: scisat.py:211 scisat.py:1726
+#: scisat.py:211 scisat.py:1729
 msgid "Carbon dioxide 636"
 msgstr "Dioxyde de carbone 636"
 
-#: scisat.py:212 scisat.py:1727
+#: scisat.py:212 scisat.py:1730
 msgid "Carbon dioxide 637"
 msgstr "Dioxyde de carbone 637"
 
-#: scisat.py:215 scisat.py:1730
+#: scisat.py:215 scisat.py:1733
 msgid "Carbon dioxide 638"
 msgstr "Dioxyde de carbone 638"
 
-#: scisat.py:216 scisat.py:1731
+#: scisat.py:216 scisat.py:1734
 msgid "Phosgene"
 msgstr "Phosgène"
 
@@ -122,191 +122,191 @@ msgstr "Phosgène"
 msgid "Carbonyl chlorine fluoride"
 msgstr ""
 
-#: scisat.py:218 scisat.py:1733
+#: scisat.py:218 scisat.py:1736
 msgid "Carbonyl fluoride"
 msgstr "Fluorure de carbonyle"
 
-#: scisat.py:219 scisat.py:1734
+#: scisat.py:219 scisat.py:1737
 msgid "Carbon monoxide 27"
 msgstr "Monoxyde de carbone 27"
 
-#: scisat.py:220 scisat.py:1735
+#: scisat.py:220 scisat.py:1738
 msgid "Carbon monoxide 28"
 msgstr "Monoxyde de carbone 28"
 
-#: scisat.py:222 scisat.py:1737
+#: scisat.py:222 scisat.py:1740
 msgid "Carbon monoxide 36"
 msgstr "Monoxyde de carbone 36"
 
-#: scisat.py:223 scisat.py:1738
+#: scisat.py:223 scisat.py:1741
 msgid "Carbon monoxide 38"
 msgstr "Monoxyde de carbone 38"
 
-#: scisat.py:224 scisat.py:1739
+#: scisat.py:224 scisat.py:1742
 msgid "GLC"
 msgstr "Géolocatisation"
 
-#: scisat.py:225 scisat.py:1740
+#: scisat.py:225 scisat.py:1743
 msgid "Formaldehyde"
 msgstr "Formaldéhyde"
 
-#: scisat.py:226 scisat.py:1741
+#: scisat.py:226 scisat.py:1744
 msgid "Water"
 msgstr "Eau"
 
-#: scisat.py:227 scisat.py:1742
+#: scisat.py:227 scisat.py:1745
 msgid "Hydrogen peroxide"
 msgstr "Peroxyde d'hydrogène"
 
-#: scisat.py:230 scisat.py:1745
+#: scisat.py:230 scisat.py:1748
 msgid "Water 162"
 msgstr "Eau 162"
 
-#: scisat.py:231 scisat.py:1746
+#: scisat.py:231 scisat.py:1749
 msgid "Water 171"
 msgstr "Eau 171"
 
-#: scisat.py:232 scisat.py:1747
+#: scisat.py:232 scisat.py:1750
 msgid "Water 181"
 msgstr "Eau 181"
 
-#: scisat.py:233 scisat.py:1748
+#: scisat.py:233 scisat.py:1751
 msgid "Water 182"
 msgstr "Eau 182"
 
-#: scisat.py:234 scisat.py:1749
+#: scisat.py:234 scisat.py:1752
 msgid "Hydrochlorofluorocarbon 141b"
 msgstr "Hydrochlorofluorocarbone 141b"
 
-#: scisat.py:235 scisat.py:1750
+#: scisat.py:235 scisat.py:1753
 msgid "Hydrochlorofluorocarbon 142b"
 msgstr "Hydrochlorofluorocarbone 142b"
 
-#: scisat.py:236 scisat.py:1751
+#: scisat.py:236 scisat.py:1754
 msgid "Hydrochloric acid"
 msgstr "Acide chlorydrique"
 
-#: scisat.py:240 scisat.py:1753
+#: scisat.py:240 scisat.py:1756
 msgid "Hydrogen cyanide"
 msgstr "Cyanure d'hydrogène"
 
-#: scisat.py:241 scisat.py:1754
+#: scisat.py:241 scisat.py:1757
 msgid "Formic acid"
 msgstr "Acide formique"
 
-#: scisat.py:242 scisat.py:1755
+#: scisat.py:242 scisat.py:1758
 msgid "Hydrogen fluoride"
 msgstr "Fluorure d'hydrogène"
 
-#: scisat.py:243 scisat.py:1756
+#: scisat.py:243 scisat.py:1759
 msgid "Hydrofluorocarbon 134a"
 msgstr "Hydrofluorocarbure 134a"
 
-#: scisat.py:244 scisat.py:1757
+#: scisat.py:244 scisat.py:1760
 msgid "Nitric acid"
 msgstr "Acide nitrique"
 
-#: scisat.py:245 scisat.py:1758
+#: scisat.py:245 scisat.py:1761
 msgid "Nitric acid 156"
 msgstr "Acide nitrique 156"
 
-#: scisat.py:248 scisat.py:1761
+#: scisat.py:248 scisat.py:1764
 msgid "Peroxynitric acid"
 msgstr "Acide perazotique"
 
-#: scisat.py:249 scisat.py:1762
+#: scisat.py:249 scisat.py:1765
 msgid "Nitrogen"
 msgstr "Azote"
 
-#: scisat.py:250 scisat.py:1763
+#: scisat.py:250 scisat.py:1766
 msgid "Nitrous oxide"
 msgstr "Protoxyde d'azote"
 
-#: scisat.py:251 scisat.py:1764
+#: scisat.py:251 scisat.py:1767
 msgid "Dinitrogen pentaoxide"
 msgstr "Pentaoxyde de diazote"
 
-#: scisat.py:252 scisat.py:1765
+#: scisat.py:252 scisat.py:1768
 msgid "Nitrous oxide 447"
 msgstr "Protoxyde d'azote 447"
 
-#: scisat.py:253 scisat.py:1766
+#: scisat.py:253 scisat.py:1769
 msgid "Nitrous oxide 448"
 msgstr "Protoxyde d'azote 448"
 
-#: scisat.py:255 scisat.py:1768
+#: scisat.py:255 scisat.py:1771
 msgid "Nitrous oxide 456"
 msgstr "Protoxyde d'azote 456"
 
-#: scisat.py:256 scisat.py:1769
+#: scisat.py:256 scisat.py:1772
 msgid "Nitrous oxide 546"
 msgstr "Protoxyde d'azote 546"
 
-#: scisat.py:257 scisat.py:1770
+#: scisat.py:257 scisat.py:1773
 msgid "Nitrous monoxide 447"
 msgstr "Monoxide d'azote 447"
 
-#: scisat.py:258 scisat.py:1771
+#: scisat.py:258 scisat.py:1774
 msgid "Nitrogen dioxide"
 msgstr "Dioxyde d'azote"
 
-#: scisat.py:259 scisat.py:1772
+#: scisat.py:259 scisat.py:1775
 msgid "Nitrogen dioxide 656"
 msgstr "Dioxyde d'azote 656"
 
-#: scisat.py:260 scisat.py:1773
+#: scisat.py:260 scisat.py:1776
 msgid "Oxygen"
 msgstr "Oxygène"
 
-#: scisat.py:263 scisat.py:1776
+#: scisat.py:263 scisat.py:1779
 msgid "Ozone"
 msgstr "Ozone"
 
-#: scisat.py:264 scisat.py:1777
+#: scisat.py:264 scisat.py:1780
 msgid "Ozone 667"
 msgstr "Ozone 667"
 
-#: scisat.py:265 scisat.py:1778
+#: scisat.py:265 scisat.py:1781
 msgid "Ozone 668"
 msgstr "Ozone 668"
 
-#: scisat.py:266 scisat.py:1779
+#: scisat.py:266 scisat.py:1782
 msgid "Ozone 676"
 msgstr "Ozone 676"
 
-#: scisat.py:267 scisat.py:1780
+#: scisat.py:267 scisat.py:1783
 msgid "Ozone 686"
 msgstr "Ozone 686"
 
-#: scisat.py:268 scisat.py:1781
+#: scisat.py:268 scisat.py:1784
 msgid "Carbonyl sulfide"
 msgstr "Sulfure de carbonyle"
 
-#: scisat.py:269 scisat.py:1782
+#: scisat.py:269 scisat.py:1785
 msgid "Carbonyl sulfide 623"
 msgstr "Sulfure de carbonyle 623"
 
-#: scisat.py:272 scisat.py:1785
+#: scisat.py:272 scisat.py:1788
 msgid "Carbonyl sulfide 624"
 msgstr "Sulfure de carbonyle 624"
 
-#: scisat.py:273 scisat.py:1786
+#: scisat.py:273 scisat.py:1789
 msgid "Carbonyl sulfide 632"
 msgstr "Sulfure de carbonyle 632"
 
-#: scisat.py:274 scisat.py:1787
+#: scisat.py:274 scisat.py:1790
 msgid "Phosphorus"
 msgstr "Phosphore"
 
-#: scisat.py:275 scisat.py:1788
+#: scisat.py:275 scisat.py:1791
 msgid "Polyacrylonitrile"
 msgstr "Polyacrylonitrile"
 
-#: scisat.py:276 scisat.py:1789
+#: scisat.py:276 scisat.py:1792
 msgid "Sulfur hexafluoride"
 msgstr "Hexafluorure de soufre"
 
-#: scisat.py:277 scisat.py:1790
+#: scisat.py:277 scisat.py:1793
 msgid "Sulfur dioxide"
 msgstr "Dioxyde de soufre"
 
@@ -322,51 +322,51 @@ msgstr "Sélection de la plage de latitude"
 msgid "Selection of the range of longitude"
 msgstr "Sélection de la plage de longitude"
 
-#: scisat.py:561
+#: scisat.py:564
 msgid "Date selection"
 msgstr "Sélection de la plage de date"
 
-#: scisat.py:572
+#: scisat.py:575
 msgid "Download the selected dataset"
 msgstr "Télécharger le jeu de données sélectionné"
 
-#: scisat.py:1055
+#: scisat.py:1058
 msgid "Altitude"
 msgstr "Altitude"
 
-#: scisat.py:1073 scisat.py:1419
+#: scisat.py:1076 scisat.py:1422
 msgid "Concentration [ppv]"
 msgstr "Concentration [ppv]"
 
-#: scisat.py:1080
+#: scisat.py:1083
 msgid "Altitude [km]"
 msgstr "Altitude [km]"
 
-#: scisat.py:1232
+#: scisat.py:1235
 msgid "Gas Concentration [ppv] (mean on altitude and position) "
 msgstr "Concentration du gaz [ppv] (moyenne sur l'altitude et la position)"
 
-#: scisat.py:1414
+#: scisat.py:1417
 msgid "Time Series"
 msgstr "Série temporelle"
 
-#: scisat.py:1416
+#: scisat.py:1419
 msgid "Date"
 msgstr "Date"
 
-#: scisat.py:1671
+#: scisat.py:1674
 msgid "SCISAT Data Visualisation"
 msgstr "Visualisation des données de SCISAT"
 
-#: scisat.py:1672
+#: scisat.py:1675
 msgid "Learn More About SCISAT"
 msgstr "En apprendre plus sur SCISAT"
 
-#: scisat.py:1673
+#: scisat.py:1676
 msgid "Data selected"
 msgstr "Données sélectionnées"
 
-#: scisat.py:1674
+#: scisat.py:1677
 msgid ""
 "Launched on August 12, 2003, SCISAT helps a team of Canadian and "
 "international scientists improve their understanding of the depletion of "
@@ -378,7 +378,7 @@ msgstr ""
 "compréhension de l'appauvrissement de la couche d'ozone, en étudiant "
 "spécialement ces changements au-dessus du Canada et de l'arctique."
 
-#: scisat.py:1675
+#: scisat.py:1678
 msgid ""
 "This application provides users the ability to select, download and "
 "visualize SCISAT's data. "
@@ -386,15 +386,15 @@ msgstr ""
 "Cette application permet aux utilisateurs de sélectionner, télécharger et"
 " visualiser les données de SCISAT."
 
-#: scisat.py:1676
+#: scisat.py:1679
 msgid "Visit our Github page to learn more about our applications."
 msgstr "Visitez notre page Github pour en apprendre plus sur nos applications."
 
-#: scisat.py:1677
+#: scisat.py:1680
 msgid "Select Data"
 msgstr "Sélectionner les données"
 
-#: scisat.py:1678
+#: scisat.py:1681
 msgid ""
 "Graph of the gas concentration in parts per volume (ppv) visualized on a "
 "world map. Each dot represents the mean concentration on the selected "
@@ -406,7 +406,7 @@ msgstr ""
 "choisies, la colonne d'altitude ainsi que la position, et la couleur "
 "indique la concentration moyenne."
 
-#: scisat.py:1679
+#: scisat.py:1682
 msgid ""
 "Graph showing the gas concentration in parts per volume (ppv) over the "
 "selected altitude interval. The value represents the mean concentration "
@@ -417,7 +417,7 @@ msgstr ""
 "selon l'intervalle d'altitude sélectionnée. La moyenne est faite sur "
 "toutes les positions ainsi que toutes les dates sélectionnées."
 
-#: scisat.py:1680
+#: scisat.py:1683
 msgid ""
 "Time series showing the evolution of the gas concentration in parts per "
 "volume (ppv). Each data point represents the daily overall mean "
@@ -427,77 +427,77 @@ msgstr ""
 "(ppv) sur les dates sélectionnées. Chaque point est une moyenne "
 "quotidienne sur l'altitude ainsi que la position."
 
-#: scisat.py:1681
+#: scisat.py:1684
 msgid ""
 "Invalid values provided. Latitude values must be between -90 and 90. "
 "Longitude values must be between -180 and 180. Minimum values must be "
 "smaller than maximum values. All values must be round numbers that are "
 "multiples of 5."
 msgstr ""
-"Valeurs invalides reçues. Les valeurs de latitude doivent être entre -90 et 90. "
-"Les valeurs de longitudes doivent être entre -180 et 180. Les valeurs minimum doivent "
-"être plus petites que les valeurs maximum. Toutes valeurs doivent être des chiffres entiers multiples de 5."
+"Valeurs invalides reçues. Les valeurs de latitude doivent être entre -90 "
+"et 90. Les valeurs de longitudes doivent être entre -180 et 180. Les "
+"valeurs minimum doivent être plus petites que les valeurs maximum. Toutes"
+" valeurs doivent être des chiffres entiers multiples de 5."
 
-#: scisat.py:1682
+#: scisat.py:1685
 msgid ""
-"Invalid dates provided. Dates must be between 02/01/2004 (Feb. 1st 2004) "
+"Invalid dates provided. Dates must be between 01/02/2004 (Feb. 1st 2004) "
 "and 05/05/2020 (May 5th 2020)."
-msgstr ""
-"Dates invalides reçues. Les dates doivent être entre 02/01/2004 (1er fév. 2004) "
-"et 05/05/2020 (5 mai 2020)."
+msgstr "Dates reçues invalides. Les dates doivent être entre 01/01/2004 (1er fév. 2004) et 05/05/2020 (5 mai 2020)."
 
-#: scisat.py:1683
+#: scisat.py:1686
 msgid ""
 "Missing data. The gas selected has no associated data. Please contact asc"
 ".donnees-data.csa@canada.ca."
 msgstr ""
-"Données manquantes. Le gaz séléctionné ne possède pas de données associées. Veuillez contacter asc.donnees-data.csa@canada.ca."
+"Données manquantes. Le gaz séléctionné ne possède pas de données "
+"associées. Veuillez contacter asc.donnees-data.csa@canada.ca."
 
-#: scisat.py:1684
+#: scisat.py:1687
 msgid "Filter by Latitude:"
 msgstr "Sélectionner par latitude"
 
-#: scisat.py:1685
+#: scisat.py:1688
 msgid "Minimum latitude"
 msgstr "Latitude minimum"
 
-#: scisat.py:1686
+#: scisat.py:1689
 msgid "Maximum latitude"
 msgstr "Latitude maximum"
 
-#: scisat.py:1687
+#: scisat.py:1690
 msgid "Filter by Longitude:"
 msgstr "Sélectionner par longitude"
 
-#: scisat.py:1688
+#: scisat.py:1691
 msgid "Minimum longitude"
 msgstr "Longitude minimum"
 
-#: scisat.py:1689
+#: scisat.py:1692
 msgid "Maximum longitude"
 msgstr "Longitude maximum"
 
-#: scisat.py:1690
+#: scisat.py:1693
 msgid "Select Altitude Range:"
 msgstr "Sélectionner l'intervalle d'altitudes"
 
-#: scisat.py:1691
+#: scisat.py:1694
 msgid "Select Date:"
 msgstr "Sélectionner les dates :"
 
-#: scisat.py:1692
+#: scisat.py:1695
 msgid "Select Gas:"
 msgstr "Sélectionner le gaz :"
 
-#: scisat.py:1693
+#: scisat.py:1696
 msgid "Download Summary Data as CSV"
 msgstr "Télécharger les données en format CSV"
 
-#: scisat.py:1703
+#: scisat.py:1706
 msgid "Dichlorodifluoromethane"
 msgstr "Dichlorodifluorométhane"
 
-#: scisat.py:1732
+#: scisat.py:1735
 msgid "Carbonyl chlorofluoride"
 msgstr "Chlorofluorure de carbonyle"
 
@@ -724,3 +724,12 @@ msgstr "Chlorofluorure de carbonyle"
 
 #~ msgid "dinitrogen pentaoxide"
 #~ msgstr "Pentaoxyde de diazote"
+
+#~ msgid ""
+#~ "Invalid dates provided. Dates must be"
+#~ " between 02/01/2004 (Feb. 1st 2004) "
+#~ "and 05/05/2020 (May 5th 2020)."
+#~ msgstr ""
+#~ "Dates invalides reçues. Les dates "
+#~ "doivent être entre 02/01/2004 (1er fév."
+#~ " 2004) et 05/05/2020 (5 mai 2020)."

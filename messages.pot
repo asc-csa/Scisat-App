@@ -477,4 +477,3 @@ msgstr ""
 #: scisat.py:1732
 msgid "Carbonyl chlorofluoride"
 msgstr ""
-

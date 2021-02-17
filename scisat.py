@@ -552,6 +552,8 @@ def build_filtering():
                                             id='date_picker_range',
                                             start_date=dt.datetime(2004, 2, 1),
                                             end_date=dt.datetime(2020, 5, 5),
+                                            min_date_allowed=dt.datetime(2004, 2, 1),
+                                            max_date_allowed=dt.datetime(2020, 5, 5),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
                                             style={"margin-top": "5px"}

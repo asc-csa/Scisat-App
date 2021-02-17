@@ -3,12 +3,13 @@ import dash
 
 
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_dangerously_set_inner_html
 import plotly.graph_objs as go
 import pandas as pd
 import datetime as dt
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import flask
 from io import StringIO
 from flask_babel import _ ,Babel
@@ -129,7 +130,6 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
     name=path_to_files+'/'+file
     nc = netcdf.netcdf_file(name,'r')
-
     #Trier / définir rapido les donnéeset les variables
     fillvalue1 = -999.
     months=np.copy(nc.variables['month'][:])
@@ -376,7 +376,6 @@ def build_filtering():
                     [
                         html.Div(
                             [
-                                 html.H6(id="description"),
                                  html.P(id="description-1"),
                                  html.P(id="description-2"),
                                  html.A(
@@ -411,6 +410,9 @@ def build_filtering():
                     [
                         html.Div(   #Gas Picker
                             [
+                                html.Div([
+                                    dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                                ]),
                                 html.P(
                                     id="gas-text",
                                     className="control_label",
@@ -424,41 +426,53 @@ def build_filtering():
                                         value='ACEFTS_L2_v4p1_O3.nc',
                                         className="dcc_control",
 
-                                    ),
+                                    )
                                 ),
 
                                   html.Span(children=_("Selection of the gas"),className="wb-inv")]),
 
                                html.Div([
+                                html.Div([
+                                    dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                                ]),
                                 html.Div( #Latitude picker
                                     [
                                         html.P(
                                             id="latitude-text",
                                             className="control_label",
                                         ),
-                                        dcc.Input(
-                                            id="lat_min",
-                                            type='number',
-                                            value=-90.0,
-                                            placeholder="Min Latitude",
-                                            min=-90.0,
-                                            max=90.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        dcc.Input(
-                                            id="lat_max",
-                                            type='number',
-                                            value=90.0,
-                                            placeholder="Max Latitude",
-                                            min=-90.0,
-                                            max=90.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        html.H5(
-                                            "", style={"margin-top": "0px"}
-                                        ),
+                                        html.Div([
+                                            html.Label(
+                                                id = "lat_min-text",
+                                                htmlFor = "lat_min",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lat_min",
+                                                type='number',
+                                                value=-90.0,
+                                                placeholder="Min Latitude",
+                                                min=-90.0,
+                                                max=90.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                            html.Label(
+                                                id = "lat_max-text",
+                                                htmlFor = "lat_max",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lat_max",
+                                                type='number',
+                                                value=90.0,
+                                                placeholder="Max Latitude",
+                                                min=-90.0,
+                                                max=90.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            )
+                                        ]),
                                       html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
                                     className="one-half column"
                                 ),
@@ -468,33 +482,40 @@ def build_filtering():
                                             id="longitude-text",
                                             className="control_label",
                                         ),
-
-                                        dcc.Input(
-                                            id="lon_min",
-                                            type='number',
-                                            value=-180.0,
-                                            placeholder="Min Longitude",
-                                            min=-180.0,
-                                            max=180.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
-                                        dcc.Input(
-                                            id="lon_max",
-                                            type='number',
-                                            value=180.0,
-                                            placeholder="Max Longitude",
-                                            min=-180.0,
-                                            max=180.0,
-                                            step=5,
-                                            style={"margin-left": "5px"}
-                                        ),
+                                        html.Div([
+                                            html.Label(
+                                                htmlFor="lon_min",
+                                                id= "lon_min-text",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lon_min",
+                                                type='number',
+                                                value=-180.0,
+                                                placeholder="Min Longitude",
+                                                min=-180.0,
+                                                max=180.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                            html.Label(
+                                                htmlFor="lon_max",
+                                                id= "lon_max-text",
+                                                hidden = True
+                                            ),
+                                            dcc.Input(
+                                                id="lon_max",
+                                                type='number',
+                                                value=180.0,
+                                                placeholder="Max Longitude",
+                                                min=-180.0,
+                                                max=180.0,
+                                                step=5,
+                                                style={"margin-left": "5px"}
+                                            ),
+                                        ]),
                                      html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
                                  #   className="one-half column"
-                                    ),
-
-                                html.H5(
-                                    "", style={"margin-top": "0px"}
                                     ),
                             ],
                             id="map-options",
@@ -508,7 +529,7 @@ def build_filtering():
                                        }
                                        )],
                         ),
-                        html.Div ([html.P(id="Map_description")]),   #!!!!!!! Tesssst
+                        html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -517,6 +538,9 @@ def build_filtering():
                 html.Div(
                     [  # Right side of container
                     html.Div([ #Year selection + download button
+                                html.Div([
+                                    dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                                ]),
                                 html.P(
                                     id="yearslider-text",
                                     className="control_label",
@@ -554,9 +578,6 @@ def build_filtering():
                             ]),
                         #Graphique Altitude
                         html.Div([ #Choix altitude
-                                  html.H5(
-                                    "", style={"margin-top": "5px"}#, "margin-bottom": "35px"}
-                                    ),
                                 html.P(id="altitude-text",
                                         className="control_label"
                                         ),
@@ -572,9 +593,6 @@ def build_filtering():
                                 html.Div(id='output-container-alt-picker-range')
                                 ]), #End Altitude Choice
                         html.Div([ # Altitude graph
-                            html.H5(
-                                    "", style={"margin-top": "25px"}#, "margin-bottom": "35px"}
-                                ),
                             html.Div([ # Graphique
                                 dcc.Graph(id="count_graph",
                                           config={
@@ -584,12 +602,9 @@ def build_filtering():
                                           )],
                                      id="countGraphContainer",
                                      ),
-                            html.H5(
-                                    "", style={"margin-top": "10px"}#, "margin-bottom": "35px"}
-                                    )
                             ]), #End Altitude Graph
                             html.Div ([ #Altitude graph description
-                                html.P(id = "Altitude_description")
+                                html.P(id = "Altitude_description", style={"margin-top":"2em"})
                                 ]),   #End description
 
                     ],
@@ -620,7 +635,7 @@ def build_stats():
                             ]),
 
                     html.Div ([
-                       html.P( id = "TimeS_description")
+                       html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
                     ],
                     id="vizChartContainer",
@@ -1075,6 +1090,62 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     return figure
 
 
+@app.callback(
+    Output("pos_alert", "is_open"),
+    [   Input("lat_min", "value"),
+        Input("lat_max", "value"),
+        Input("lon_min", "value"),
+        Input("lon_max", "value"),
+    ],
+    [
+        State("pos_alert", "is_open")
+    ],
+)
+def pos_validation(lat_min,lat_max,lon_min,lon_max, is_open):
+    try:
+        s = not ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
+    except TypeError:
+        s = True
+    return s
+
+@app.callback(
+    Output("date_alert", "is_open"),
+    [   Input("date_picker_range", "start_date"),
+        Input("date_picker_range", "end_date")
+    ],
+    [
+        State("date_alert", "is_open")
+    ],
+)
+def date_validation(start_date, end_date, is_open):
+    try:
+        start = dt.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
+        end = dt.datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S')
+    except ValueError:
+        start = dt.datetime.strptime(start_date, '%Y-%m-%d')
+        end = dt.datetime.strptime(end_date, '%Y-%m-%d')
+    MIN_DATE=dt.datetime(2004, 2, 1)
+    MAX_DATE=dt.datetime(2020, 5, 5)
+    return not ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
+
+@app.callback(
+    Output("gas_alert", "is_open"),
+    [
+        Input("gaz_list", "value"),
+    ],
+    [
+        State("gas_alert", "is_open")
+    ],
+)
+def gas_validation(gaz_list, is_open):
+    try:
+        if type(gaz_list)==list:
+            gaz_list=gaz_list[0]
+        name=path_data+'/'+gaz_list
+        nc = netcdf.netcdf_file(name,'r')
+    except FileNotFoundError:
+        return True
+    return False
 
 #=====================================================================
 #this is where the graph are generated
@@ -1577,8 +1648,15 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("Map_description","children"),
         Output("Altitude_description","children"),
         Output("TimeS_description","children"),
+        Output("pos_alert", "children"),
+        Output("date_alert", "children"),
+        Output("gas_alert", "children"),
         Output("latitude-text", "children"),
+        Output("lat_min-text", "children"),
+        Output("lat_max-text", "children"),
         Output("longitude-text", "children"),
+        Output("lon_min-text", "children"),
+        Output("lon_max-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
         Output("gas-text", "children"),
@@ -1600,8 +1678,15 @@ def translate_static(x):
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
+                _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                _("Invalid dates provided. Dates must be between 02/01/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
                 _("Filter by Latitude:"),
+                _("Minimum latitude"),
+                _("Maximum latitude"),
                 _("Filter by Longitude:"),
+                _("Minimum longitude"),
+                _("Maximum longitude"),
                 _("Select Altitude Range:"),
                 _("Select Date:"),
                 _("Select Gas:"),

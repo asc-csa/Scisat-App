@@ -429,7 +429,7 @@ def build_filtering():
                                     )
                                 ),
 
-                                  html.Span(children=_("Selection of the gas"),className="wb-inv")]),
+                                  html.Span(children=html.P(id="gas_selection"),className="wb-inv")]),
 
                                html.Div([
                                 html.Div([
@@ -473,7 +473,7 @@ def build_filtering():
                                                 style={"margin-left": "5px"}
                                             )
                                         ]),
-                                      html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
+                                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")],
                                     className="one-half column"
                                 ),
                                 html.Div( #longitude picker
@@ -514,7 +514,7 @@ def build_filtering():
                                                 style={"margin-left": "5px"}
                                             ),
                                         ]),
-                                     html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
+                                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ],
                                  #   className="one-half column"
                                     ),
                             ],
@@ -561,7 +561,7 @@ def build_filtering():
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range')
-                                    , html.Span(children=_("Date selection"),className="wb-inv")],
+                                    , html.Span(children=html.P(id="date_selection"),className="wb-inv")],
                                     className="one-half column"),
                                 html.Div([ #Download button
                                     html.Div([
@@ -572,7 +572,7 @@ def build_filtering():
                                             href="",
                                             target="_blank",
                                             ),
-                                        html.Span(children=_("Download the selected dataset"),className="wb-inv")]
+                                        html.Span(children=html.P(id="download_selection"),className="wb-inv")]
 
                                         ),
                                     ],
@@ -1651,6 +1651,11 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("Map_description","children"),
         Output("Altitude_description","children"),
         Output("TimeS_description","children"),
+        Output("gas_selection", "children"),
+        Output("lat_selection", "children"),
+        Output("lon_selection", "children"),
+        Output("date_selection", "children"),
+        Output("download_selection", "children"),
         Output("pos_alert", "children"),
         Output("date_alert", "children"),
         Output("gas_alert", "children"),
@@ -1681,6 +1686,11 @@ def translate_static(x):
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
+                _("Selection of the gas"),
+                _("Selection of the range of latitude "),
+                _("Selection of the range of longitude"),
+                _("Date selection"),
+                _("Download the selected dataset"),
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Dates must be between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),

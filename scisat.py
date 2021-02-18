@@ -365,7 +365,7 @@ def build_filtering():
             [
                 html.Div(
                     [
-                        html.H3(id="filtering_text"),
+                        html.H2(id="filtering_text"),
                         html.P(id="data-ratio")
                     ],
                     id="info-container",

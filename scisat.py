@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import dash
 
-
+import configparser
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -36,21 +36,26 @@ external_scripts = [
 
 ]
 
+def get_config_dict():
+    config = configparser.RawConfigParser()
+    config.read('config.cfg')
+    if not hasattr(get_config_dict, 'config_dict'):
+        get_config_dict.config_dict = dict(config.items('TOKENS'))
+    return get_config_dict.config_dict
 
 if __name__ == '__main__':
      path_data=r"data"
      prefixe=""
 #     app.run_server(debug=True)  # For development/testing
      from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-
-
+     tokens = get_config_dict()
 
 
 
      app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
      app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
      server = app.server
-     server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+     server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
      babel = Babel(server)  # Hook flask-babel to the app
 
 
@@ -61,8 +66,7 @@ else :
     path_data=r"applications/scisat/data"
     prefixe="/scisat"
     from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-
-
+    tokens = get_config_dict()
     app = dash.Dash(
     __name__,
     requests_pathname_prefix='/scisat/',
@@ -72,9 +76,8 @@ else :
 )
     app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
     server = app.server
-    server.config['SECRET_KEY'] = '78b81502f7e89045fe634e85d02f42c5'  # Setting up secret key to access flask session
+    server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
     babel = Babel(server)  # Hook flask-babel to the app
-
 
 
 
@@ -285,7 +288,7 @@ gaz_name_options = [
 
 
 # Create global chart template
-mapbox_access_token = "pk.eyJ1IjoiamFja2x1byIsImEiOiJjajNlcnh3MzEwMHZtMzNueGw3NWw5ZXF5In0.fk8k06T96Ml9CLGgKmk81w"
+mapbox_access_token = tokens['mapbox_token']
 
 layout = dict(
     autosize=True,
@@ -429,7 +432,7 @@ def build_filtering():
                                     )
                                 ),
 
-                                  html.Span(children=_("Selection of the gas"),className="wb-inv")]),
+                                  html.Span(children=html.P(id="gas_selection"),className="wb-inv")]),
 
                                html.Div([
                                 html.Div([
@@ -473,7 +476,7 @@ def build_filtering():
                                                 style={"margin-left": "5px"}
                                             )
                                         ]),
-                                      html.Span(children=_("Selection of the range of latitude "),className="wb-inv")],
+                                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")],
                                     className="one-half column"
                                 ),
                                 html.Div( #longitude picker
@@ -514,7 +517,7 @@ def build_filtering():
                                                 style={"margin-left": "5px"}
                                             ),
                                         ]),
-                                     html.Span(children=_("Selection of the range of longitude"),className="wb-inv") ],
+                                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ],
                                  #   className="one-half column"
                                     ),
                             ],
@@ -561,7 +564,7 @@ def build_filtering():
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range')
-                                    , html.Span(children=_("Date selection"),className="wb-inv")],
+                                    , html.Span(children=html.P(id="date_selection"),className="wb-inv")],
                                     className="one-half column"),
                                 html.Div([ #Download button
                                     html.Div([
@@ -572,7 +575,7 @@ def build_filtering():
                                             href="",
                                             target="_blank",
                                             ),
-                                        html.Span(children=_("Download the selected dataset"),className="wb-inv")]
+                                        html.Span(children=html.P(id="download_selection"),className="wb-inv")]
 
                                         ),
                                     ],
@@ -1651,6 +1654,11 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("Map_description","children"),
         Output("Altitude_description","children"),
         Output("TimeS_description","children"),
+        Output("gas_selection", "children"),
+        Output("lat_selection", "children"),
+        Output("lon_selection", "children"),
+        Output("date_selection", "children"),
+        Output("download_selection", "children"),
         Output("pos_alert", "children"),
         Output("date_alert", "children"),
         Output("gas_alert", "children"),
@@ -1681,6 +1689,11 @@ def translate_static(x):
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
+                _("Selection of the gas"),
+                _("Selection of the range of latitude "),
+                _("Selection of the range of longitude"),
+                _("Date selection"),
+                _("Download the selected dataset"),
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Dates must be between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),

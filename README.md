@@ -17,6 +17,7 @@ Les commandes suivantes peuvent être exécutées plus facilement dans un enviro
 
 Pour démarrer l'application :
 - Créer un dossier nommé "data" et y mettre les fichiers .he5 des données de SCISAT
+- Ajouter le fichier "config.cfg" que vous retrouverez sur [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1) dans le même dossier que scisat.py
 - Dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
 
         pip install -r requirements.txt
@@ -94,6 +95,7 @@ The following commands can be done more easily if in a virtual environment (like
 
 For starting the application:
 - Create a folder nammed "data" and put the .he5 files containing the SCISAT data
+- Add the "config.cfg" file (found on [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1)) in the folder where "scisat.py" is
 - Go to the [ash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
 
         pip install -r requirements.txt

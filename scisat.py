@@ -288,7 +288,7 @@ gaz_name_options = [
 
 
 # Create global chart template
-mapbox_access_token = tokens['mapbox_token']
+mapbox_access_token = tokens['scisat_mapbox_token']
 
 layout = dict(
     autosize=True,
@@ -300,7 +300,6 @@ layout = dict(
     legend=dict(font=dict(size=10), orientation="h"),
     title="Gas Concentration Overview",
     mapbox=dict(
-        accesstoken=mapbox_access_token,
         style="light",
         # center=dict(lon=-78.05, lat=42.54),
         zoom=2,
@@ -556,7 +555,7 @@ def build_filtering():
                                             start_date=dt.datetime(2004, 2, 1),
                                             end_date=dt.datetime(2020, 5, 5),
                                             min_date_allowed=dt.datetime(2004, 2, 1),
-                                            max_date_allowed=dt.datetime(2020, 5, 5),
+                                            max_date_allowed=dt.date.today(),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
                                             display_format="DD/MM/Y",
@@ -739,7 +738,6 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
 
     [ Input("gaz_list", "value")]
     )
-
 def update_picker(gaz_list):
      df =data_reader(gaz_list,r'data')
      return df.date.min().to_pydatetime(),df.date.max().to_pydatetime(),df.date.min().to_pydatetime(),df.date.max().to_pydatetime()
@@ -1117,21 +1115,19 @@ def pos_validation(lat_min,lat_max,lon_min,lon_max, is_open):
 @app.callback(
     Output("date_alert", "is_open"),
     [   Input("date_picker_range", "start_date"),
-        Input("date_picker_range", "end_date")
+        Input("date_picker_range", "end_date"),
+        Input("gaz_list", "value")
     ],
     [
         State("date_alert", "is_open")
     ],
 )
-def date_validation(start_date, end_date, is_open):
-    try:
-        start = dt.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
-        end = dt.datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S')
-    except ValueError:
-        start = dt.datetime.strptime(start_date, '%Y-%m-%d')
-        end = dt.datetime.strptime(end_date, '%Y-%m-%d')
-    MIN_DATE=dt.datetime(2004, 2, 1)
-    MAX_DATE=dt.datetime(2020, 5, 5)
+def date_validation(start_date, end_date, gaz_list, is_open):
+    start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
+    end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
+    df =data_reader(gaz_list,r'data')
+    MIN_DATE=df.date.min().to_pydatetime()
+    MAX_DATE=df.date.max().to_pydatetime()
     return not ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
 
 @app.callback(
@@ -1695,7 +1691,7 @@ def translate_static(x):
                 _("Date selection"),
                 _("Download the selected dataset"),
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
-                _("Invalid dates provided. Dates must be between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
                 _("Filter by Latitude:"),
                 _("Minimum latitude"),

@@ -16,11 +16,18 @@ Le satellite SCISAT, en orbite depuis le 12 août 2003, aide des équipes de sci
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
 Pour démarrer l'application :
-- Créer un dossier nommé "data" et y mettre les fichiers .he5 des données de SCISAT
+- Créer un dossier nommé "data" et y mettre les fichiers .nc des données de SCISAT
 - Ajouter le fichier "config.cfg" que vous retrouverez sur [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1) dans le même dossier que scisat.py
-- Dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
-
+- D'abord, vous devrez créer un environment virtuel avec conda:
+```
+        pip install conda
+        conda create -name venv
+        conda activate venv
+```
+- Puis, dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
+        
         pip install -r requirements.txt
+        conda install -v venv -c conda-forge --file requirements.txt
         python scisat.py
 
 ## Construit avec:
@@ -94,11 +101,18 @@ The following commands can be done more easily if in a virtual environment (like
 ![interface de l'application](Capture_app.PNG)
 
 For starting the application:
-- Create a folder nammed "data" and put the .he5 files containing the SCISAT data
-- Add the "config.cfg" file (found on [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1)) in the folder where "scisat.py" is
-- Go to the [ash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
-
+- Create a folder nammed "data" and put the .nc files containing the SCISAT data
+- Add the "config.cfg" file (found on [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1)) in the folder where "scisat.py" is.
+- First, you will have to create a conda virtual environment:
+```
+        pip install conda
+        conda create -name venv
+        conda activate venv
+```
+- Then, go to the [Dash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
+        
         pip install -r requirements.txt
+        conda -v venv -c conda-forge --file requirements.txt
         python scisat.py
 
 Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".

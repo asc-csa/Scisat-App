@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import dash
-
+import cartopy.feature as cf
 import configparser
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -1209,58 +1209,120 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
     """
+    # We bin the data in 3 degree bins
+    df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,3)
 
-    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    # We collect the coordinates of all coastlines geometries from cartopy
+    x_coords = []
+    y_coords = []
+    for coord_seq in cf.COASTLINE.geometries():
+        x_coords.extend([k[0] for k in coord_seq.coords] + [np.nan])
+        y_coords.extend([k[1] for k in coord_seq.coords] + [np.nan])
 
-    # Group data by latitude and longitude
-    df=df.groupby(['lat','long']).mean().reset_index()
-
-    # Graph
-    fig =go.Figure( go.Scattermapbox(
-        lat=df['lat'],#[df['Alt_Mean']<0.0003],
-        lon=df['long'],#[df['Alt_Mean']<0.0003],
-        mode="markers",
-        marker=dict(
-            color=df['Alt_Mean'],#[df['Alt_Mean']<0.0003],
-            colorscale=[[0, 'blue'],
-            [1, 'red']],
-            cmin=0,
-            cmax=max(df['Alt_Mean']),#[df['Alt_Mean']<0.0003]),
-            showscale=True,
-
-            size=5,
-            colorbar=dict(
-                title=dict(
-                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),#!!! description à mettre dans le caption au lieu de sur le côté
-                ),
-                titleside="right",
-                showexponent = 'all',
-                exponentformat = 'e'
-            ),
-        opacity=0.6,
-        )
-      )
-
-    )
+    # We create a heatmap of the binned data
+    fig= go.Figure(
+                go.Heatmap(
+                        showscale=True,
+                        x=df['long'],
+                        y=df['lat'],
+                        z=df['Alt_Mean'],
+                        #zsmooth='fast', # Turned off smoothing to avoid interpolations
+                        opacity=1,
+                        name = "",
+                        hoverongaps = False,
+                        hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
+                        colorbar=dict(
+                            title=dict(
+                                text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                            ),
+                            titleside="right",
+                            showexponent = 'all',
+                            exponentformat = 'e'
+                        ),
+                        colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
+                         [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
+                          [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
+                           [0.9230769230769231, '#cc2727'], [1.0, '#a50026']],
+                    )
+                )
+    # We set the layout for margins and paddings
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
-        # annotations = [dict(xref='paper',
-        #     yref='paper',
-        #     x=0.5, y=-0.25,
-        #     showarrow=False,
-        #     text ='This is my caption for the Plotly figure')],
         clickmode="event+select",
         hovermode="closest",
-       # showlegend=False,
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token
-            #style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex", #!!!!!! changer le stype de la map?
         ),
         transition={'duration': 500},
     )
 
+    # We turn off the axes
+    fig.update_xaxes(visible=False)
+    fig.update_yaxes(visible=False)
+
+    # This makes sure pixels are square so that we can accurately lay our data on an equirectangular map. We also set the background color to white
+    fig['layout']['yaxis']['scaleanchor']='x'
+    fig['layout'].update(plot_bgcolor='white')
+    # We add the coastlines on top of our heatmap and skip hoverinfo so that it does not overlap heatmap labels
+    fig.add_trace(
+        go.Scatter(
+            x = x_coords,
+            y = y_coords,
+            mode = 'lines',
+            hoverinfo = "skip",
+            line = dict(color='black')))
+
     return fig
 
+def databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,step):
+    """
+    Create data bins of specified steps in terms of longitude and latitude.
+
+    Parameters
+    ----------
+
+
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
+
+    lat_max : float
+        Maximum value of the latitude stored as a float.
+
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
+
+    alt_range : List
+        Range of altitudes
+
+    step : float
+        Size of bins in terms of lat/long degrees
+
+    Returns
+    -------
+    Dataframe
+        A dataframe contained the binned data provided in steps of specified degrees.
+    """
+    # We read the full data
+    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    # We create a binning map
+    to_bin = lambda x: np.round(x / step) * step
+    # We map the current data into the bins
+    df["lat"] = df['lat'].map(to_bin)
+    df["long"] = df['long'].map(to_bin)
+    # We return a mean value of all overlapping data to ensure there are no overlaps
+    return df.groupby(["lat", "long"]).mean().reset_index()
 
 # Selectors -> viz chart (95% CI)
 @app.callback(

@@ -1209,8 +1209,19 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
     """
-    # We bin the data in 3 degree bins
-    df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,3)
+
+    dft = databin(gaz_list,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180,alt_range=[0,150],step=3)
+
+    # We decide the binning that needs to be done, if any, based on lat/long range selected
+    hm = True
+    area = (lat_max-lat_min)*(lon_max-lon_min)
+    if area<1800:
+        df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+        hm = False
+    elif area<16200 and area>=1800:
+        df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,1)
+    else:
+        df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,3)
 
     # We collect the coordinates of all coastlines geometries from cartopy
     x_coords = []
@@ -1220,31 +1231,65 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         y_coords.extend([k[1] for k in coord_seq.coords] + [np.nan])
 
     # We create a heatmap of the binned data
-    fig= go.Figure(
-                go.Heatmap(
-                        showscale=True,
-                        x=df['long'],
-                        y=df['lat'],
-                        z=df['Alt_Mean'],
-                        #zsmooth='fast', # Turned off smoothing to avoid interpolations
-                        opacity=1,
-                        name = "",
-                        hoverongaps = False,
-                        hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
-                        colorbar=dict(
-                            title=dict(
-                                text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+    if hm:
+        fig= go.Figure(
+                    go.Heatmap(
+                            showscale=True,
+                            x=df['long'],
+                            y=df['lat'],
+                            z=df['Alt_Mean'],
+                            zmax=dft['Alt_Mean'].max(),
+                            zmin=dft['Alt_Mean'].min(),
+                            #zsmooth='fast', # Turned off smoothing to avoid interpolations
+                            opacity=1,
+                            name = "",
+                            hoverongaps = False,
+                            hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
+                            colorbar=dict(
+                                title=dict(
+                                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                                ),
+                                titleside="right",
+                                showexponent = 'all',
+                                exponentformat = 'e'
                             ),
-                            titleside="right",
-                            showexponent = 'all',
-                            exponentformat = 'e'
-                        ),
-                        colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
-                         [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
-                          [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
-                           [0.9230769230769231, '#cc2727'], [1.0, '#a50026']],
+                            colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
+                             [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
+                              [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
+                               [0.9230769230769231, '#cc2727'], [1.0, '#a50026']],
+                        )
                     )
+    else:
+        fig = go.Figure(
+            go.Scatter(
+                name="",
+                showlegend=False,
+                x=df['long'],
+                y=df['lat'],
+                meta=df['Alt_Mean'],
+                mode="markers",
+                hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{meta:.3e} ppv",
+                marker= dict(
+                    size=10,
+                    color=df['Alt_Mean'],
+                    cmin=dft['Alt_Mean'].min(),
+                    cmax=dft['Alt_Mean'].max(),
+                    colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
+                     [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
+                      [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
+                       [0.9230769230769231, '#cc2727'], [1.0, '#a50026']],
+                    colorbar=dict(
+                        title=dict(
+                            text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                        ),
+                        titleside="right",
+                        showexponent = 'all',
+                        exponentformat = 'e'
+                    ),
                 )
+
+            )
+        )
     # We set the layout for margins and paddings
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
@@ -1254,6 +1299,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             accesstoken=mapbox_access_token
         ),
         transition={'duration': 500},
+        xaxis = dict(range=[lon_min-1.5,lon_max+1.5]),
+        yaxis = dict(range=[lat_min-1.5,lat_max+1.5])
     )
 
     # We turn off the axes
@@ -1268,6 +1315,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         go.Scatter(
             x = x_coords,
             y = y_coords,
+            name="",
+            showlegend=False,
             mode = 'lines',
             hoverinfo = "skip",
             line = dict(color='black')))

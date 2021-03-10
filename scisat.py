@@ -457,7 +457,8 @@ def build_filtering():
                                                 min=-90.0,
                                                 max=90.0,
                                                 step=5,
-                                                style={"margin-left": "5px"}
+                                                style={"margin-left": "5px"},
+                                                debounce=True
                                             ),
                                             html.Label(
                                                 id = "lat_max-text",
@@ -472,7 +473,8 @@ def build_filtering():
                                                 min=-90.0,
                                                 max=90.0,
                                                 step=5,
-                                                style={"margin-left": "5px"}
+                                                style={"margin-left": "5px"},
+                                                debounce=True
                                             )
                                         ]),
                                       html.Span(children=html.P(id="lat_selection"),className="wb-inv")],
@@ -498,7 +500,8 @@ def build_filtering():
                                                 min=-180.0,
                                                 max=180.0,
                                                 step=5,
-                                                style={"margin-left": "5px"}
+                                                style={"margin-left": "5px"},
+                                                debounce=True
                                             ),
                                             html.Label(
                                                 htmlFor="lon_max",
@@ -513,7 +516,8 @@ def build_filtering():
                                                 min=-180.0,
                                                 max=180.0,
                                                 step=5,
-                                                style={"margin-left": "5px"}
+                                                style={"margin-left": "5px"},
+                                                debounce=True
                                             ),
                                         ]),
                                      html.Span(children=html.P(id="lon_selection"),className="wb-inv") ],
@@ -952,40 +956,43 @@ def download_csv():
 #============================================================================
 # Selected Data by sliding mouse
 #!!!!!!!!!!!!!!!!!!!
-@app.callback(
-    [Output("lat_min", "value"),
-    Output("lat_max", "value"),
-    Output("lon_min", "value"),
-    Output("lon_max", "value")],
-    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
-)
-def update_bar_selector(value, clickData):
-    holder_lat = []
-    holder_lon = []
-    if clickData:
-        holder_lat.append(str(int(clickData["points"][0]["lat"])))
-        holder_lon.append(str(int(clickData["points"][0]["lon"])))
-    if value:
-        for x in value["points"]:
-            holder_lat.append(((x["lat"])))
-            holder_lon.append(((x["lon"])))
-
-    holder_lat  = np.array( holder_lat)
-    holder_lon  = np.array( holder_lon)
-    if len(holder_lat)!=0 :
-        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
-    else :
-        return -90,90,-180,180
+#@app.callback(
+#    [Output("lat_min", "value"),
+#    Output("lat_max", "value"),
+#    Output("lon_min", "value"),
+#    Output("lon_max", "value")],
+#    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
+#)
+#def update_bar_selector(value, clickData):
+#    holder_lat = []
+#    holder_lon = []
+#    if clickData:
+#        try:
+#            holder_lat.append(str(int(clickData["points"][0]["lat"])))
+#            holder_lon.append(str(int(clickData["points"][0]["long"])))
+#        except KeyError:
+#            ""
+#    if value:
+#        for x in value["points"]:
+#            holder_lat.append(((x["lat"])))
+#            holder_lon.append(((x["long"])))
+#
+#    holder_lat  = np.array( holder_lat)
+#    holder_lon  = np.array( holder_lon)
+#    if len(holder_lat)!=0 :
+#        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
+#    else :
+#        return -90,90,-180,180
 
 
 # Clear Selected Data if Click Data is used
-@app.callback(
-    Output("selector_map", "selectedData"),
-    [Input("selector_map", "clickData")]
-    )
-def update_selected_data(clickData):
-    if clickData:
-        return {"points": []}
+#@app.callback(
+#    Output("selector_map", "selectedData"),
+#    [Input("selector_map", "clickData")]
+#    )
+#def update_selected_data(clickData):
+#    if clickData:
+#        return {"points": []}
 
 #============================================================================
 

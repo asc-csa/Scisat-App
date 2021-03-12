@@ -36,6 +36,12 @@ external_scripts = [
 
 ]
 
+LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
+START_DATE, END_DATE = None, None
+GAZ_LIST = ""
+ALT_RANGE = [0,150]
+DEFAULT_DF = None
+
 def get_config_dict():
     config = configparser.RawConfigParser()
     config.read('config.cfg')
@@ -129,6 +135,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     if len(gaz)>1:
         gaz = gaz[0]+'_'+gaz[1]
     else:
+        print(gaz)
         gaz=gaz[0]
 
     name=path_to_files+'/'+file
@@ -368,7 +375,8 @@ def build_filtering():
                 html.Div(
                     [
                         html.H2(id="filtering_text"),
-                        html.P(id="data-ratio")
+                        html.P(id="data-ratio"),
+                        html.P(id='placeholder')
                     ],
                     id="info-container",
                     className="mini_container three columns",
@@ -599,8 +607,15 @@ def build_filtering():
                                     value=[0, 150] ,
                                    # tooltip = { 'always_visible': True }
                                    ),
-                                html.Div(id='output-container-alt-picker-range')
+                                html.Div(id='output-container-alt-picker-range'),
                                 ]), #End Altitude Choice
+                        html.Div([
+                            html.A(
+                                html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                id='generate',
+                                target="_blank",
+                                ),
+                            html.Span(children=html.P(id="generate_selection"),className="wb-inv")]),
                         html.Div([ # Altitude graph
                             html.Div([ # Graphique
                                 dcc.Graph(id="count_graph",
@@ -679,21 +694,89 @@ app.layout = html.Div(
 
 # Helper functions
 
-# Selectors -> !!! À voir ce qu'on veut rajouter ?
 @app.callback(
-    Output("filtering_text", "children"),
+    Output("pos_alert", "is_open"),
     [
-        Input('date_picker_range', "start_date"),
-        Input('date_picker_range', "end_date"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        Input("gaz_list", "value"),
-        Input("alt_range","value"),
+        Input('lat_min','value'),
+        Input('lat_max','value'),
+        Input('lon_min','value'),
+        Input('lon_max','value')
+    ],
+    [
+        State("pos_alert", "is_open")
     ],
 )
-def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_max,gaz_list,alt_range):
+def update_ranges(lat_min,lat_max,lon_min,lon_max, is_open):
+    global LAT_MIN, LAT_MAX, LON_MIN, lON_MAX
+    s = False
+    if pos_validation(lat_min, lat_max, lon_min, lon_max):
+        LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
+    else:
+        s = True
+    return s
+
+@app.callback(
+    Output("date_alert", "is_open"),
+    [   Input("date_picker_range", "start_date"),
+        Input("date_picker_range", "end_date"),
+        Input("gaz_list", "value")
+    ],
+    [
+        State("date_alert", "is_open")
+    ],
+)
+def update_dates(start_date, end_date, gaz_list, is_open):
+    global START_DATE, END_DATE
+    s = False
+    if date_validation(start_date,end_date,gaz_list):
+        START_DATE, END_DATE = start_date, end_date
+    else:
+        s = True
+    return s
+
+@app.callback(
+    Output("gas_alert", "is_open"),
+    [
+        Input("gaz_list", "value"),
+    ],
+    [
+        State("gas_alert", "is_open")
+    ],
+)
+def update_gas(gaz_list, is_open):
+    global GAZ_LIST
+    s = False
+    if gas_validation(gaz_list):
+        GAZ_LIST = gaz_list
+    else:
+        s = True
+    return s
+
+@app.callback(
+    Output("placeholder","value"),
+    [Input("alt_range", "value")]
+)
+def update_alt(alt_range):
+    global ALT_RANGE
+    ALT_RANGE = alt_range
+    return ""
+
+@app.callback(
+    [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
+    [Input("generate-button","n_clicks")]
+)
+def controller(n_clicks):
+    global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
+    df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    fig1 = generate_geo_map(df)
+    fig2 = make_viz_chart(df)
+    fig3 = make_count_figure(df)
+    link = update_csv_link()
+    nbr = update_filtering_text(df)
+    return fig1, fig2, fig3, link, nbr
+
+# Selectors -> !!! À voir ce qu'on veut rajouter ?
+def update_filtering_text(df):
     """Update the component that counts the number of data points selected.
 
     Parameters
@@ -728,9 +811,6 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
         The number of data points present in the dataframe after filtering
     """
 
-
-    df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
 
@@ -743,7 +823,9 @@ def update_filtering_text(start_date, end_date, lat_min, lat_max, lon_min, lon_m
     [ Input("gaz_list", "value")]
     )
 def update_picker(gaz_list):
-     df =data_reader(gaz_list,r'data')
+     global DEFAULT_DF
+     df = data_reader(gaz_list, r'data')
+     DEFAULT_DF = databin(df,3)
      return df.date.min().to_pydatetime(),df.date.max().to_pydatetime(),df.date.min().to_pydatetime(),df.date.max().to_pydatetime()
 
 
@@ -821,20 +903,7 @@ def download_images():  #!!!!! à corriger selon donnée
 
 
 # Selectors -> CSV Link
-@app.callback(
-    Output("download-link-1", "href"),
-    [   Input("gaz_list", "value"),
-        Input('date_picker_range', "start_date"),
-        Input('date_picker_range', "end_date"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        Input("alt_range","value"),
-
-    ],
-)
-def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon_max,alt_range):
+def update_csv_link():
     """Updates the link to the CSV download
 
     Parameters
@@ -866,9 +935,9 @@ def update_csv_link(gaz_list,start_date,end_date, lat_min, lat_max, lon_min, lon
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
-
+    global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
-            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range)
+            .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
 
     return link
 
@@ -998,21 +1067,7 @@ def download_csv():
 
 
 # Selectors -> count graph
-
-@app.callback(
-    Output("count_graph", "figure"),
-    # [Input("visualize-button", "n_clicks")],
-    [   Input('date_picker_range', "start_date"),
-        Input('date_picker_range', "end_date"),
-        Input("gaz_list", "value"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        Input("alt_range","value"),
-    ],
-)
-def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
+def make_count_figure(df):
     """Create and update the Gas Concentration vs Altitude over the given time range.
 
     Parameters
@@ -1049,8 +1104,8 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object.
     """
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-    concentration=df[alt_range[0]:alt_range[1]]
+    global ALT_RANGE
+    concentration=df[ALT_RANGE[0]:ALT_RANGE[1]]
     # concentration=np.array(concentration,dtype=np.float32)
     # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
@@ -1061,7 +1116,7 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[alt_range[0]:alt_range[1]],
+            y=df.columns[ALT_RANGE[0]:ALT_RANGE[1]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -1101,81 +1156,35 @@ def make_count_figure(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, l
     return figure
 
 
-@app.callback(
-    Output("pos_alert", "is_open"),
-    [   Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-    ],
-    [
-        State("pos_alert", "is_open")
-    ],
-)
-def pos_validation(lat_min,lat_max,lon_min,lon_max, is_open):
+def pos_validation(lat_min,lat_max,lon_min,lon_max):
     try:
-        s = not ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
+        s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
     except TypeError:
-        s = True
+        s = False
     return s
 
-@app.callback(
-    Output("date_alert", "is_open"),
-    [   Input("date_picker_range", "start_date"),
-        Input("date_picker_range", "end_date"),
-        Input("gaz_list", "value")
-    ],
-    [
-        State("date_alert", "is_open")
-    ],
-)
-def date_validation(start_date, end_date, gaz_list, is_open):
+def date_validation(start_date, end_date, gaz_list):
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
     df =data_reader(gaz_list,r'data')
     MIN_DATE=df.date.min().to_pydatetime()
     MAX_DATE=df.date.max().to_pydatetime()
-    return not ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
+    return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
 
-@app.callback(
-    Output("gas_alert", "is_open"),
-    [
-        Input("gaz_list", "value"),
-    ],
-    [
-        State("gas_alert", "is_open")
-    ],
-)
-def gas_validation(gaz_list, is_open):
+def gas_validation(gaz_list):
     try:
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
         name=path_data+'/'+gaz_list
         nc = netcdf.netcdf_file(name,'r')
     except FileNotFoundError:
-        return True
-    return False
+        return False
+    return True
 
 #=====================================================================
 #this is where the graph are generated
 
-#app callback is used to get the variables from the user input
-@app.callback(
-    Output("selector_map", "figure"),
-    # [Input("visualize-button", "n_clicks")],
-    [   Input("date_picker_range", "start_date"),
-        Input("date_picker_range", "end_date"),
-        Input("gaz_list", "value"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),#!!!!!! à remplacer lorsque le click-select est pret
-        Input("lon_max", "value"),
-        Input("alt_range","value"),
-
-    ],
-)
-
-def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lon_max,alt_range):
+def generate_geo_map(df):
     """Create and update the map of gas concentrations for selected variables.
 
     The color of the data points indicates the mean gas concentration at that coordinate.
@@ -1216,19 +1225,18 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
     """
-
-    dft = databin(gaz_list,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180,alt_range=[0,150],step=3)
+    global DEFAULT_DF
+    dft = DEFAULT_DF
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
-    area = (lat_max-lat_min)*(lon_max-lon_min)
+    area = (df['lat'].max()-df['lat'].min())*(df['long'].max()-df['long'].min())
     if area<1800:
-        df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
         hm = False
     elif area<16200 and area>=1800:
-        df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,1)
+        df = databin(df,1)
     else:
-        df = databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,3)
+        df = databin(df,3)
 
     # We collect the coordinates of all coastlines geometries from cartopy
     x_coords = []
@@ -1306,8 +1314,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
             accesstoken=mapbox_access_token
         ),
         transition={'duration': 500},
-        xaxis = dict(range=[lon_min-1.5,lon_max+1.5]),
-        yaxis = dict(range=[lat_min-1.5,lat_max+1.5])
+        xaxis = dict(range=[df['long'].min()-1.5,df['long'].max()+1.5]),
+        yaxis = dict(range=[df['lat'].min()-1.5,df['lat'].max()+1.5])
     )
 
     # We turn off the axes
@@ -1330,7 +1338,8 @@ def generate_geo_map(start_date,end_date,gaz_list, lat_min, lat_max, lon_min, lo
 
     return fig
 
-def databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range,step):
+
+def databin(df, step):
     """
     Create data bins of specified steps in terms of longitude and latitude.
 
@@ -1370,8 +1379,6 @@ def databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_ran
     Dataframe
         A dataframe contained the binned data provided in steps of specified degrees.
     """
-    # We read the full data
-    df = data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
     # We create a binning map
     to_bin = lambda x: np.round(x / step) * step
     # We map the current data into the bins
@@ -1380,25 +1387,9 @@ def databin(gaz_list,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_ran
     # We return a mean value of all overlapping data to ensure there are no overlaps
     return df.groupby(["lat", "long"]).mean().reset_index()
 
-# Selectors -> viz chart (95% CI)
-@app.callback(
-    Output("viz_chart", "figure"),
-    # [Input("visualize-button", "n_clicks")],
-    [
 
-        Input("date_picker_range", "start_date"),
-        Input("date_picker_range", "end_date"),
-        # Input("x_axis_selection_1", "value"),
-        # Input("y_axis_selection_1", "value"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        Input("gaz_list", "value"),
-        Input("alt_range","value"),
-    ],
-)
-def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_list,alt_range):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
+# Selectors -> viz chart (95% CI)
+def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
 
 
@@ -1442,9 +1433,6 @@ def make_viz_chart(start_date,end_date, lat_min, lat_max, lon_min, lon_max, gaz_
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the chart's layout
         as a Plotly layout graph object.
     """
-
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-
     concentration =df.groupby('date')['Alt_Mean'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
     bins=concentration
@@ -1765,6 +1753,8 @@ def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min,
         Output("description-2", "children"),
         Output("github-link", "children"),
         Output("select-data", "children"),
+        Output("generate-button","children"),
+        Output("generate_selection", "children"),
         Output("Map_description","children"),
         Output("Altitude_description","children"),
         Output("TimeS_description","children"),
@@ -1800,6 +1790,8 @@ def translate_static(x):
                 _("This application provides users the ability to select, download and visualize SCISAT's data. "),
                 _("Visit our Github page to learn more about our applications."),
                 _("Select Data"),
+                _("Generate"),
+                _("Generate from selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),

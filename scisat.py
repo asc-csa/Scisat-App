@@ -655,7 +655,6 @@ def build_filtering():
                                    ),
                                 html.Div(id='output-container-alt-picker-range'),
                                 ]), #End Altitude Choice
-                        html.Hr(),
                         html.Div([
                             html.A(
                                 html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),

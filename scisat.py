@@ -13,7 +13,7 @@ from dash.dependencies import Input, Output, State
 import flask
 from io import StringIO
 from flask_babel import _ ,Babel
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, make_response
 
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
@@ -36,12 +36,15 @@ external_scripts = [
 
 ]
 
+## These are constant values from our input forms.
+# The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
 LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
 START_DATE, END_DATE = None, None
 GAZ_LIST = ""
 ALT_RANGE = [0,150]
 DEFAULT_DF = None
 
+# Loads the config file
 def get_config_dict():
     config = configparser.RawConfigParser()
     config.read('config.cfg')
@@ -49,6 +52,7 @@ def get_config_dict():
         get_config_dict.config_dict = dict(config.items('TOKENS'))
     return get_config_dict.config_dict
 
+# Runs the application based on what executed this file.
 if __name__ == '__main__':
      path_data=r"data"
      prefixe=""
@@ -63,9 +67,6 @@ if __name__ == '__main__':
      server = app.server
      server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
      babel = Babel(server)  # Hook flask-babel to the app
-
-
-
 
 else :
 
@@ -86,7 +87,7 @@ else :
     babel = Babel(server)  # Hook flask-babel to the app
 
 
-
+# Loads data file based on values provided into a pandas dataframe.
 def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=90,lon_min=-180,lon_max=180,alt_range=[0,150]) :
     """
 
@@ -135,7 +136,6 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     if len(gaz)>1:
         gaz = gaz[0]+'_'+gaz[1]
     else:
-        print(gaz)
         gaz=gaz[0]
 
     name=path_to_files+'/'+file
@@ -189,6 +189,55 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['long']<lon_max,True,False)]
 
     return df
+
+# Returns a binned dataframe with the provided steps.
+def databin(df, step):
+    """
+    Create data bins of specified steps in terms of longitude and latitude.
+
+    Parameters
+    ----------
+
+
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
+
+    lat_max : float
+        Maximum value of the latitude stored as a float.
+
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
+
+    alt_range : List
+        Range of altitudes
+
+    step : float
+        Size of bins in terms of lat/long degrees
+
+    Returns
+    -------
+    Dataframe
+        A dataframe contained the binned data provided in steps of specified degrees.
+    """
+    # We create a binning map
+    to_bin = lambda x: np.round(x / step) * step
+    # We map the current data into the bins
+    df["lat"] = df['lat'].map(to_bin)
+    df["long"] = df['long'].map(to_bin)
+    # We return a mean value of all overlapping data to ensure there are no overlaps
+    return df.groupby(["lat", "long"]).mean().reset_index()
 
 # Dropdown options
 #======================================================================================
@@ -288,9 +337,6 @@ gaz_name_options = [
  #    {'label': _('Temperature'), 'value':    'ACEFTS_L2_v4p0_T.nc'} #!!! Est ce qu'on la met?
 
    ]
-
-
-
 #======================================================================================
 
 
@@ -609,6 +655,7 @@ def build_filtering():
                                    ),
                                 html.Div(id='output-container-alt-picker-range'),
                                 ]), #End Altitude Choice
+                        html.Hr(),
                         html.Div([
                             html.A(
                                 html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
@@ -692,8 +739,10 @@ app.layout = html.Div(
 )
 
 
-# Helper functions
+#=======================================================================================================================
+# Input functions and validation functions
 
+# Update global values of lat/long using validation
 @app.callback(
     Output("pos_alert", "is_open"),
     [
@@ -715,6 +764,7 @@ def update_ranges(lat_min,lat_max,lon_min,lon_max, is_open):
         s = True
     return s
 
+# Update global date values using validation
 @app.callback(
     Output("date_alert", "is_open"),
     [   Input("date_picker_range", "start_date"),
@@ -734,6 +784,7 @@ def update_dates(start_date, end_date, gaz_list, is_open):
         s = True
     return s
 
+# Update gas value using validation
 @app.callback(
     Output("gas_alert", "is_open"),
     [
@@ -752,6 +803,7 @@ def update_gas(gaz_list, is_open):
         s = True
     return s
 
+# Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
     Output("placeholder","value"),
     [Input("alt_range", "value")]
@@ -761,312 +813,39 @@ def update_alt(alt_range):
     ALT_RANGE = alt_range
     return ""
 
-@app.callback(
-    [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
-    [Input("generate-button","n_clicks")]
-)
-def controller(n_clicks):
-    global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
-    df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
-    fig2 = make_viz_chart(df)
-    fig3 = make_count_figure(df)
-    link = update_csv_link()
-    nbr = update_filtering_text(df)
-    return fig1, fig2, fig3, link, nbr
-
-# Selectors -> !!! À voir ce qu'on veut rajouter ?
-def update_filtering_text(df):
-    """Update the component that counts the number of data points selected.
-
-    Parameters
-    ----------
-    start_date : Datetime
-        First day in the date range selected by user. The default is the first day of data available.
-
-    end_date : Datetime
-        Last day in the date range selected by user. The default is the last day of data available.
-
-    lat_min : float
-        Minimum value of the latitude stored as a float.
-
-    lat_max : float
-        Maximum value of the latitude stored as a float.
-
-    lon_min : float
-        Minimum value of the longitude stored as a float.
-
-    lon_max : float
-        Maximum value of the longitude stored as a float.
-
-    gaz_list : list
-        Gas names strings stored in a list (e.g. ['Ozone'])
-
-    alt_range : List
-        Range of altitudes
-
-    Returns
-    -------
-    int
-        The number of data points present in the dataframe after filtering
-    """
-
-    return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
-
-
-@app.callback(
-    [Output('date_picker_range', 'min_date_allowed'),
-    Output('date_picker_range', 'max_date_allowed'),
-    Output('date_picker_range', 'start_date'),
-    Output('date_picker_range', 'end_date')],
-
-    [ Input("gaz_list", "value")]
-    )
-def update_picker(gaz_list):
-     global DEFAULT_DF
-     df = data_reader(gaz_list, r'data')
-     DEFAULT_DF = databin(df,3)
-     return df.date.min().to_pydatetime(),df.date.max().to_pydatetime(),df.date.min().to_pydatetime(),df.date.max().to_pydatetime()
-
-
-
-# Selectors -> Image download link
-#
-#@app.callback(
-#    Output("download-link-2", "href"),
-#    [
-#        Input("gaz_list", "value"),
-#        Input('date_picker_range', "start_date"),
-#        Input('date_picker_range', "end_date"),
-#        Input("lat_min", "value"),
-#        Input("lat_max", "value"),
-#        Input("lon_min", "value"),
-#        Input("lon_max", "value"),
-#
-#    ],
-#)
-#def update_images_link(gaz,date, lat_min, lat_max, lon_min, lon_max):
-#    """Updates the link to the Ionogram images download
-#
-#    Returns
-#    -------
-#    link : str
-#        Link that redirects to the Flask route to download the CSV based on selected filters
-"""
-
-    link = '/dash/downloadImages?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&ground_stations={}'\
-        .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ground_stations)  #!!!!! à corriger selon donnée
-
-    return link
-
-
-from io import BytesIO
-
-
-
-@app.server.route('/dash/downloadImages')
-def download_images():  #!!!!! à corriger selon donnée
-
-    start_date = dt.datetime.strptime(flask.request.args.get('start_date').split('T')[0], '%Y-%m-%d')  # Convert strings to datetime objects
-    end_date = dt.datetime.strptime(flask.request.args.get('end_date').split('T')[0], '%Y-%m-%d')
-
-    lat_min = flask.request.args.get('lat_min')
-    lat_max = flask.request.args.get('lat_max')
-    lon_min = flask.request.args.get('lon_min')
-    lon_max = flask.request.args.get('lon_max')
-
-    gaz_list = flask.request.args.get('gaz_list') # parses a string representation of ground_stations
-
-
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max)
-
-
-
-    # Store the zip in memory
-    memory_file = BytesIO()
-    max_download = 100  # Temporary limit on number of ionograms that can be downloaded
-    with ZipFile(memory_file, 'w') as zf:
-        for index, row in dff.iterrows():
-            if os.path.exists(row['file_path']) and max_download > 0:
-                max_download -= 1
-                zf.write(row['file_path'], arcname=row['file_name']+'.png')  # Write each image into the zip
-
-        # Making the output csv from the filtered df
-        csv_buffer = StringIO()
-        dff.to_csv(csv_buffer, index=False)
-        zf.writestr('Metadata_of_selected_ionograms.csv', csv_buffer.getvalue())
-
-    memory_file.seek(0)
-
-    return flask.send_file(memory_file, attachment_filename='Ionograms.zip', as_attachment=True)
-"""
-
-
-# Selectors -> CSV Link
-def update_csv_link():
-    """Updates the link to the CSV download
-
-    Parameters
-    ----------
-
-    start_date : Datetime
-        First day in the date range selected by user. The default is the first day of data available.
-
-    end_date : Datetime
-        Last day in the date range selected by user. The default is the last day of data available.
-
-    lat_min : float
-        Minimum value of the latitude stored as a float.
-
-    lat_max : float
-        Maximum value of the latitude stored as a float.
-
-    lon_min : float
-        Minimum value of the longitude stored as a float.
-
-    lon_max : float
-        Maximum value of the longitude stored as a float.
-
-    gaz_list : list
-        Gas names strings stored in a list (e.g. ['Ozone'])
-
-    Returns
-    -------
-    link : str
-        Link that redirects to the Flask route to download the CSV based on selected filters
-    """
-    global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
-    link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
-            .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
-
-    return link
-
-from flask import make_response
-
-
-
-# Flask route that handles the CSV downloads. This allows for larger files to be passed,
-# as well as avoiding generating the CSV until the download is desired
-@app.server.route('/dash/downloadCSV')
-def download_csv():
-    """Generates the CSV and sends it to the user
-
-    args
-    ----------
-
-    start_date : Datetime
-        First day in the date range selected by user. The default is the first day of data available.
-
-    end_date : Datetime
-        Last day in the date range selected by user. The default is the last day of data available.
-
-
-    lat_min : float
-        Minimum value of the latitude stored as a float.
-
-    lat_max : float
-        Maximum value of the latitude stored as a float.
-
-    lon_min : float
-        Minimum value of the longitude stored as a float.
-
-    lon_max : float
-        Maximum value of the longitude stored as a float.
-
-    gaz_list : list
-        Gas name strings stored in a list (e.g. ['Ozone'])
-
-    alt_range : List
-        Range of altitudes
-
-    Returns
-    -------
-    output : CSV
-        CSV file based on the applied filters
-    """
-
-    lat_min    = float(flask.request.args.get('lat_min'))
-    lat_max    = float(flask.request.args.get('lat_max'))
-    lon_min    = float(flask.request.args.get('lon_min'))
-    lon_max    = float(flask.request.args.get('lon_max'))
-    start_date = flask.request.args.get('start_date')
-    end_date   = flask.request.args.get('end_date')
-    alt_range   = flask.request.args.get('alt_range')
-    gaz_list= flask.request.args.get('gaz_list')
-
-    #start_date =pd.Timestamp(parse(start_date))
-    #end_date   =pd.Timestamp(parse(end_date))
-
-    #Pre-processing of alt_range
-    alt_range = alt_range.replace(" ", "")
-    alt_range = alt_range[1:-1].split(',')
-    alt_range[0] = int(alt_range[0])
-    alt_range[1] = int(alt_range[1])
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
-
-    # Making the output csv from the filtered df
-    csv_buffer = StringIO()
-    df.to_csv(csv_buffer, index=False)
-    output = make_response(csv_buffer.getvalue())
+# Lat/long validation
+def pos_validation(lat_min,lat_max,lon_min,lon_max):
     try:
-        language = session['language']
-    except KeyError:
-        language = 'en'
-    if language == 'fr':
-        output.headers["Content-Disposition"] = "attachment; filename=résumé_données.csv"
-    else:
-        output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
-    output.headers["Content-type"] = "text/csv"
+        s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
+    except TypeError:
+        s = False
+    return s
 
-    return output
+# Date validation
+def date_validation(start_date, end_date, gaz_list):
+    global DEFAULT_DF
+    start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
+    end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
+    df = DEFAULT_DF
+    MIN_DATE=df['date'].min().to_pydatetime()
+    MAX_DATE=df['date'].max().to_pydatetime()
+    return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
 
+# Gas validation
+def gas_validation(gaz_list):
+    try:
+        if type(gaz_list)==list:
+            gaz_list=gaz_list[0]
+        name=path_data+'/'+gaz_list
+        nc = netcdf.netcdf_file(name,'r')
+    except FileNotFoundError:
+        return False
+    return True
 
+#=======================================================================================================================
+# This section is for graph generation. The 3 graphs are generated here.
 
-#============================================================================
-# Selected Data by sliding mouse
-#!!!!!!!!!!!!!!!!!!!
-#@app.callback(
-#    [Output("lat_min", "value"),
-#    Output("lat_max", "value"),
-#    Output("lon_min", "value"),
-#    Output("lon_max", "value")],
-#    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
-#)
-#def update_bar_selector(value, clickData):
-#    holder_lat = []
-#    holder_lon = []
-#    if clickData:
-#        try:
-#            holder_lat.append(str(int(clickData["points"][0]["lat"])))
-#            holder_lon.append(str(int(clickData["points"][0]["long"])))
-#        except KeyError:
-#            ""
-#    if value:
-#        for x in value["points"]:
-#            holder_lat.append(((x["lat"])))
-#            holder_lon.append(((x["long"])))
-#
-#    holder_lat  = np.array( holder_lat)
-#    holder_lon  = np.array( holder_lon)
-#    if len(holder_lat)!=0 :
-#        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
-#    else :
-#        return -90,90,-180,180
-
-
-# Clear Selected Data if Click Data is used
-#@app.callback(
-#    Output("selector_map", "selectedData"),
-#    [Input("selector_map", "clickData")]
-#    )
-#def update_selected_data(clickData):
-#    if clickData:
-#        return {"points": []}
-
-#============================================================================
-
-
-# Selectors -> count graph
+# This generates the concentration v.s. altitude figure
 def make_count_figure(df):
     """Create and update the Gas Concentration vs Altitude over the given time range.
 
@@ -1155,35 +934,7 @@ def make_count_figure(df):
 
     return figure
 
-
-def pos_validation(lat_min,lat_max,lon_min,lon_max):
-    try:
-        s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
-    except TypeError:
-        s = False
-    return s
-
-def date_validation(start_date, end_date, gaz_list):
-    start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
-    end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
-    df =data_reader(gaz_list,r'data')
-    MIN_DATE=df.date.min().to_pydatetime()
-    MAX_DATE=df.date.max().to_pydatetime()
-    return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
-
-def gas_validation(gaz_list):
-    try:
-        if type(gaz_list)==list:
-            gaz_list=gaz_list[0]
-        name=path_data+'/'+gaz_list
-        nc = netcdf.netcdf_file(name,'r')
-    except FileNotFoundError:
-        return False
-    return True
-
-#=====================================================================
-#this is where the graph are generated
-
+# This generates the geographical representation of the data
 def generate_geo_map(df):
     """Create and update the map of gas concentrations for selected variables.
 
@@ -1226,7 +977,7 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
     global DEFAULT_DF
-    dft = DEFAULT_DF
+    dft = databin(DEFAULT_DF,3)
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
@@ -1338,57 +1089,7 @@ def generate_geo_map(df):
 
     return fig
 
-
-def databin(df, step):
-    """
-    Create data bins of specified steps in terms of longitude and latitude.
-
-    Parameters
-    ----------
-
-
-    start_date : Datetime
-        First day in the date range selected by user. The default is the first day of data available.
-
-    end_date : Datetime
-        Last day in the date range selected by user. The default is the last day of data available.
-
-    lat_min : float
-        Minimum value of the latitude stored as a float.
-
-    lat_max : float
-        Maximum value of the latitude stored as a float.
-
-    lon_min : float
-        Minimum value of the longitude stored as a float.
-
-    lon_max : float
-        Maximum value of the longitude stored as a float.
-
-    gaz_list : list
-        Gas name strings stored in a list (e.g. ['Ozone'])
-
-    alt_range : List
-        Range of altitudes
-
-    step : float
-        Size of bins in terms of lat/long degrees
-
-    Returns
-    -------
-    Dataframe
-        A dataframe contained the binned data provided in steps of specified degrees.
-    """
-    # We create a binning map
-    to_bin = lambda x: np.round(x / step) * step
-    # We map the current data into the bins
-    df["lat"] = df['lat'].map(to_bin)
-    df["long"] = df['long'].map(to_bin)
-    # We return a mean value of all overlapping data to ensure there are no overlaps
-    return df.groupby(["lat", "long"]).mean().reset_index()
-
-
-# Selectors -> viz chart (95% CI)
+# This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
 
@@ -1438,65 +1139,6 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()
 
-    # bucketing the data
-    """
-    if x_axis_selection == 'timestamp':
-        dff.index = dff["timestamp"]
-
-        index_month = dt.date(dff.index.min().year, dff.index.min().month, 1)
-        end_month = dt.date(dff.index.max().year, dff.index.max().month, 1)
-
-        while index_month <= end_month:
-            index_month_data = dff[(dff['timestamp'] > pd.Timestamp(index_month))
-                                & (dff['timestamp'] < pd.Timestamp(index_month + relativedelta(months=1)))]
-                # dff[index_month: index_month + relativedelta(months=1)]
-
-            n = len(index_month_data[y_axis_selection])
-            if n == 0:
-                estimated_means.append(None)
-                ci_upper_limits.append(None)
-                ci_lower_limits.append(None)
-            else:
-                bin_mean = mean(index_month_data[y_axis_selection])
-                std_err = sem(index_month_data[y_axis_selection])
-                error_range = std_err * t.ppf((1 + confidence) / 2, n - 1)  # t.ppf should be 1.96 given big enough n value
-
-                estimated_means.append(bin_mean)
-                ci_upper_limits.append(bin_mean + error_range)
-                ci_lower_limits.append(bin_mean - error_range if bin_mean - error_range >= 0 else 0)
-                bins.append(index_month)
-
-            index_month += relativedelta(months=1)
-
-    elif x_axis_selection == 'latitude' or x_axis_selection == 'longitude':
-        if x_axis_selection == 'latitude':
-            step = 5
-            index_range = range(-90,90,step)
-        if x_axis_selection == 'longitude':
-            step = 5
-            index_range = range(-180, 180, step)
-
-
-        for i in index_range:
-            bin_data = dff[(dff[x_axis_selection] >= i)
-                                & (dff[x_axis_selection] < i + step)]
-                # dff[index_month: index_month + relativedelta(months=1)]
-
-            n = len(bin_data[y_axis_selection])
-            if n == 0:
-                estimated_means.append(None)
-                ci_upper_limits.append(None)
-                ci_lower_limits.append(None)
-            else:
-                bin_mean = mean(bin_data[y_axis_selection])
-                std_err = sem(bin_data[y_axis_selection])
-                error_range = std_err * t.ppf((1 + confidence) / 2, n - 1)  # t.ppf should be 1.96 given big enough n value
-
-                estimated_means.append(bin_mean)
-                ci_upper_limits.append(bin_mean + error_range)
-                ci_lower_limits.append(bin_mean - error_range if bin_mean - error_range >= 0 else 0)
-                bins.append(i)
-    """
     data = [
         dict(
             #mode="lines",
@@ -1537,210 +1179,244 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     figure = dict(data=data, layout=layout)
 
     return figure
-"""
-# Selectors -> viz map
+
+#=======================================================================================================================
+#  Controller and other major callback function.
+
+# The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
 @app.callback(
-    Output("viz_map", "figure"),
-    # [Input("visualize-button", "n_clicks")],
-    [
-
-        Input('date_picker_range', "value"),
-        Input("stat_selection", "value"),
-        Input("y_axis_selection_2", "value"),
-        Input("lat_min", "value"),
-        Input("lat_max", "value"),
-        Input("lon_min", "value"),
-        Input("lon_max", "value"),
-        Input("gaz_list", "value"),
-    ],
+    [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
+    [Input("generate-button","n_clicks"),Input("gaz_list","value")]
 )
+def controller(n_clicks, gaz_list):
+    global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
+    df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    fig1 = generate_geo_map(df)
+    fig2 = make_viz_chart(df)
+    fig3 = make_count_figure(df)
+    link = update_csv_link()
+    nbr = update_filtering_text(df)
+    return fig1, fig2, fig3, link, nbr
 
+# This function calculates the number of points selected
+def update_filtering_text(df):
+    """Update the component that counts the number of data points selected.
 
-def make_viz_map(date, stat_selection, var_selection, lat_min, lat_max, lon_min, lon_max, ground_stations=None):
-"""
-"""
-    Create and update a map visualizing the selected ionograms' values for the selected variable by ground station.
+    Parameters
+    ----------
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
 
-    The size of the ground station marker indicates the number of ionograms from that ground station.
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
+
+    lat_max : float
+        Maximum value of the latitude stored as a float.
+
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+
+    gaz_list : list
+        Gas names strings stored in a list (e.g. ['Ozone'])
+
+    alt_range : List
+        Range of altitudes
+
+    Returns
+    -------
+    int
+        The number of data points present in the dataframe after filtering
+    """
+
+    return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
+
+# This function sets the max/min allowed dates when switching gas
+@app.callback(
+    [Output('date_picker_range', 'min_date_allowed'),
+    Output('date_picker_range', 'max_date_allowed'),
+    Output('date_picker_range', 'start_date'),
+    Output('date_picker_range', 'end_date')],
+
+    [ Input("gaz_list", "value")]
+    )
+def update_picker(gaz_list):
+     global DEFAULT_DF, START_DATE, END_DATE
+     df = data_reader(gaz_list, r'data')
+     DEFAULT_DF = df
+     START_DATE = df.date.min().to_pydatetime()
+     END_DATE = df.date.max().to_pydatetime()
+     return START_DATE, END_DATE, START_DATE, END_DATE
+
+# This function updates the link that is opened when pressing the download button
+def update_csv_link():
+    """Updates the link to the CSV download
 
     Parameters
     ----------
 
-    date : str
-        Ending date stored as a str
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
 
-    stat_selection : string
-        The type of average used for the size of the ground station markers stored as a string (e.g 'Mean')
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-    var_selection : string
-        The variable corresponding to the size of the ground station markers on the maps elected by the dropdown stored
-        as a string (e.g 'max_depth')
+    lat_min : float
+        Minimum value of the latitude stored as a float.
 
-    lat_min : double
-        Minimum value of the latitude stored as a double.
+    lat_max : float
+        Maximum value of the latitude stored as a float.
 
-    lat_max : double
-        Maximum value of the latitude stored as a double.
+    lon_min : float
+        Minimum value of the longitude stored as a float.
 
-    lon_min : double
-        Minimum value of the longitude stored as a double.
+    lon_max : float
+        Maximum value of the longitude stored as a float.
 
-    lon_max : double
-        Maximum value of the longitude stored as a double.
-
-    ground_stations : list
-        Ground station name strings stored in a list (e.g. ['Resolute Bay, No. W. Territories'])
+    gaz_list : list
+        Gas names strings stored in a list (e.g. ['Ozone'])
 
     Returns
     -------
-    dict
-        A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
-        and the map's layout as a Plotly layout graph object.
-"""
-"""
-    start_time = dt.datetime.now()
+    link : str
+        Link that redirects to the Flask route to download the CSV based on selected filters
+    """
+    global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
+    link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
+            .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
 
-     # Convert strings to datetime objects
-    date = dt.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
+    return link
 
-    df =data_reader(gaz_list,r'data',start_date,end_date)
+#=======================================================================================================================
+# Routing
 
-    traces = []
-    for station_details, dfff in filtered_data.groupby(["station_name", "lat", "lon"]):
-        trace = dict(
-            station_name=station_details[0],
-            lat=station_details[1],
-            lon=station_details[2],
-            count=len(dfff),
-            mean=filtered_data.groupby(["station_name", "lat", "lon"])[var_selection].mean()[station_details[0]][0],
-            median=filtered_data.groupby(["station_name", "lat", "lon"])[var_selection].median()[station_details[0]][0]
-        )
-        traces.append(trace)
+# Flask route that handles the CSV downloads. This allows for larger files to be passed,
+# as well as avoiding generating the CSV until the download is desired
+@app.server.route('/dash/downloadCSV')
+def download_csv():
+    """Generates the CSV and sends it to the user
 
-    df_stations = pd.DataFrame(traces)
+    args
+    ----------
 
-    stations = []
-    if traces != []:
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
 
-        lat = df_stations["lat"].tolist()
-        lon = df_stations["lon"].tolist()
-        station_names = df_stations["station_name"].tolist()
-        if stat_selection == 'mean':
-            stat_values = df_stations["mean"].tolist()
-        elif stat_selection == 'median':
-            stat_values = df_stations["median"].tolist()
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
 
-        # Count mapping from aggregated data
-        stat_metric_data = {}
-        stat_metric_data["min"] = df_stations[stat_selection].min()
-        stat_metric_data["max"] = df_stations[stat_selection].max()
-        stat_metric_data["mid"] = (stat_metric_data["min"] + stat_metric_data["max"]) / 2
-        stat_metric_data["low_mid"] = (stat_metric_data["min"] + stat_metric_data["mid"]) / 2
-        stat_metric_data["high_mid"] = (stat_metric_data["mid"] + stat_metric_data["max"]) / 2
 
-        for i in range(len(df_stations)):
-            val = stat_values[i]
-            station_name = station_names[i]
+    lat_min : float
+        Minimum value of the latitude stored as a float.
 
-            station = go.Scattermapbox(
-                lat=[lat[i]],
-                lon=[lon[i]],
-                mode="markers",
-                marker=dict(
-                    color='white',
-                    showscale=False,
-                    cmin=stat_metric_data["min"],
-                    cmax=stat_metric_data["max"],
-                    #size=1 + (val - stat_metric_data["min"] / 10),
-                    size= 1 + 25 * ((val - stat_metric_data["min"]) + stat_metric_data["min"]) / stat_metric_data["mid"],
-                            # 10 + (val - stat_metric_data["min"]) / 15,
-                    colorbar=dict(
-                        x=0.9,
-                        len=0.7,
-                        title=dict(
-                            text="Ground Station Overview",
-                            font={"color": "#737a8d", "family": "Open Sans"},
-                        ),
-                        titleside="top",
-                        tickmode="array",
-                        tickvals=[stat_metric_data["min"], stat_metric_data["max"]],
-                        ticktext=[
-                            stat_metric_data["min"],
-                            stat_metric_data["max"],
-                        ],
-                        ticks="outside",
-                        thickness=15,
-                        tickfont={"family": "Open Sans", "color": "#737a8d"},
-                    ),
-                ),
-                opacity=0.6,
-                #selectedpoints=selected_index,
-                selected=dict(marker={"color": "#ffff00"}),
-                customdata=[(station_name)],
-                hoverinfo="text",
-                text=station_name
-                + "<br>" + stat_selection + " " + var_selection + ":"
-                + str(round(val, 2))
-                + "<br>lat: " + str(lat[i])
-                + "<br>lon: " + str(lon[i])
-            )
-            stations.append(station)
+    lat_max : float
+        Maximum value of the latitude stored as a float.
 
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
+
+    alt_range : List
+        Range of altitudes
+
+    Returns
+    -------
+    output : CSV
+        CSV file based on the applied filters
+    """
+
+    lat_min    = float(flask.request.args.get('lat_min'))
+    lat_max    = float(flask.request.args.get('lat_max'))
+    lon_min    = float(flask.request.args.get('lon_min'))
+    lon_max    = float(flask.request.args.get('lon_max'))
+    start_date = flask.request.args.get('start_date')
+    end_date   = flask.request.args.get('end_date')
+    alt_range   = flask.request.args.get('alt_range')
+    gaz_list= flask.request.args.get('gaz_list')
+
+    #start_date =pd.Timestamp(parse(start_date))
+    #end_date   =pd.Timestamp(parse(end_date))
+
+    #Pre-processing of alt_range
+    alt_range = alt_range.replace(" ", "")
+    alt_range = alt_range[1:-1].split(',')
+    alt_range[0] = int(alt_range[0])
+    alt_range[1] = int(alt_range[1])
+    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+
+    # Making the output csv from the filtered df
+    csv_buffer = StringIO()
+    df.to_csv(csv_buffer, index=False)
+    output = make_response(csv_buffer.getvalue())
+    try:
+        language = session['language']
+    except KeyError:
+        language = 'en'
+    if language == 'fr':
+        output.headers["Content-Disposition"] = "attachment; filename=résumé_données.csv"
     else:
-        station = go.Scattermapbox(
-            lat=[],
-            lon=[],
-            mode="markers",
-            marker=dict(
-                color='#1263A8',
-                showscale=False,
-                size=0,
-                colorbar=dict(
-                    x=0.9,
-                    len=0.7,
-                    title=dict(
-                        text="No Ground Stations Selected",
-                        font={"color": "#737a8d", "family": "Open Sans"},
-                    ),
-                    titleside="top",
-                    tickmode="array",
-                    ticks="outside",
-                    thickness=15,
-                    tickfont={"family": "Open Sans", "color": "#737a8d"},
-                ),
-            ),
-            opacity=0.8,
-            selected=dict(marker={"color": "#ffff00"}),
-            customdata=[],
-            hoverinfo="text",
-        )
-        stations.append(station)
+        output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
+    output.headers["Content-type"] = "text/csv"
 
-    layout = go.Layout(
-        margin=dict(l=10, r=10, t=20, b=10, pad=5),
-        plot_bgcolor="#171b26",
-        paper_bgcolor="#171b26",
-        clickmode="event+select",
-        hovermode="closest",
-        showlegend=False,
-        mapbox=go.layout.Mapbox(
-            accesstoken=mapbox_access_token,
-            #bearing=10,
-            #center=go.layout.mapbox.Center(
-            #    lat=df_stations.lat.mean(), lon=df_stations.lon.mean()
-            #),
-            #pitch=5,
-            zoom=1,
-            style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex",
-        ),
-        height=500,
-        transition={'duration': 500},
-    )
+    return output
 
-    print(f'make_viz_map: {(dt.datetime.now()-start_time).total_seconds()}')
 
-    return {"data": stations, "layout": layout}
-"""
+
+#============================================================================
+# Unused code
+
+# Selected Data by sliding mouse
+#!!!!!!!!!!!!!!!!!!!
+#@app.callback(
+#    [Output("lat_min", "value"),
+#    Output("lat_max", "value"),
+#    Output("lon_min", "value"),
+#    Output("lon_max", "value")],
+#    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
+#)
+#def update_bar_selector(value, clickData):
+#    holder_lat = []
+#    holder_lon = []
+#    if clickData:
+#        try:
+#            holder_lat.append(str(int(clickData["points"][0]["lat"])))
+#            holder_lon.append(str(int(clickData["points"][0]["long"])))
+#        except KeyError:
+#            ""
+#    if value:
+#        for x in value["points"]:
+#            holder_lat.append(((x["lat"])))
+#            holder_lon.append(((x["long"])))
+#
+#    holder_lat  = np.array( holder_lat)
+#    holder_lon  = np.array( holder_lon)
+#    if len(holder_lat)!=0 :
+#        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
+#    else :
+#        return -90,90,-180,180
+
+
+# Clear Selected Data if Click Data is used
+#@app.callback(
+#    Output("selector_map", "selectedData"),
+#    [Input("selector_map", "clickData")]
+#    )
+#def update_selected_data(clickData):
+#    if clickData:
+#        return {"points": []}
+
+#============================================================================
+# Translation
 
 # Inject the static text here after translating
 # The variables in controls.py are placed here; babel does not work for translation unless it is hard coded here, not sure why. Likely has to with the way Dash builds the web app.
@@ -1983,7 +1659,7 @@ def set_language(language=None):
 
 
 
-
+# Main
 if __name__ == '__main__':
      #app.run_server(debug=True)  # For development/testing
 

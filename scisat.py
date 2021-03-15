@@ -16,6 +16,8 @@ from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 
 from scipy.io import netcdf #### <--- This is the library to import data
+from scipy.stats import sem, t
+from scipy import mean
 import numpy as np
 import datetime
 
@@ -54,7 +56,7 @@ external_scripts = [
 # The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
 LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
 START_DATE, END_DATE = None, None
-GAZ_LIST = ""
+GAZ_LIST = 'ACEFTS_L2_v4p1_O3.nc'
 ALT_RANGE = [0,150]
 DEFAULT_DF = None
 
@@ -252,6 +254,7 @@ def databin(df, step):
     df["long"] = df['long'].map(to_bin)
     # We return a mean value of all overlapping data to ensure there are no overlaps
     return df.groupby(["lat", "long"]).mean().reset_index()
+
 
 # Dropdown options
 #======================================================================================
@@ -589,21 +592,37 @@ def build_filtering():
                                             ),
                                         ]),
                                      html.Span(children=html.P(id="lon_selection"),className="wb-inv") ],
-                                 #   className="one-half column"
+                                     className="one-half column"
                                     ),
                             ],
                             id="map-options",
-                            ), #End of map options
+                            ),
+                            html.Div([
+                                html.A(
+                                    html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                    id='generate',
+                                    target="_blank",
+                                    ),
+                                html.Span(children=html.P(id="generate_selection"),className="wb-inv")],
+                                 className="one-half column"
+                                 ), #End of map options
+                            html.Div([ #Download button
+                                html.Div([
+                                    html.A(
+                                        html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                                        id='download-link-1',
+                                        # download='rawdata.csv',
+                                        href="",
+                                        target="_blank",
+                                        ),
+                                    html.Span(children=html.P(id="download_selection"),className="wb-inv")]
+
+                                    ),
+                                ],
+                                id="cross-filter-options",
+                                className="one-half column"
+                                ),
                                 ]),
-                        html.Div(
-                            [dcc.Graph(id="selector_map",
-                                       config={
-                                           "displaylogo": False,
-                                           "displayModeBar": False
-                                       }
-                                       )],
-                        ),
-                        html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),   #!!!!!!! Tesssst
                     ],
                     id="left-column-1",
                     style={"flex-grow": 1},
@@ -635,23 +654,9 @@ def build_filtering():
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range')
-                                    , html.Span(children=html.P(id="date_selection"),className="wb-inv")],
-                                    className="one-half column"),
-                                html.Div([ #Download button
-                                    html.Div([
-                                        html.A(
-                                            html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                            id='download-link-1',
-                                            # download='rawdata.csv',
-                                            href="",
-                                            target="_blank",
-                                            ),
-                                        html.Span(children=html.P(id="download_selection"),className="wb-inv")]
-
-                                        ),
-                                    ],
-                                    id="cross-filter-options"
-                                    ),  #End download Button
+                                    , html.Span(children=html.P(id="date_selection"),className="wb-inv")]
+                                    ),
+                                  #End download Button
                             ]),
                         #Graphique Altitude
                         html.Div([ #Choix altitude
@@ -669,27 +674,7 @@ def build_filtering():
                                    ),
                                 html.Div(id='output-container-alt-picker-range'),
                                 ]), #End Altitude Choice
-                        html.Div([
-                            html.A(
-                                html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                id='generate',
-                                target="_blank",
-                                ),
-                            html.Span(children=html.P(id="generate_selection"),className="wb-inv")]),
-                        html.Div([ # Altitude graph
-                            html.Div([ # Graphique
-                                dcc.Graph(id="count_graph",
-                                          config={
-                                              "displaylogo": False,
-                                              "displayModeBar": False
-                                          }
-                                          )],
-                                     id="countGraphContainer",
-                                     ),
-                            ]), #End Altitude Graph
-                            html.Div ([ #Altitude graph description
-                                html.P(id = "Altitude_description", style={"margin-top":"2em"})
-                                ]),   #End description
+                           #End description
 
                     ],
                     id="right-column-1",
@@ -699,7 +684,7 @@ def build_filtering():
             ],
             className="row flex-display pretty_container twelve columns",
             style={"justify-content": "space-evenly"}
-            ),
+            )
     ])
 
 
@@ -709,6 +694,30 @@ def build_stats():
         html.Div([
                 html.Div(
                     [
+                    html.Div(
+                        [dcc.Graph(id="selector_map",
+                                   config={
+                                       "displaylogo": False,
+                                       "displayModeBar": False
+                                   }
+                                   )],
+                    ),
+                    html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
+                    html.Div([ # Altitude graph
+                        html.Div([ # Graphique
+                            dcc.Graph(id="count_graph",
+                                      config={
+                                          "displaylogo": False,
+                                          "displayModeBar": False
+                                      }
+                                      )],
+                                 id="countGraphContainer",
+                                 ),
+                        ]), #End Altitude Graph
+                        html.Div ([ #Altitude graph description
+                            html.P(id = "Altitude_description", style={"margin-top":"2em"})
+                            ]),
+                    ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
                                   config={
@@ -763,13 +772,10 @@ app.layout = html.Div(
         Input('lat_max','value'),
         Input('lon_min','value'),
         Input('lon_max','value')
-    ],
-    [
-        State("pos_alert", "is_open")
-    ],
+    ]
 )
-def update_ranges(lat_min,lat_max,lon_min,lon_max, is_open):
-    global LAT_MIN, LAT_MAX, LON_MIN, lON_MAX
+def update_ranges(lat_min,lat_max,lon_min,lon_max):
+    global LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     s = False
     if pos_validation(lat_min, lat_max, lon_min, lon_max):
         LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
@@ -990,7 +996,15 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
     global DEFAULT_DF
-    dft = databin(DEFAULT_DF,3)
+    dft = DEFAULT_DF
+    test = dft.columns[0:150]
+    a = dft['Alt_Mean'].to_numpy()
+    n = len(a)
+    m = mean(a)
+    std_err = sem(a)
+    h = std_err * t.ppf((1 + 0.95) / 2, n - 1)
+    interval_min= m-h
+    interval_max= m+h
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
@@ -1017,8 +1031,8 @@ def generate_geo_map(df):
                             x=df['long'],
                             y=df['lat'],
                             z=df['Alt_Mean'],
-                            zmax=dft['Alt_Mean'].max(),
-                            zmin=dft['Alt_Mean'].min(),
+                            zmax=interval_max,
+                            zmin=interval_min,
                             #zsmooth='fast', # Turned off smoothing to avoid interpolations
                             opacity=1,
                             name = "",
@@ -1051,8 +1065,8 @@ def generate_geo_map(df):
                 marker= dict(
                     size=10,
                     color=df['Alt_Mean'],
-                    cmin=dft['Alt_Mean'].min(),
-                    cmax=dft['Alt_Mean'].max(),
+                    cmin=interval_min,
+                    cmax=interval_max,
                     colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
                      [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
                       [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
@@ -1479,8 +1493,8 @@ def translate_static(x):
                 _("This application provides users the ability to select, download and visualize SCISAT's data. "),
                 _("Visit our Github page to learn more about our applications."),
                 _("Select Data"),
-                _("Generate"),
-                _("Generate from selected data"),
+                _("Update"),
+                _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),

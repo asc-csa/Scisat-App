@@ -23,15 +23,29 @@ import datetime
 # load data and transform as needed
 
 
-external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
+# external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
+#                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+#                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
+#                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
+
+external_stylesheets = ['assets/gc_theme_cdn/assets/favicon.ico',
                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
-                        'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
+                        'assets/gc_theme_cdn/css/theme.min.css',
+                        # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
+                       ]  # Link to external CSS
+
+# external_scripts = [
+#     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+#     'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
+#     'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
+#     'https://cdn.plot.ly/plotly-locale-de-latest.js',
+
+# ]
 
 external_scripts = [
     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
+    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
+    'assets/gc_theme_cdn/js/theme.min.js',
     'https://cdn.plot.ly/plotly-locale-de-latest.js',
 
 ]

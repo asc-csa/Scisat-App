@@ -502,6 +502,7 @@ def build_filtering():
                 ),
                 html.Div(
                     dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),className="row"),
+                html.Div([
                 html.Div( #Latitude picker
                     [
                         html.P(
@@ -540,7 +541,7 @@ def build_filtering():
                                 debounce=True
                             )
                         ]),
-                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")],
+                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")], className="one-third column"
                 ),
                 html.Div( #longitude picker
                     [
@@ -580,9 +581,10 @@ def build_filtering():
                                 debounce=True
                             ),
                         ]),
-                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ]
+                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ], className="one-third column"
                     ),
-                html.Div([ #Year selection + download button
+                html.Div(
+                [ #Year selection + download button
                                 html.Div([
                                     dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
                                 ]),
@@ -607,7 +609,9 @@ def build_filtering():
                                     html.Div(id='output-container-date-picker-range')
                                     , html.Span(children=html.P(id="date_selection"),className="wb-inv")]
                                     ),
-                            ]),
+                            ], className="one-third column"
+                )
+                ]),
                 html.Div([ #Choix altitude
                         html.P(id="altitude-text"),
                         dcc.RangeSlider(
@@ -620,7 +624,7 @@ def build_filtering():
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
-                        ]),
+                        ], className="one row"),
                 html.Div([html.Div([
                         html.A(
                             html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),

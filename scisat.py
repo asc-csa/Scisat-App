@@ -496,20 +496,20 @@ def build_filtering():
                             multi=False,
                             value='ACEFTS_L2_v4p1_O3.nc',
                             className="dcc_control",
-
                         )
                     ),
 
-                      html.Span(children=html.P(id="gas_selection"),className="wb-inv")])], className="row"
+                      html.Span(children=html.P(id="gas_selection"),className="wb-inv")])], style={"textAlign":"left"}
                 ),
                 html.Div(
-                    dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),className="row"),
+                    dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}), style={"textAlign":"left"}),
                 html.Div([
                 html.Div( #Latitude picker
                     [
                         html.P(
                             id="latitude-text",
                             className="control_label",
+                            style={"textAlign":"left"}
                         ),
                         html.Div([
                             html.Label(
@@ -543,13 +543,14 @@ def build_filtering():
                                 debounce=True
                             )
                         ]),
-                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")], className="one-third column"
+                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")], className="one-third column",
                 ),
                 html.Div( #longitude picker
                     [
                         html.P(
                             id="longitude-text",
                             className="control_label",
+                            style ={"textAlign":"center"}
                         ),
                         html.Div([
                             html.Label(
@@ -583,7 +584,7 @@ def build_filtering():
                                 debounce=True
                             ),
                         ]),
-                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ], className="one-third column"
+                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ], className="one-third column", style={"textAlign":"center"}
                     ),
                 html.Div(
                 [ #Year selection + download button
@@ -593,6 +594,7 @@ def build_filtering():
                                 html.P(
                                     id="yearslider-text",
                                     className="control_label",
+                                    style={"textAlign":"center"}
                                     ),
 
                                 html.Div([
@@ -611,9 +613,10 @@ def build_filtering():
                                     html.Div(id='output-container-date-picker-range')
                                     , html.Span(children=html.P(id="date_selection"),className="wb-inv")]
                                     ),
-                            ], className="one-third column", style={"margin-left":"4em"}
+                            ], className="one-third column", style={"margin-right":"4em", "textAlign":"right"}
                 )
-                ]),
+                ], style={"textAlign":"left"}),
+                html.Hr(),
                 html.Div([ #Choix altitude
                         html.P(id="altitude-text"),
                         dcc.RangeSlider(
@@ -626,14 +629,14 @@ def build_filtering():
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
-                        ]),
+                        ],style={"margin-top":"75px"}),
                 html.Div([html.Div([
                         html.A(
-                            html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
+                            html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding-left': '112px', 'padding-right':'112px'}),
                             id='generate',
                             target="_blank",
                             ),
-                        html.Span(children=html.P(id="generate_selection"),className="wb-inv")]),html.Div([ #Download button
+                        html.Span(children=html.P(id="generate_selection"),className="wb-inv")], className="one-half column", style={"textAlign":"right"}),html.Div([ #Download button
                              html.Div([
                                  html.A(
                                      html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
@@ -645,7 +648,7 @@ def build_filtering():
                                  html.Span(children=html.P(id="download_selection"),className="wb-inv")]
 
                                  ),
-                             ],id="cross-filter-options")],className="row")
+                             ],id="cross-filter-options", className="one-half column")], style={"margin-top":"30px"})
             ],
             className="pretty_container twelve column",
             style={"justify-content": "space-evenly"}

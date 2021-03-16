@@ -609,7 +609,7 @@ def build_filtering():
                                     html.Div(id='output-container-date-picker-range')
                                     , html.Span(children=html.P(id="date_selection"),className="wb-inv")]
                                     ),
-                            ], className="one-third column"
+                            ], className="one-third column", style={"margin-left":"4em"}
                 )
                 ]),
                 html.Div([ #Choix altitude
@@ -624,7 +624,7 @@ def build_filtering():
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
-                        ], className="one row"),
+                        ]),
                 html.Div([html.Div([
                         html.A(
                             html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),

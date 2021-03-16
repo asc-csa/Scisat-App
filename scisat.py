@@ -449,8 +449,10 @@ def build_filtering():
                     [
                         html.Div(
                             [
-                                 html.P(id="description-1"),
-                                 html.P(id="description-2"),
+                                 dcc.Markdown(id="description-1"),
+                                 dcc.Markdown(id="description-2"),
+                                 dcc.Markdown(id="description-3"),
+                                 dcc.Markdown(id="description-4"),
                                  html.A(
                                     html.P(id="github-link"),
                                     href = "https://github.com/asc-csa",
@@ -1417,6 +1419,8 @@ def download_csv():
         Output("data-ratio", "children"),
         Output("description-1", "children"),
         Output("description-2", "children"),
+        Output("description-3", "children"),
+        Output("description-4", "children"),
         Output("github-link", "children"),
         Output("select-data", "children"),
         Output("generate-button","children"),
@@ -1453,7 +1457,9 @@ def translate_static(x):
                 _("Learn More About SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
-                _("This application provides users the ability to select, download and visualize SCISAT's data. "),
+                _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
+                _("The authoritative source data for the Atmospheric Chemistry Experiment (ACE), also known as SCISAT, is available on the [ACE site](http://www.ace.uwaterloo.ca/data.php) (external site only available in English). "),
+                _("Please read this [Important Mission Information Document](http://www.ace.uwaterloo.ca/ACE-FTS_v2.2/ACEFTSPublicReleaseDocumentation.pdf) before using the ACE/SCISAT data. Please refer to the relevant scientific literature when interpreting SCISAT data."),
                 _("Visit our Github page to learn more about our applications."),
                 _("Select Data"),
                 _("Update"),

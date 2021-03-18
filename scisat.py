@@ -871,7 +871,7 @@ def make_count_figure(df):
         layout as as a Plotly layout graph object.
     """
     global ALT_RANGE
-    concentration=df[ALT_RANGE[0]:ALT_RANGE[1]]
+    concentration=df.iloc[:,ALT_RANGE[0]:ALT_RANGE[1]]
     # concentration=np.array(concentration,dtype=np.float32)
     # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
@@ -964,15 +964,9 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
     global DEFAULT_DF
+    global DEFAULT_DF, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     dft = DEFAULT_DF
-    test = dft.columns[0:150]
-    a = dft['Alt_Mean'].to_numpy()
-    n = len(a)
-    m = mean(a)
-    std_err = sem(a)
-    h = std_err * t.ppf((1 + 0.95) / 2, n - 1)
-    interval_min= m-h
-    interval_max= m+h
+
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
@@ -999,8 +993,8 @@ def generate_geo_map(df):
                             x=df['long'],
                             y=df['lat'],
                             z=df['Alt_Mean'],
-                            zmax=interval_max,
-                            zmin=interval_min,
+                            zmax=1e-05,
+                            zmin=1e-08,
                             #zsmooth='fast', # Turned off smoothing to avoid interpolations
                             opacity=1,
                             name = "",
@@ -1033,8 +1027,8 @@ def generate_geo_map(df):
                 marker= dict(
                     size=10,
                     color=df['Alt_Mean'],
-                    cmin=interval_min,
-                    cmax=interval_max,
+                    cmin=df['Alt_Mean'].min(),
+                    cmax=df['Alt_Mean'].max(),
                     colorscale= [[0.0, '#313695'], [0.07692307692307693, '#3a67af'], [0.15384615384615385, '#5994c5'], [0.23076923076923078, '#84bbd8'],
                      [0.3076923076923077, '#afdbea'], [0.38461538461538464, '#d8eff5'], [0.46153846153846156, '#d6ffe1'], [0.5384615384615384, '#fef4ac'],
                       [0.6153846153846154, '#fed987'], [0.6923076923076923, '#fdb264'], [0.7692307692307693, '#f78249'], [0.8461538461538461, '#e75435'],
@@ -1060,8 +1054,8 @@ def generate_geo_map(df):
             accesstoken=mapbox_access_token
         ),
         transition={'duration': 500},
-        xaxis = dict(range=[df['long'].min()-1.5,df['long'].max()+1.5]),
-        yaxis = dict(range=[df['lat'].min()-1.5,df['lat'].max()+1.5])
+        xaxis = dict(range=[LON_MIN-1.5, LON_MAX+1.5]),
+        yaxis = dict(range=[LAT_MIN-1.5, LAT_MAX+1.5])
     )
 
     # We turn off the axes

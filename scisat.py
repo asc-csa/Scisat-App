@@ -963,7 +963,6 @@ def generate_geo_map(df):
         A dictionary containing 2 key-value pairs: the selected data as an array of Plotly scattermapbox graph objects
         and the map's layout as a Plotly layout graph object.
     """
-    global DEFAULT_DF
     global DEFAULT_DF, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     dft = DEFAULT_DF
 

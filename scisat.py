@@ -966,6 +966,7 @@ def generate_geo_map(df):
     global DEFAULT_DF, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     dft = DEFAULT_DF
 
+    interval_max=np.nanmax(DEFAULT_DF.iloc[:,0:150].to_numpy().flatten())
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
@@ -992,8 +993,8 @@ def generate_geo_map(df):
                             x=df['long'],
                             y=df['lat'],
                             z=df['Alt_Mean'],
-                            zmax=1e-05,
-                            zmin=1e-08,
+                            zmax=interval_max,
+                            zmin=0,
                             #zsmooth='fast', # Turned off smoothing to avoid interpolations
                             opacity=1,
                             name = "",

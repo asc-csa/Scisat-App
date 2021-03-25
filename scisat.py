@@ -621,7 +621,7 @@ def build_filtering():
                                             max_date_allowed=dt.date.today(),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
-                                            display_format="DD/MM/Y"
+                                            display_format="Y/MM/DD"
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range'),

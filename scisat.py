@@ -411,17 +411,21 @@ def build_header():
                 html.Div(
                     [
                         html.A(
-                            html.Button("", id="learn-more-button", className="dash_button"),
-                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp",id='learn-more-link'
+                            html.Span("", id="learn-more-button"),
+                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp",
+                            id='learn-more-link',
+                            className="btn btn-primary"
                         ),
                         html.A(
-                            html.Button('FR', id='language-button', className="dash_button"),
-                            href='/scisat/language/fr', id='language-link'
+                            html.Span('FR', id='language-button'),
+                            href='/scisat/language/fr',
+                            id='language-link',
+                            className="btn btn-primary"
                         ),
                     ],
                     className="four columns",
                     id="button-div",
-                    style={"text-align": "center"}
+                    style={"display": "flex", "justify-content": "space-around"}
                 ),
             ],
             id="header",
@@ -617,7 +621,7 @@ def build_filtering():
                                             max_date_allowed=dt.date.today(),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
-                                            display_format="DD/MM/Y"
+                                            display_format="Y/MM/DD"
                                             ),
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
@@ -645,22 +649,24 @@ def build_filtering():
                         ],style={"margin-top":"75px"}),
                 html.Div([html.Div([
                         html.A(
-                            html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding-left': '112px', 'padding-right':'112px'}),
+                            html.Span(id='generate-button', n_clicks=0, style={'padding-left': '112px', 'padding-right':'112px'}),
                             id='generate',
                             target="_blank",
+                            className="btn btn-primary",
                             ),
                         html.Span(children=html.P(id="generate_selection"),className="wb-inv")], className="one-half column", style={"textAlign":"right"}),html.Div([ #Download button
                              html.Div([
-                                 html.A(
-                                     html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                     id='download-link-1',
-                                     # download='rawdata.csv',
-                                     href="",
-                                     target="_blank",
-                                     ),
-                                 html.Span(children=html.P(id="download_selection"),className="wb-inv")]
+                                html.A(
+                                    html.Span(id='download-button-1', n_clicks=0, style={'padding': '0px 10px'}),
+                                    id='download-link-1',
+                                    # download='rawdata.csv',
+                                    href="",
+                                    target="_blank",
+                                    className="btn btn-primary"
+                                ),
+                                html.Span(children=html.P(id="download_selection"),className="wb-inv")]
 
-                                 ),
+                                ),
                              ],id="cross-filter-options", className="one-half column")], style={"margin-top":"30px"})
             ],
             className="pretty_container twelve column",

@@ -457,10 +457,12 @@ def build_filtering():
                                  dcc.Markdown(id="description-2"),
                                  dcc.Markdown(id="description-3"),
                                  dcc.Markdown(id="description-4"),
-                                 html.A(
-                                    html.P(id="github-link"),
-                                    href = "https://github.com/asc-csa",
-                                    title = "ASC-CSA Github"
+                                 html.P(
+                                    html.A(
+                                        id="github-link",
+                                        href = "https://github.com/asc-csa",
+                                        title = "ASC-CSA Github"
+                                    )
                                  )
                             ],
                             id="description_div",
@@ -487,23 +489,33 @@ def build_filtering():
             [
                 html.Div(
                     [
-                    dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
-                    html.P(
-                        id="gas-text",
-                        className="control_label",
-                    ),
-                    html.Div([
-                    html.Label(
-                        dcc.Dropdown(
-                            id="gaz_list",
-                            options= gaz_name_options,
-                            multi=False,
-                            value='ACEFTS_L2_v4p1_CO.nc',
-                            className="dcc_control",
+                        dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
+                        html.P(
+                            id="gas-text",
+                            className="control_label",
+                        ),
+                        html.Div(
+                            [
+                                html.Label(
+                                    id="gas_selection",
+                                    htmlFor='gaz_list'
+                                ),
+                                dcc.Dropdown(
+                                    id="gaz_list",
+                                    options= gaz_name_options,
+                                    multi=False,
+                                    value='ACEFTS_L2_v4p1_CO.nc',
+                                    className="dcc_control",
+                                ),
+            
+                                # html.Span(children=html.P(),className="wb-inv")
+                            ],
+                            role='listbox',
+                            **{'aria-label': 'Gas Dropdown'}
+                            
                         )
-                    ),
-
-                      html.Span(children=html.P(id="gas_selection"),className="wb-inv")])], style={"textAlign":"left"}
+                    ],
+                    style={"textAlign":"left"}
                 ),
                 html.Div(
                     dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}), style={"textAlign":"left"}),

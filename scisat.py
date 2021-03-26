@@ -31,11 +31,12 @@ import datetime
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
-external_stylesheets = ['assets/gc_theme_cdn/assets/favicon.ico',
-                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'assets/gc_theme_cdn/css/theme.min.css',
-                        # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
-                       ]  # Link to external CSS
+external_stylesheets = [
+    # 'assets/gc_theme_cdn/assets/favicon.ico',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
+]  # Link to external CSS
 
 # external_scripts = [
 #     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',

@@ -50,6 +50,7 @@ external_scripts = [
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
     'assets/gc_theme_cdn/js/theme.min.js',
     'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    'assets/scripts.js'
 
 ]
 

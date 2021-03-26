@@ -371,7 +371,7 @@ layout = dict(
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     legend=dict(font=dict(size=10), orientation="h"),
-    title="Gas Concentration Overview",
+    title="Gas concentration overview",
     mapbox=dict(
         style="light",
         # center=dict(lon=-78.05, lat=42.54),
@@ -1070,7 +1070,7 @@ def generate_geo_map(df):
                             hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
                             colorbar=dict(
                                 title=dict(
-                                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                                    text=_("Gas concentration [ppv] (mean on altitude and position) "),
                                 ),
                                 titleside="right",
                                 showexponent = 'all',
@@ -1218,7 +1218,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Time Series"),
+        title=_("Time series"),
 
         xaxis={"title": _('Date'), "automargin": True} ,
 
@@ -1538,15 +1538,15 @@ def download_csv():
 def translate_static(x):
     print('Translating...')
     return [
-                _("SCISAT Data Visualisation"),
-                _("Learn More About SCISAT"),
+                _("SCISAT data visualisation"),
+                _("Learn more about SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
                 _("The authoritative source data for the Atmospheric Chemistry Experiment (ACE), also known as SCISAT, is available on the [ACE site](http://www.ace.uwaterloo.ca/data.php) (external site only available in English). "),
                 _("Please read this [Important Mission Information Document](http://www.ace.uwaterloo.ca/ACE-FTS_v2.2/ACEFTSPublicReleaseDocumentation.pdf) before using the ACE/SCISAT data. Please refer to the relevant scientific literature when interpreting SCISAT data."),
                 _("Visit our Github page to learn more about our applications."),
-                _("Select Data"),
+                _("Select data"),
                 _("Update"),
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
@@ -1560,16 +1560,16 @@ def translate_static(x):
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
-                _("Filter by Latitude:"),
+                _("Filter by latitude:"),
                 _("Minimum latitude"),
                 _("Maximum latitude"),
-                _("Filter by Longitude:"),
+                _("Filter by longitude:"),
                 _("Minimum longitude"),
                 _("Maximum longitude"),
-                _("Select Altitude Range:"),
-                _("Select Date:"),
-                _("Select Gas:"),
-                _('Download Summary Data as CSV'),
+                _("Select altitude Range:"),
+                _("Select date:"),
+                _("Select gas:"),
+                _('Download summary data as CSV'),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),

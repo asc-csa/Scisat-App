@@ -59,7 +59,7 @@ external_scripts = [
 # The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
 LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
 START_DATE, END_DATE = None, None
-GAZ_LIST = 'ACEFTS_L2_v4p1_CO.nc'
+GAZ_LIST = 'ACEFTS_L2_v4p1_O3.nc'
 ALT_RANGE = [0,150]
 DEFAULT_DF = None
 
@@ -507,7 +507,7 @@ def build_filtering():
                                     id="gaz_list",
                                     options= gaz_name_options,
                                     multi=False,
-                                    value='ACEFTS_L2_v4p1_CO.nc',
+                                    value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
                                 ),
             

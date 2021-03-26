@@ -52,14 +52,6 @@ external_scripts = [
 
 ]
 
-## These are constant values from our input forms.
-# The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
-LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
-START_DATE, END_DATE = None, None
-GAZ_LIST = 'ACEFTS_L2_v4p1_O3.nc'
-ALT_RANGE = [0,150]
-DEFAULT_DF = None
-
 # Loads the config file
 def get_config_dict():
     config = configparser.RawConfigParser()
@@ -791,11 +783,8 @@ app.layout = html.Div(
     ]
 )
 def update_ranges(lat_min,lat_max,lon_min,lon_max):
-    global LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     s = False
-    if pos_validation(lat_min, lat_max, lon_min, lon_max):
-        LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
-    else:
+    if not pos_validation(lat_min, lat_max, lon_min, lon_max):
         s = True
     return s
 
@@ -811,11 +800,8 @@ def update_ranges(lat_min,lat_max,lon_min,lon_max):
     ],
 )
 def update_dates(start_date, end_date, gaz_list, is_open):
-    global START_DATE, END_DATE
     s = False
-    if date_validation(start_date,end_date,gaz_list):
-        START_DATE, END_DATE = start_date, end_date
-    else:
+    if not date_validation(start_date,end_date,gaz_list):
         s = True
     return s
 
@@ -830,11 +816,8 @@ def update_dates(start_date, end_date, gaz_list, is_open):
     ],
 )
 def update_gas(gaz_list, is_open):
-    global GAZ_LIST
     s = False
-    if gas_validation(gaz_list):
-        GAZ_LIST = gaz_list
-    else:
+    if not gas_validation(gaz_list):
         s = True
     return s
 
@@ -844,11 +827,8 @@ def update_gas(gaz_list, is_open):
     [Input("alt_min", "value"), Input("alt_max", "value")]
 )
 def update_alt(alt_min, alt_max):
-    global ALT_RANGE
     s = False
-    if alt_validation(alt_min, alt_max):
-        ALT_RANGE = [alt_min, alt_max]
-    else:
+    if not alt_validation(alt_min, alt_max):
         s = True
     return s
 
@@ -862,10 +842,9 @@ def pos_validation(lat_min,lat_max,lon_min,lon_max):
 
 # Date validation
 def date_validation(start_date, end_date, gaz_list):
-    global DEFAULT_DF
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
-    df = DEFAULT_DF
+    df = data_reader(gaz_list,r'data')
     MIN_DATE=df['date'].min().to_pydatetime()
     MAX_DATE=df['date'].max().to_pydatetime()
     return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
@@ -892,7 +871,7 @@ def alt_validation(alt_min, alt_max):
 # This section is for graph generation. The 3 graphs are generated here.
 
 # This generates the concentration v.s. altitude figure
-def make_count_figure(df):
+def make_count_figure(df, alt_range):
     """Create and update the Gas Concentration vs Altitude over the given time range.
 
     Parameters
@@ -929,8 +908,7 @@ def make_count_figure(df):
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object.
     """
-    global ALT_RANGE
-    concentration=df[ALT_RANGE[0]:ALT_RANGE[1]]
+    concentration=df[alt_range[0]:alt_range[1]]
     # concentration=np.array(concentration,dtype=np.float32)
     # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
@@ -941,7 +919,7 @@ def make_count_figure(df):
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[ALT_RANGE[0]:ALT_RANGE[1]],
+            y=df.columns[alt_range[0]:alt_range[1]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -1233,16 +1211,22 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 # The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
 @app.callback(
     [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
-    [Input("generate-button","n_clicks"),Input("gaz_list","value")]
+    [Input("generate-button","n_clicks"),Input("gaz_list","value")],
+    [State("gaz_list","value"), State("lat_min","value"), State("lat_max", "value"), State("lon_min", "value"), State("lon_max", "value"), State("alt_min", "value"),
+     State("alt_max", "value"), State("date_picker_range", "start_date"), State("date_picker_range", "end_date"),
+      State("pos_alert", "is_open"), State("gas_alert", "is_open"), State("date_alert", "is_open"), State("alt_alert", "is_open")]
 )
-def controller(n_clicks, gaz_list):
-    global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
-    df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
-    fig2 = make_viz_chart(df)
-    fig3 = make_count_figure(df)
-    link = update_csv_link()
-    nbr = update_filtering_text(df)
+def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_min, alt_max, start_date, end_date, pos_alert, gas_alert, date_alert, alt_alert):
+
+    if not (pos_alert or date_alert or alt_alert):
+        df = data_reader(act_gaz_list, r'data', start_date, end_date, lat_min, lat_max, lon_min, lon_max, [alt_min, alt_max])
+        fig1 = generate_geo_map(df)
+        fig2 = make_viz_chart(df)
+        fig3 = make_count_figure(df, [alt_min, alt_max])
+        link = update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, act_gaz_list, [alt_min, alt_max])
+        nbr = update_filtering_text(df)
+    else:
+        df, fig1, fig2, fig3, link, nbr = None, None, None, None, None, 0
     return fig1, fig2, fig3, link, nbr
 
 # This function calculates the number of points selected
@@ -1286,22 +1270,17 @@ def update_filtering_text(df):
 # This function sets the max/min allowed dates when switching gas
 @app.callback(
     [Output('date_picker_range', 'min_date_allowed'),
-    Output('date_picker_range', 'max_date_allowed'),
-    Output('date_picker_range', 'start_date'),
-    Output('date_picker_range', 'end_date')],
-
+    Output('date_picker_range', 'max_date_allowed')],
     [ Input("gaz_list", "value")]
     )
 def update_picker(gaz_list):
-     global DEFAULT_DF, START_DATE, END_DATE
      df = data_reader(gaz_list, r'data')
-     DEFAULT_DF = df
      START_DATE = df.date.min().to_pydatetime()
      END_DATE = df.date.max().to_pydatetime()
-     return START_DATE, END_DATE, START_DATE, END_DATE
+     return START_DATE, END_DATE
 
 # This function updates the link that is opened when pressing the download button
-def update_csv_link():
+def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range):
     """Updates the link to the CSV download
 
     Parameters
@@ -1333,9 +1312,8 @@ def update_csv_link():
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
-    global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
-            .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range)
 
     return link
 

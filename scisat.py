@@ -660,27 +660,65 @@ def build_filtering():
                            ),
                         html.Div(id='output-container-alt-picker-range'),
                         ],style={"margin-top":"75px"}),
-                html.Div([html.Div([
-                        html.A(
-                            html.Span(id='generate-button', n_clicks=0, style={'padding-left': '112px', 'padding-right':'112px'}),
-                            id='generate',
-                            target="_blank",
-                            className="btn btn-primary",
-                            ),
-                        html.Span(children=html.P(id="generate_selection"),className="wb-inv")], className="one-half column", style={"textAlign":"right"}),html.Div([ #Download button
-                             html.Div([
-                                html.A(
-                                    html.Span(id='download-button-1', n_clicks=0, style={'padding': '0px 10px'}),
-                                    id='download-link-1',
-                                    # download='rawdata.csv',
-                                    href="",
-                                    target="_blank",
-                                    className="btn btn-primary"
-                                ),
-                                html.Span(children=html.P(id="download_selection"),className="wb-inv")]
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.A(
+                                            html.Span(
+                                                id='generate-button',
+                                                n_clicks=0,
+                                                style={'padding-left': '112px', 'padding-right':'112px'}
+                                            ),
+                                            id='generate',
+                                            target="_blank",
+                                            className="btn btn-primary",
+                                            href=""
+                                        ),
+                                        html.Span(
+                                            children=html.P(
+                                            id="generate_selection"
+                                            ),
+                                            className="wb-inv"
+                                        )
+                                    ]
+                                )
+                            ],
+                            className="one-half column",
+                            style={"textAlign":"right"}
+                        ),
+                        html.Div(
+                            [ #Download button
+                                html.Div(
+                                    [
+                                        html.A(
+                                            html.Span(
+                                                id='download-button-1',
+                                                n_clicks=0,
+                                                style={'padding': '0px 10px'}
+                                            ),
+                                            id='download-link-1',
+                                            # download='rawdata.csv',
+                                            href="",
+                                            target="_blank",
+                                            className="btn btn-primary"
+                                        ),
+                                        html.Span(
+                                            children=html.P(id="download_selection"),
+                                            className="wb-inv"
+                                        )
+                                    ]
 
                                 ),
-                             ],id="cross-filter-options", className="one-half column")], style={"margin-top":"30px"})
+                            ],
+                            id="cross-filter-options",
+                            className="one-half column"
+                        )
+                    ],
+                    style={"margin-top":"30px"}
+                )
             ],
             className="pretty_container twelve column",
             style={"justify-content": "space-evenly"}

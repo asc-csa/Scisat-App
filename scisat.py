@@ -14,6 +14,7 @@ import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
+import urllib.parse
 
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
@@ -1201,8 +1202,17 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 
 # The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
 @app.callback(
-    [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
-    [Input("generate-button","n_clicks"),Input("gaz_list","value")]
+    [
+        Output("selector_map", "figure"),
+        Output("viz_chart", "figure"),
+        Output("count_graph", "figure"),
+        Output("download-link-1", "href"),
+        Output("filtering_text", "children")
+    ],
+    [
+        Input("generate-button","n_clicks"),
+        Input("gaz_list","value")
+    ]
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
@@ -1305,6 +1315,17 @@ def update_csv_link():
     global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
             .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
+    values = {
+        'start_date': START_DATE,
+        'end_date': END_DATE,
+        'lat_min': LAT_MIN,
+        'lat_max': LAT_MAX,
+        'lon_min': LON_MIN,
+        'lon_max':LON_MAX,
+        'gaz_list': GAZ_LIST,
+        'alt_range': ALT_RANGE
+    }
+    link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
 
     return link
 

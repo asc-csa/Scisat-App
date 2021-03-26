@@ -332,7 +332,7 @@ msgstr "Concentration du gaz [ppv] (moyenne sur l'altitude et la position)"
 
 #: scisat.py:1106
 msgid "World graph of mean gas concentration"
-msgstr "Concentration moyenne du gas dans le monde"
+msgstr "Concentration moyenne du gaz dans le monde"
 
 #: scisat.py:1211
 msgid "Time Series"

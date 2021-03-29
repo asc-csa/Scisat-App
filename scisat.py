@@ -676,8 +676,7 @@ def build_filtering():
                                             ),
                                             id='generate',
                                             target="_blank",
-                                            className="btn btn-primary",
-                                            href=""
+                                            className="btn btn-primary"
                                         ),
                                         html.Span(
                                             children=html.P(
@@ -1566,7 +1565,7 @@ def translate_static(x):
                 _("Filter by longitude:"),
                 _("Minimum longitude"),
                 _("Maximum longitude"),
-                _("Select altitude Range:"),
+                _("Select altitude range:"),
                 _("Select date:"),
                 _("Select gas:"),
                 _('Download summary data as CSV'),

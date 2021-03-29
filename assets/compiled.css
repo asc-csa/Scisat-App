@@ -730,3 +730,7 @@ td.CalendarDay {
   animation-delay: 1s;
   -webkit-animation-delay: 1s;
 }
+
+#generate{
+  color: #fff;
+}

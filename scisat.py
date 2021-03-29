@@ -22,6 +22,48 @@ from scipy import mean
 import numpy as np
 import datetime
 
+class CustomDash(dash.Dash):
+
+    analytics_code = '<h1>Hello Worlds asdfsdf </h1>'
+
+    def set_analytics(self, code):
+        self.analytics_code = code
+
+    def interpolate_index(self, **kwargs):
+        # Inspect the arguments by printing them
+        return '''
+        <!DOCTYPE html>
+        <html lang='en'>
+            <head>
+                {analytics}
+                {metas}
+                {favicon}
+                <title>
+                {title}
+                </title>
+                {css}
+            </head>
+            <body>
+                {app_entry}
+                <footer>
+                    {config}
+                    {scripts}
+                    {renderer}
+                </footer>
+            </body>
+        </html>
+        '''.format(
+            app_entry=kwargs['app_entry'],
+            config=kwargs['config'],
+            scripts=kwargs['scripts'],
+            renderer=kwargs['renderer'],
+            metas = kwargs['metas'],
+            favicon = kwargs['favicon'],
+            css = kwargs['css'],
+            title = kwargs['title'],
+            analytics = self.analytics_code
+            )
+
 #==========================================================================================
 # load data and transform as needed
 
@@ -73,33 +115,44 @@ def get_config_dict():
 
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-     path_data=r"data"
-     prefixe=""
+    path_data=r"data"
+    prefixe=""
 #     app.run_server(debug=True)  # For development/testing
-     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-     tokens = get_config_dict()
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    from analytics import analytics_code
+    tokens = get_config_dict()
 
 
 
-     app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
-     app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
-     server = app.server
-     server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
-     babel = Babel(server)  # Hook flask-babel to the app
+    app = CustomDash(
+        __name__,
+        meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+        external_stylesheets=external_stylesheets,
+        external_scripts=external_scripts,
+        # analytics = analytics_code
+    )
+    app.set_analytics(analytics_code)
+    app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
+    server = app.server
+    server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
+    babel = Babel(server)  # Hook flask-babel to the app
 
 else :
 
     path_data=r"applications/scisat/data"
     prefixe="/scisat"
     from applications.scisat.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    from applications.scisat.analytics import analytics_code
     tokens = get_config_dict()
-    app = dash.Dash(
+    app = CustomDash(
     __name__,
     requests_pathname_prefix='/scisat/',
     meta_tags=[{"name": "viewport", "content": "width=device-width"}],
     external_stylesheets=external_stylesheets,
     external_scripts=external_scripts,
+    # analytics = analytics_code
 )
+    app.set_analytics(analytics_code)
     app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
     server = app.server
     server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session

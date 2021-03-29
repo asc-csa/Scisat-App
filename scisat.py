@@ -31,11 +31,12 @@ import datetime
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
-external_stylesheets = ['assets/gc_theme_cdn/assets/favicon.ico',
-                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'assets/gc_theme_cdn/css/theme.min.css',
-                        # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
-                       ]  # Link to external CSS
+external_stylesheets = [
+    # 'assets/gc_theme_cdn/assets/favicon.ico',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
+]  # Link to external CSS
 
 # external_scripts = [
 #     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
@@ -58,7 +59,7 @@ external_scripts = [
 # The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
 LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
 START_DATE, END_DATE = None, None
-GAZ_LIST = 'ACEFTS_L2_v4p1_CO.nc'
+GAZ_LIST = 'ACEFTS_L2_v4p1_O3.nc'
 ALT_RANGE = [0,150]
 DEFAULT_DF = None
 
@@ -370,7 +371,7 @@ layout = dict(
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     legend=dict(font=dict(size=10), orientation="h"),
-    title="Gas Concentration Overview",
+    title="Gas concentration overview",
     mapbox=dict(
         style="light",
         # center=dict(lon=-78.05, lat=42.54),
@@ -492,21 +493,18 @@ def build_filtering():
                 html.Div(
                     [
                         dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
-                        html.P(
-                            id="gas-text",
-                            className="control_label",
-                        ),
                         html.Div(
                             [
                                 html.Label(
                                     id="gas_selection",
-                                    htmlFor='gaz_list'
+                                    htmlFor='gaz_list',
+                                    className="control_label",
                                 ),
                                 dcc.Dropdown(
                                     id="gaz_list",
                                     options= gaz_name_options,
                                     multi=False,
-                                    value='ACEFTS_L2_v4p1_CO.nc',
+                                    value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
                                 ),
             
@@ -524,7 +522,7 @@ def build_filtering():
                 html.Div([
                     html.Div( #Latitude picker
                         [
-                            html.P(
+                            html.Label(
                                 id="latitude-text",
                                 className="control_label",
                                 style={"textAlign":"left"}
@@ -567,10 +565,10 @@ def build_filtering():
                     ),
                     html.Div( #longitude picker
                         [
-                            html.P(
+                            html.Label(
                                 id="longitude-text",
                                 className="control_label",
-                                style ={"textAlign":"center"}
+                                style ={"textAlign":"left"}
                             ),
                             html.Div([
                                 html.Label(
@@ -607,19 +605,14 @@ def build_filtering():
                             html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
                         ],
                         className="col-md-4",
-                        style={"textAlign":"center"}
+                        style={"textAlign":"left"}
                     ),
-                ],
-                className='row align-items-start',
-                style={"textAlign":"left"}
-                ),
-                html.Div(
                     html.Div(
                         [ #Year selection + download button
                             html.Div([
                                 dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
                             ]),
-                            html.P(
+                            html.Label(
                                 id="yearslider-text",
                                 className="control_label"
                                 ),
@@ -643,13 +636,15 @@ def build_filtering():
                                 ]
                                 ),
                         ], 
-                        className="col-md-12",
+                        className="col-md-12 col-lg-4",
                     ),
-                    className="row",
+                ],
+                className='row align-items-start',
+                style={"textAlign":"left"}
                 ),
                 html.Hr(),
                 html.Div([ #Choix altitude
-                        html.P(id="altitude-text"),
+                        html.Label(id="altitude-text"),
                         dcc.RangeSlider(
                             id='alt_range',
                             marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
@@ -675,8 +670,7 @@ def build_filtering():
                                             ),
                                             id='generate',
                                             target="_blank",
-                                            className="btn btn-primary",
-                                            href=""
+                                            className="btn btn-primary"
                                         ),
                                         html.Span(
                                             children=html.P(
@@ -1069,7 +1063,7 @@ def generate_geo_map(df):
                             hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
                             colorbar=dict(
                                 title=dict(
-                                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                                    text=_("Gas concentration [ppv] (mean on altitude and position) "),
                                 ),
                                 titleside="right",
                                 showexponent = 'all',
@@ -1217,7 +1211,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Time Series"),
+        title=_("Time series"),
 
         xaxis={"title": _('Date'), "automargin": True} ,
 
@@ -1528,7 +1522,6 @@ def download_csv():
         Output("lon_max-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
-        Output("gas-text", "children"),
         Output("download-button-1", "children"),
         Output("gaz_list", "options"),
     ],
@@ -1537,21 +1530,21 @@ def download_csv():
 def translate_static(x):
     print('Translating...')
     return [
-                _("SCISAT Data Visualisation"),
-                _("Learn More About SCISAT"),
+                _("SCISAT data visualisation"),
+                _("Learn more about SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
                 _("The authoritative source data for the Atmospheric Chemistry Experiment (ACE), also known as SCISAT, is available on the [ACE site](http://www.ace.uwaterloo.ca/data.php) (external site only available in English). "),
                 _("Please read this [Important Mission Information Document](http://www.ace.uwaterloo.ca/ACE-FTS_v2.2/ACEFTSPublicReleaseDocumentation.pdf) before using the ACE/SCISAT data. Please refer to the relevant scientific literature when interpreting SCISAT data."),
                 _("Visit our Github page to learn more about our applications."),
-                _("Select Data"),
+                _("Select data"),
                 _("Update"),
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
-                _("Selection of the gas"),
+                _("Select gas:"),
                 _("Selection of the range of latitude "),
                 _("Selection of the range of longitude"),
                 _("Date selection"),
@@ -1559,16 +1552,15 @@ def translate_static(x):
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
-                _("Filter by Latitude:"),
+                _("Filter by latitude:"),
                 _("Minimum latitude"),
                 _("Maximum latitude"),
-                _("Filter by Longitude:"),
+                _("Filter by longitude:"),
                 _("Minimum longitude"),
                 _("Maximum longitude"),
-                _("Select Altitude Range:"),
-                _("Select Date:"),
-                _("Select Gas:"),
-                _('Download Summary Data as CSV'),
+                _("Select altitude range:"),
+                _("Select date:"),
+                _('Download summary data as CSV'),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),

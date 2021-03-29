@@ -493,15 +493,12 @@ def build_filtering():
                 html.Div(
                     [
                         dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
-                        html.P(
-                            id="gas-text",
-                            className="control_label",
-                        ),
                         html.Div(
                             [
                                 html.Label(
                                     id="gas_selection",
-                                    htmlFor='gaz_list'
+                                    htmlFor='gaz_list',
+                                    className="control_label",
                                 ),
                                 dcc.Dropdown(
                                     id="gaz_list",
@@ -525,7 +522,7 @@ def build_filtering():
                 html.Div([
                     html.Div( #Latitude picker
                         [
-                            html.P(
+                            html.Label(
                                 id="latitude-text",
                                 className="control_label",
                                 style={"textAlign":"left"}
@@ -568,10 +565,10 @@ def build_filtering():
                     ),
                     html.Div( #longitude picker
                         [
-                            html.P(
+                            html.Label(
                                 id="longitude-text",
                                 className="control_label",
-                                style ={"textAlign":"center"}
+                                style ={"textAlign":"left"}
                             ),
                             html.Div([
                                 html.Label(
@@ -608,19 +605,14 @@ def build_filtering():
                             html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
                         ],
                         className="col-md-4",
-                        style={"textAlign":"center"}
+                        style={"textAlign":"left"}
                     ),
-                ],
-                className='row align-items-start',
-                style={"textAlign":"left"}
-                ),
-                html.Div(
                     html.Div(
                         [ #Year selection + download button
                             html.Div([
                                 dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
                             ]),
-                            html.P(
+                            html.Label(
                                 id="yearslider-text",
                                 className="control_label"
                                 ),
@@ -644,13 +636,15 @@ def build_filtering():
                                 ]
                                 ),
                         ], 
-                        className="col-md-12",
+                        className="col-md-12 col-lg-4",
                     ),
-                    className="row",
+                ],
+                className='row align-items-start',
+                style={"textAlign":"left"}
                 ),
                 html.Hr(),
                 html.Div([ #Choix altitude
-                        html.P(id="altitude-text"),
+                        html.Label(id="altitude-text"),
                         dcc.RangeSlider(
                             id='alt_range',
                             marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
@@ -1528,7 +1522,6 @@ def download_csv():
         Output("lon_max-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
-        Output("gas-text", "children"),
         Output("download-button-1", "children"),
         Output("gaz_list", "options"),
     ],
@@ -1551,7 +1544,7 @@ def translate_static(x):
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
-                _("Selection of the gas"),
+                _("Select gas:"),
                 _("Selection of the range of latitude "),
                 _("Selection of the range of longitude"),
                 _("Date selection"),
@@ -1567,7 +1560,6 @@ def translate_static(x):
                 _("Maximum longitude"),
                 _("Select altitude range:"),
                 _("Select date:"),
-                _("Select gas:"),
                 _('Download summary data as CSV'),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),

@@ -737,7 +737,7 @@ def build_stats():
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
                     html.Div([
-                        html.Details([html.Summary("Text Version"),dst.DataTable(id="test",columns=[{"name":"col1", "id":"col1"}, {"name":"col2", "id":"col2"}], data=[{"col1": 1, "col2":2}])])
+                        html.Details([html.Summary(_("Text Version - World Graph of Mean Concentrations")), html.Div(dst.DataTable(id="world-table"), style={"margin":"4rem"})])
                     ]),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
@@ -1140,7 +1140,11 @@ def generate_geo_map(df):
             hoverinfo = "skip",
             line = dict(color='black')))
 
-    return fig
+    # Here, we set the attributes that pertain to the text table
+    data = df[['lat','long','Alt_Mean']].to_dict('records')
+    columns = [{"name":_("Latitude"), "id":"lat"},{"name":_("Longitude"),"id":"long"},{"name":_("Mean Concentration"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+
+    return [fig, columns, data]
 
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
@@ -1240,6 +1244,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 @app.callback(
     [
         Output("selector_map", "figure"),
+        Output("world-table", "columns"),
+        Output("world-table", "data"),
         Output("viz_chart", "figure"),
         Output("count_graph", "figure"),
         Output("download-link-1", "href"),
@@ -1253,12 +1259,12 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
     df = data_reader(GAZ_LIST, r'applications/scisat/data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
+    [fig1, columns, data] = generate_geo_map(df)
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, fig2, fig3, link, nbr
+    return fig1, columns, data, fig2, fig3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):

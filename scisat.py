@@ -507,12 +507,12 @@ def build_filtering():
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
                                 ),
-            
+
                                 # html.Span(children=html.P(),className="wb-inv")
                             ],
                             role='listbox',
                             **{'aria-label': 'Gas Dropdown'}
-                            
+
                         )
                     ],
                     style={"textAlign":"left"}
@@ -602,7 +602,7 @@ def build_filtering():
                                     debounce=True
                                 ),
                             ]),
-                            html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
+                            html.Span(children=html.P(id="lon_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                         style={"textAlign":"left"}
@@ -635,7 +635,7 @@ def build_filtering():
                                     html.Span(children=html.P(id="date_selection"),className="wb-inv")
                                 ]
                                 ),
-                        ], 
+                        ],
                         className="col-md-12 col-lg-4",
                     ),
                 ],
@@ -736,6 +736,9 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
+                    html.Div([
+                        html.Details([html.Summary("Text Version"),dst.DataTable(id="test",columns=[{"name":"col1", "id":"col1"}, {"name":"col2", "id":"col2"}], data=[{"col1": 1, "col2":2}])])
+                    ]),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",

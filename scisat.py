@@ -14,6 +14,7 @@ import flask
 from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
+import urllib.parse
 
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
@@ -30,11 +31,12 @@ import datetime
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
-external_stylesheets = ['assets/gc_theme_cdn/assets/favicon.ico',
-                        'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                        'assets/gc_theme_cdn/css/theme.min.css',
-                        # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
-                       ]  # Link to external CSS
+external_stylesheets = [
+    # 'assets/gc_theme_cdn/assets/favicon.ico',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
+]  # Link to external CSS
 
 # external_scripts = [
 #     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
@@ -49,6 +51,7 @@ external_scripts = [
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
     'assets/gc_theme_cdn/js/theme.min.js',
     'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    'assets/scripts.js'
 
 ]
 
@@ -88,7 +91,7 @@ else :
 
     path_data=r"applications/scisat/data"
     prefixe="/scisat"
-    from applications.alouette.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    from applications.scisat.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
     tokens = get_config_dict()
     app = dash.Dash(
     __name__,
@@ -368,7 +371,7 @@ layout = dict(
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     legend=dict(font=dict(size=10), orientation="h"),
-    title="Gas Concentration Overview",
+    title="Gas concentration overview",
     mapbox=dict(
         style="light",
         # center=dict(lon=-78.05, lat=42.54),
@@ -411,17 +414,21 @@ def build_header():
                 html.Div(
                     [
                         html.A(
-                            html.Button("", id="learn-more-button", className="dash_button"),
-                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp",id='learn-more-link'
+                            html.Span("", id="learn-more-button"),
+                            href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp",
+                            id='learn-more-link',
+                            className="btn btn-primary"
                         ),
                         html.A(
-                            html.Button('FR', id='language-button', className="dash_button"),
-                            href='/scisat/language/fr', id='language-link'
+                            html.Span('FR', id='language-button'),
+                            href='/scisat/language/fr',
+                            id='language-link',
+                            className="btn btn-primary"
                         ),
                     ],
                     className="four columns",
                     id="button-div",
-                    style={"text-align": "center"}
+                    style={"display": "flex", "justify-content": "space-around"}
                 ),
             ],
             id="header",
@@ -453,10 +460,12 @@ def build_filtering():
                                  dcc.Markdown(id="description-2"),
                                  dcc.Markdown(id="description-3"),
                                  dcc.Markdown(id="description-4"),
-                                 html.A(
-                                    html.P(id="github-link"),
-                                    href = "https://github.com/asc-csa",
-                                    title = "ASC-CSA Github"
+                                 html.P(
+                                    html.A(
+                                        id="github-link",
+                                        href = "https://github.com/asc-csa",
+                                        title = "ASC-CSA Github"
+                                    )
                                  )
                             ],
                             id="description_div",
@@ -483,121 +492,133 @@ def build_filtering():
             [
                 html.Div(
                     [
-                    dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
-                    html.P(
-                        id="gas-text",
-                        className="control_label",
-                    ),
-                    html.Div([
-                    html.Label(
-                        dcc.Dropdown(
-                            id="gaz_list",
-                            options= gaz_name_options,
-                            multi=False,
-                            value='ACEFTS_L2_v4p1_O3.nc',
-                            className="dcc_control",
+                        dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
+                        html.Div(
+                            [
+                                html.Label(
+                                    id="gas_selection",
+                                    htmlFor='gaz_list',
+                                    className="control_label",
+                                ),
+                                dcc.Dropdown(
+                                    id="gaz_list",
+                                    options= gaz_name_options,
+                                    multi=False,
+                                    value='ACEFTS_L2_v4p1_O3.nc',
+                                    className="dcc_control",
+                                ),
+            
+                                # html.Span(children=html.P(),className="wb-inv")
+                            ],
+                            role='listbox',
+                            **{'aria-label': 'Gas Dropdown'}
+                            
                         )
-                    ),
-
-                      html.Span(children=html.P(id="gas_selection"),className="wb-inv")])], style={"textAlign":"left"}
+                    ],
+                    style={"textAlign":"left"}
                 ),
                 html.Div(
                     dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}), style={"textAlign":"left"}),
                 html.Div([
-                html.Div( #Latitude picker
-                    [
-                        html.P(
-                            id="latitude-text",
-                            className="control_label",
-                            style={"textAlign":"left"}
-                        ),
-                        html.Div([
+                    html.Div( #Latitude picker
+                        [
                             html.Label(
-                                id = "lat_min-text",
-                                htmlFor = "lat_min",
-                                hidden = True
+                                id="latitude-text",
+                                className="control_label",
+                                style={"textAlign":"left"}
                             ),
-                            dcc.Input(
-                                id="lat_min",
-                                type='number',
-                                value=-90.0,
-                                placeholder="Min Latitude",
-                                min=-90.0,
-                                max=90.0,
-                                step=5,
-                                debounce=True
-                            ),
-                            html.Label(
-                                id = "lat_max-text",
-                                htmlFor = "lat_max",
-                                hidden = True
-                            ),
-                            dcc.Input(
-                                id="lat_max",
-                                type='number',
-                                value=90.0,
-                                placeholder="Max Latitude",
-                                min=-90.0,
-                                max=90.0,
-                                step=5,
-                                debounce=True
-                            )
-                        ]),
-                      html.Span(children=html.P(id="lat_selection"),className="wb-inv")], className="one-third column",
-                ),
-                html.Div( #longitude picker
-                    [
-                        html.P(
-                            id="longitude-text",
-                            className="control_label",
-                            style ={"textAlign":"center"}
-                        ),
-                        html.Div([
-                            html.Label(
-                                htmlFor="lon_min",
-                                id= "lon_min-text",
-                                hidden = True
-                            ),
-                            dcc.Input(
-                                id="lon_min",
-                                type='number',
-                                value=-180.0,
-                                placeholder="Min Longitude",
-                                min=-180.0,
-                                max=180.0,
-                                step=5,
-                                debounce=True
-                            ),
-                            html.Label(
-                                htmlFor="lon_max",
-                                id= "lon_max-text",
-                                hidden = True
-                            ),
-                            dcc.Input(
-                                id="lon_max",
-                                type='number',
-                                value=180.0,
-                                placeholder="Max Longitude",
-                                min=-180.0,
-                                max=180.0,
-                                step=5,
-                                debounce=True
-                            ),
-                        ]),
-                     html.Span(children=html.P(id="lon_selection"),className="wb-inv") ], className="one-third column", style={"textAlign":"center"}
+                            html.Div([
+                                html.Label(
+                                    id = "lat_min-text",
+                                    htmlFor = "lat_min",
+                                    hidden = True
+                                ),
+                                dcc.Input(
+                                    id="lat_min",
+                                    type='number',
+                                    value=-90.0,
+                                    placeholder="Min Latitude",
+                                    min=-90.0,
+                                    max=90.0,
+                                    step=5,
+                                    debounce=True
+                                ),
+                                html.Label(
+                                    id = "lat_max-text",
+                                    htmlFor = "lat_max",
+                                    hidden = True
+                                ),
+                                dcc.Input(
+                                    id="lat_max",
+                                    type='number',
+                                    value=90.0,
+                                    placeholder="Max Latitude",
+                                    min=-90.0,
+                                    max=90.0,
+                                    step=5,
+                                    debounce=True
+                                )
+                            ]),
+                            html.Span(children=html.P(id="lat_selection"),className="wb-inv")
+                        ],
+                        className="col-md-4",
                     ),
-                html.Div(
-                [ #Year selection + download button
-                                html.Div([
-                                    dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
-                                ]),
-                                html.P(
-                                    id="yearslider-text",
-                                    className="control_label",
-                                    style={"textAlign":"center"}
-                                    ),
+                    html.Div( #longitude picker
+                        [
+                            html.Label(
+                                id="longitude-text",
+                                className="control_label",
+                                style ={"textAlign":"left"}
+                            ),
+                            html.Div([
+                                html.Label(
+                                    htmlFor="lon_min",
+                                    id= "lon_min-text",
+                                    hidden = True
+                                ),
+                                dcc.Input(
+                                    id="lon_min",
+                                    type='number',
+                                    value=-180.0,
+                                    placeholder="Min Longitude",
+                                    min=-180.0,
+                                    max=180.0,
+                                    step=5,
+                                    debounce=True
+                                ),
+                                html.Label(
+                                    htmlFor="lon_max",
+                                    id= "lon_max-text",
+                                    hidden = True
+                                ),
+                                dcc.Input(
+                                    id="lon_max",
+                                    type='number',
+                                    value=180.0,
+                                    placeholder="Max Longitude",
+                                    min=-180.0,
+                                    max=180.0,
+                                    step=5,
+                                    debounce=True
+                                ),
+                            ]),
+                            html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
+                        ],
+                        className="col-md-4",
+                        style={"textAlign":"left"}
+                    ),
+                    html.Div(
+                        [ #Year selection + download button
+                            html.Div([
+                                dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                            ]),
+                            html.Label(
+                                id="yearslider-text",
+                                className="control_label"
+                                ),
 
-                                html.Div([
+                            html.Div(
+                                [
                                     html.Label(
                                         dcc.DatePickerRange(
                                             id='date_picker_range',
@@ -607,18 +628,23 @@ def build_filtering():
                                             max_date_allowed=dt.date.today(),
                                             start_date_placeholder_text='Select start date',
                                             end_date_placeholder_text='Select end date',
-                                            display_format="DD/MM/Y"
+                                            display_format="Y/MM/DD"
                                             ),
                                         ),
-                                    html.Div(id='output-container-date-picker-range')
-                                    , html.Span(children=html.P(id="date_selection"),className="wb-inv")]
-                                    ),
-                            ], className="one-third column", style={"margin-right":"4em", "textAlign":"right"}
-                )
-                ], style={"textAlign":"left"}),
+                                    html.Div(id='output-container-date-picker-range'),
+                                    html.Span(children=html.P(id="date_selection"),className="wb-inv")
+                                ]
+                                ),
+                        ], 
+                        className="col-md-12 col-lg-4",
+                    ),
+                ],
+                className='row align-items-start',
+                style={"textAlign":"left"}
+                ),
                 html.Hr(),
                 html.Div([ #Choix altitude
-                        html.P(id="altitude-text"),
+                        html.Label(id="altitude-text"),
                         dcc.RangeSlider(
                             id='alt_range',
                             marks = {i: "{}".format(i) for i in np.append(np.arange(0.5,149.5,10),149.5)},
@@ -630,25 +656,64 @@ def build_filtering():
                            ),
                         html.Div(id='output-container-alt-picker-range'),
                         ],style={"margin-top":"75px"}),
-                html.Div([html.Div([
-                        html.A(
-                            html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding-left': '112px', 'padding-right':'112px'}),
-                            id='generate',
-                            target="_blank",
-                            ),
-                        html.Span(children=html.P(id="generate_selection"),className="wb-inv")], className="one-half column", style={"textAlign":"right"}),html.Div([ #Download button
-                             html.Div([
-                                 html.A(
-                                     html.Button(id='download-button-1', n_clicks=0, className="dash_button", style={'padding': '0px 10px'}),
-                                     id='download-link-1',
-                                     # download='rawdata.csv',
-                                     href="",
-                                     target="_blank",
-                                     ),
-                                 html.Span(children=html.P(id="download_selection"),className="wb-inv")]
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.A(
+                                            html.Span(
+                                                id='generate-button',
+                                                n_clicks=0,
+                                                style={'padding-left': '112px', 'padding-right':'112px'}
+                                            ),
+                                            id='generate',
+                                            target="_blank",
+                                            className="btn btn-primary"
+                                        ),
+                                        html.Span(
+                                            children=html.P(
+                                            id="generate_selection"
+                                            ),
+                                            className="wb-inv"
+                                        )
+                                    ]
+                                )
+                            ],
+                            className="one-half column",
+                            style={"textAlign":"right"}
+                        ),
+                        html.Div(
+                            [ #Download button
+                                html.Div(
+                                    [
+                                        html.A(
+                                            html.Span(
+                                                id='download-button-1',
+                                                n_clicks=0,
+                                                style={'padding': '0px 10px'}
+                                            ),
+                                            id='download-link-1',
+                                            # download='rawdata.csv',
+                                            href="",
+                                            target="_blank",
+                                            className="btn btn-primary"
+                                        ),
+                                        html.Span(
+                                            children=html.P(id="download_selection"),
+                                            className="wb-inv"
+                                        )
+                                    ]
 
-                                 ),
-                             ],id="cross-filter-options", className="one-half column")], style={"margin-top":"30px"})
+                                ),
+                            ],
+                            id="cross-filter-options",
+                            className="one-half column"
+                        )
+                    ],
+                    style={"margin-top":"30px"}
+                )
             ],
             className="pretty_container twelve column",
             style={"justify-content": "space-evenly"}
@@ -998,7 +1063,7 @@ def generate_geo_map(df):
                             hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
                             colorbar=dict(
                                 title=dict(
-                                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                                    text=_("Gas concentration [ppv] (mean on altitude and position) "),
                                 ),
                                 titleside="right",
                                 showexponent = 'all',
@@ -1146,7 +1211,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Time Series"),
+        title=_("Time series"),
 
         xaxis={"title": _('Date'), "automargin": True} ,
 
@@ -1170,12 +1235,21 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 
 # The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
 @app.callback(
-    [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
-    [Input("generate-button","n_clicks"),Input("gaz_list","value")]
+    [
+        Output("selector_map", "figure"),
+        Output("viz_chart", "figure"),
+        Output("count_graph", "figure"),
+        Output("download-link-1", "href"),
+        Output("filtering_text", "children")
+    ],
+    [
+        Input("generate-button","n_clicks"),
+        Input("gaz_list","value")
+    ]
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
-    df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    df = data_reader(GAZ_LIST, r'applications/scisat/data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     fig1 = generate_geo_map(df)
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
@@ -1232,7 +1306,7 @@ def update_filtering_text(df):
     )
 def update_picker(gaz_list):
      global DEFAULT_DF, START_DATE, END_DATE
-     df = data_reader(gaz_list, r'data')
+     df = data_reader(gaz_list, r'applications/scisat/data')
      DEFAULT_DF = df
      START_DATE = df.date.min().to_pydatetime()
      END_DATE = df.date.max().to_pydatetime()
@@ -1274,6 +1348,17 @@ def update_csv_link():
     global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
             .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
+    values = {
+        'start_date': START_DATE,
+        'end_date': END_DATE,
+        'lat_min': LAT_MIN,
+        'lat_max': LAT_MAX,
+        'lon_min': LON_MIN,
+        'lon_max':LON_MAX,
+        'gaz_list': GAZ_LIST,
+        'alt_range': ALT_RANGE
+    }
+    link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
 
     return link
 
@@ -1337,7 +1422,7 @@ def download_csv():
     alt_range = alt_range[1:-1].split(',')
     alt_range[0] = int(alt_range[0])
     alt_range[1] = int(alt_range[1])
-    df =data_reader(gaz_list,r'data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    df =data_reader(gaz_list,r'applications/scisat/data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -1437,7 +1522,6 @@ def download_csv():
         Output("lon_max-text", "children"),
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
-        Output("gas-text", "children"),
         Output("download-button-1", "children"),
         Output("gaz_list", "options"),
     ],
@@ -1446,21 +1530,21 @@ def download_csv():
 def translate_static(x):
     print('Translating...')
     return [
-                _("SCISAT Data Visualisation"),
-                _("Learn More About SCISAT"),
+                _("SCISAT data visualisation"),
+                _("Learn more about SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
                 _("The authoritative source data for the Atmospheric Chemistry Experiment (ACE), also known as SCISAT, is available on the [ACE site](http://www.ace.uwaterloo.ca/data.php) (external site only available in English). "),
                 _("Please read this [Important Mission Information Document](http://www.ace.uwaterloo.ca/ACE-FTS_v2.2/ACEFTSPublicReleaseDocumentation.pdf) before using the ACE/SCISAT data. Please refer to the relevant scientific literature when interpreting SCISAT data."),
                 _("Visit our Github page to learn more about our applications."),
-                _("Select Data"),
+                _("Select data"),
                 _("Update"),
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
-                _("Selection of the gas"),
+                _("Select gas:"),
                 _("Selection of the range of latitude "),
                 _("Selection of the range of longitude"),
                 _("Date selection"),
@@ -1468,16 +1552,15 @@ def translate_static(x):
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
-                _("Filter by Latitude:"),
+                _("Filter by latitude:"),
                 _("Minimum latitude"),
                 _("Maximum latitude"),
-                _("Filter by Longitude:"),
+                _("Filter by longitude:"),
                 _("Minimum longitude"),
                 _("Maximum longitude"),
-                _("Select Altitude Range:"),
-                _("Select Date:"),
-                _("Select Gas:"),
-                _('Download Summary Data as CSV'),
+                _("Select altitude range:"),
+                _("Select date:"),
+                _('Download summary data as CSV'),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),
@@ -1653,3 +1736,5 @@ if __name__ == '__main__':
      #app.run_server(debug=True)  # For development/testing
 
      app.run_server(debug=False, host='0.0.0.0', port=8888)  # For the server
+
+print('Scisat loaded.')

@@ -464,11 +464,11 @@ there.
     margin-bottom: 0px !important;
     height: 45px !important;
   }
-  #learn-more-button {
+  /* #learn-more-button {
     margin-top: 0px !important;
     padding: 0 10px !important;
     font-size: 12px !important;
-  }
+  } */
   #button {
     display: flex;
     justify-content: center;
@@ -476,7 +476,7 @@ there.
 }
 
 
-#learn-more-button {
+/* #learn-more-button {
   text-align: center;
   padding-left: 10px;
   padding-right: 10px;
@@ -484,9 +484,9 @@ there.
   float: right;
   margin-right: 10px;
   margin-top: 30px;
-}
+} */
 
-#language-button {
+/* #language-button {
   text-align: center;
   padding-left: 10px;
   padding-right: 10px;
@@ -494,7 +494,7 @@ there.
   float: right;
   margin-right: 10px;
   margin-top: 30px;
-}
+} */
 
 /* Larger than desktop */
 @media (min-width: 1000px) {
@@ -729,4 +729,8 @@ td.CalendarDay {
   animation: fadein 1s linear forwards, spin 2s infinite linear;
   animation-delay: 1s;
   -webkit-animation-delay: 1s;
+}
+
+#generate{
+  color: #fff;
 }

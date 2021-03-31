@@ -1,5 +1,28 @@
 # Raw header and footer code copied from GC websites. This html is injected into the webapp using dash-dangerously-set-inner-html
 
+gc_breadcrumb_en = '''
+<nav id="wb-bc" property="breadcrumb">
+    <h2>You are here:</h2>
+    <div class="container">
+      <ol class="breadcrumb">
+        <li><a href="https://www.canada.ca/en.html">Canada.ca</a></li>
+        <li><a href="https://www.asc-csa.gc.ca/eng/default.asp">Canadian Space Agency</a></li>
+      </ol>
+    </div>
+</nav>
+'''
+
+gc_breadcrumb_fr = '''
+<nav id="wb-bc" property="breadcrumb">
+    <h2>You are here:</h2>
+    <div class="container">
+      <ol class="breadcrumb">
+        <li><a href="https://www.canada.ca/fr.html">Canada.ca</a></li>
+        <li><a href="https://www.asc-csa.gc.ca/fra/default.asp">Agence spatiale canadienne</a></li>
+      </ol>
+    </div>
+</nav>
+'''
 
 gc_header_en ='''
 <header>
@@ -441,14 +464,7 @@ gc_header_en ='''
         </ul>
         </div>
     </nav>
-    <nav id="wb-bc" property="breadcrumb">
-        <h2>You are here:</h2>
-        <div class="container">
-            <ol class="breadcrumb">
-                <li><a href="https://www.canada.ca/en.html">Home</a></li>
-            </ol>
-        </div>
-    </nav>
+    '''+ gc_breadcrumb_en +'''
 </header>
 '''
 
@@ -956,9 +972,7 @@ gc_header_fr = '''
 	
 	
 	
-		<nav id="wb-bc" property="breadcrumb"><h2 class="wb-inv">Vous êtes ici&nbsp;:</h2><div class="container"><ol class="breadcrumb">
-<li><a href="/fr.html">Accueil</a></li>
-</ol></div></nav>
+	'''+ gc_breadcrumb_fr +'''
 	<div data-ajax-replace="/bin/canada/alert/messages.fr.html" class="original wb-init wb-data-ajax-replace-inited" id="wb-auto-4"></div>
 
 </header>

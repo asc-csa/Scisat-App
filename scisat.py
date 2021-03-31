@@ -723,17 +723,15 @@ def build_filtering():
 
                             html.Div(
                                 [
-                                    html.Label(
-                                        dcc.DatePickerRange(
-                                            id='date_picker_range',
-                                            start_date=dt.datetime(2004, 2, 1),
-                                            end_date=dt.datetime(2020, 5, 5),
-                                            min_date_allowed=dt.datetime(2004, 2, 1),
-                                            max_date_allowed=dt.date.today(),
-                                            start_date_placeholder_text='Select start date',
-                                            end_date_placeholder_text='Select end date',
-                                            display_format="Y/MM/DD"
-                                            ),
+                                    dcc.DatePickerRange(
+                                        id='date_picker_range',
+                                        start_date=dt.datetime(2004, 2, 1),
+                                        end_date=dt.datetime(2020, 5, 5),
+                                        min_date_allowed=dt.datetime(2004, 2, 1),
+                                        max_date_allowed=dt.date.today(),
+                                        start_date_placeholder_text='Select start date',
+                                        end_date_placeholder_text='Select end date',
+                                        display_format="Y/MM/DD"
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
                                     html.Span(children=html.P(id="date_selection"),className="wb-inv")

@@ -1,5 +1,8 @@
 # Raw header and footer code copied from GC websites. This html is injected into the webapp using dash-dangerously-set-inner-html
 
+from .config import Config
+app_config = Config()
+
 app_title_en = '''
   <div id="header" class="container" style="margin-bottom: 25px;">
     <div class='flex-display justify-space-between'>
@@ -50,7 +53,7 @@ gc_header_en ='''
           <h2 class="wb-inv">Language selection</h2>
           <ul class="list-inline mrgn-bttm-0">
             <li>
-              <a lang="fr" hreflang="fr" href="/fra/default.asp">
+              <a lang="fr" hreflang="fr" href="'''+ app_config.FR_LINK +'''">
               <span class="hidden-xs">Français</span>
               <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
               </a>
@@ -551,7 +554,7 @@ gc_header_fr = '''
 							<h2 class="wb-inv">Sélection de la langue</h2>
 							<ul class="list-inline mrgn-bttm-0">
 								<li>
-									<a lang="en" hreflang="en" href="/eng/default.asp">
+									<a lang="en" hreflang="en" href="'''+ app_config.EN_LINK +'''">
 									<span class="hidden-xs">English</span>
 									<abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
 									</a>

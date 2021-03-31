@@ -16,6 +16,7 @@ from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
 import dash_table as dst
+from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
 from scipy import mean

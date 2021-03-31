@@ -27,32 +27,45 @@ gc_breadcrumb_fr = '''
 gc_header_en ='''
 <header>
     <div id="wb-bnr" class="container">
-        <section id="wb-lng" class="text-right">
-            <h2 class="wb-inv">Language selection</h2>
-            <ul class="list-inline margin-bottom-none">
-            </ul>
+      <div class="row">
+        <section id="wb-lng" class="col-xs-3 col-sm-12 pull-right text-right">
+          <h2 class="wb-inv">Language selection</h2>
+          <ul class="list-inline mrgn-bttm-0">
+            <li>
+              <a lang="fr" hreflang="fr" href="/fra/default.asp">
+              <span class="hidden-xs">Français</span>
+              <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
+              </a>
+            </li>
+          </ul>
         </section>
-        <div class="row">
-            <div class="brand col-xs-5 col-md-4" property="publisher" typeof="GovernmentOrganization"> <a href="https://www.canada.ca/en.html" property="url"><img src="assets/gc_theme_cdn/assets/sig-blk-en.svg" alt="Government of Canada Logo" property="logo"><span class="wb-inv" property="name"> Government of Canada / <span lang="fr">Gouvernement du Canada</span></span></a>
-                <meta property="areaServed" typeof="Country" content="Canada">
-                <link property="logo" href="assets/gc_theme_cdn/assets/wmms-blk.svg">
-            </div>
-            <section id="wb-srch" class="col-lg-8 text-right">
-                <h2>Search</h2>
-                <a href="https://www.canada.ca/en/sr/srb.html">
-                    <form action="#" method="post" name="cse-search-box" role="search" class="form-inline">
-                        <div class="form-group">
-                            <label for="wb-srch-q" class="wb-inv">Search Canada.ca</label>
-                            <input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="34" maxlength="170" placeholder="Search Canada.ca">
-                            <datalist id="wb-srch-q-ac"> </datalist>
-                        </div>
-                        <div class="form-group submit">
-                            <button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">Search</span></button>
-                        </div>
-                    </form>
-                </a>
-            </section>
+        <div class="brand col-xs-9 col-sm-5 col-md-4" property="publisher" typeof="GovernmentOrganization">
+          <a href="https://www.canada.ca/en.html" property="URL">
+            <img src="assets/gc_theme_cdn/assets/sig-blk-en.svg" alt="Government of Canada" property="logo">
+              <span class="wb-inv"> /
+                <span lang="fr">Gouvernement du Canada</span>
+              </span></a>
+          <meta property="name" content="Government of Canada">
+          <meta property="areaServed" typeof="Country" content="Canada">
+          <link property="logo" href="assets/gc_theme_cdn/assets/sig-blk-en.svg">
         </div>
+        <section id="wb-srch" class="col-lg-offset-4 col-md-offset-4 col-sm-offset-2 col-xs-12 col-sm-5 col-md-4">
+          <h2>Search</h2>
+          <form action="//www.canada.ca/en/sr/srb/sra.html" method="get" name="cse-search-box" role="search">
+            <div class="form-group wb-srch-qry">
+              <label for="wb-srch-q" class="wb-inv">Search Canadian Space Agency</label>
+              <input name="dmn" value="asc-csa.gc.ca" type="hidden">
+              <input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="allq" type="search" value="" size="34" maxlength="170" placeholder="Search Canadian Space Agency">
+              <datalist id="wb-srch-q-ac"></datalist>
+            </div>
+            <div class="form-group submit">
+              <button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub">
+                <span class="glyphicon-search glyphicon"></span>
+                <span class="wb-inv">Search</span></button>
+            </div>
+          </form>
+        </section>
+      </div>
     </div>
     <nav class="gcweb-menu" typeof="SiteNavigationElement">
         <div class="container">
@@ -514,61 +527,47 @@ gc_footer_en = '''
 
 gc_header_fr = '''
 <header>
-	<div id="wb-bnr" class="container">
-		
-		<section id="wb-lng" class="text-right">
-            <h2 class="wb-inv">Sélection de la langue</h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="list-inline margin-bottom-none">
-                        <li>
-                        </li>
-                        
-                        
-                    </ul>
-                </div>
-            </div>
-        </section>
-		<div class="row">
-			<div class="brand col-xs-5 col-md-4" property="publisher" typeof="GovernmentOrganization">
-				<a href="/fr.html" property="url">
-                    <img src="assets/gc_theme_cdn/assets/sig-blk-en.svg" alt="" property="logo">
-                    <span class="wb-inv" property="name"> Gouvernement du Canada</span>
-                </a>
-                <meta property="areaServed" typeof="Country" content="Canada">
-				<link property="logo" href="https://wet-boew.github.io/themes-dist/GCWeb/GCWeb/assets/wmms-blk.svg">
-			</div>
-			<section id="wb-srch" class="col-lg-8 text-right">
-				<h2>Recherche</h2>
-				
-				<a href="https://www.canada.ca/fr/sr/srb.html">
-                    <form action="/fr/sr/srb.html" method="get" name="cse-search-box" role="search" class="form-inline">
-                    <div class="form-group">
-                    <label for="wb-srch-q" class="wb-inv">Rechercher dans Canada.ca</label>
-                    <input name="cdn" value="canada" type="hidden">
-                    <input name="st" value="s" type="hidden">
-                    <input name="num" value="10" type="hidden">
-                    <input name="langs" value="fr" type="hidden">
-                    <input name="st1rt" value="1" type="hidden">
-                    <input name="s5bm3ts21rch" value="x" type="hidden">
-                    
-                        <input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="34" maxlength="170" placeholder="Rechercher dans Canada.ca">
-                        
-                    
-                    <input type="hidden" name="_charset_" value="UTF-8">
-                    
-                    <datalist id="wb-srch-q-ac">
-                    </datalist>
-                    </div>
-                    <div class="form-group submit">
-                    <button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">Recherche</span></button>
-                    </div>
-                    </form>
-                </a>
-
-			</section>
-		</div>
-	</div>
+				<div id="wb-bnr" class="container">
+					<div class="row">
+						<section id="wb-lng" class="col-xs-3 col-sm-12 pull-right text-right">
+							<h2 class="wb-inv">Sélection de la langue</h2>
+							<ul class="list-inline mrgn-bttm-0">
+								<li>
+									<a lang="en" hreflang="en" href="/eng/default.asp">
+									<span class="hidden-xs">English</span>
+									<abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
+									</a>
+								</li>
+							</ul>
+						</section>
+						<div class="brand col-xs-9 col-sm-5 col-md-4" property="publisher" typeof="GovernmentOrganization">
+							<a href="https://www.canada.ca/en.html" property="URL">
+								<img src="assets/gc_theme_cdn/assets/sig-blk-fr.svg" alt="Gouvernement du Canada" property="logo">
+									<span class="wb-inv"> /
+										<span lang="en">Government of Canada</span>
+									</span></a>
+							<meta property="name" content="Gouvernement du Canada">
+							<meta property="areaServed" typeof="Country" content="Canada">
+							<link property="logo" href="assets/gc_theme_cdn/assets/sig-blk-fr.svg">
+						</div>
+						<section id="wb-srch" class="col-lg-offset-4 col-md-offset-4 col-sm-offset-2 col-xs-12 col-sm-5 col-md-4">
+							<h2>Recherche</h2>
+							<form action="//www.canada.ca/fr/sr/srb/sra.html" method="get" name="cse-search-box" role="search">
+								<div class="form-group wb-srch-qry">
+									<label for="wb-srch-q" class="wb-inv">Rechercher dans l'Agence spatiale canadienne</label>
+									<input name="dmn" value="asc-csa.gc.ca" type="hidden">
+									<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="allq" type="search" value="" size="34" maxlength="170" placeholder="Rechercher dans l'Agence spatiale canadienne">
+									<datalist id="wb-srch-q-ac"></datalist>
+								</div>
+								<div class="form-group submit">
+									<button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub">
+										<span class="glyphicon-search glyphicon"></span>
+										<span class="wb-inv">Recherche</span></button>
+								</div>
+							</form>
+						</section>
+					</div>
+				</div>
 
 	
 	<nav class="gcweb-v2 gcweb-menu wb-init gcweb-menu-inited" typeof="SiteNavigationElement" id="wb-auto-2"><div class="container">

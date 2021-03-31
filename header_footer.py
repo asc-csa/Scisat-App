@@ -2,7 +2,6 @@
 
 
 gc_header_en ='''
-<html class="no-js" lang="en" dir="ltr">
 <header>
     <div id="wb-bnr" class="container">
         <section id="wb-lng" class="text-right">
@@ -498,7 +497,6 @@ gc_footer_en = '''
 
 
 gc_header_fr = '''
-<html class="no-js" lang="fr" dir="ltr">
 <header>
 	<div id="wb-bnr" class="container">
 		
@@ -967,8 +965,7 @@ gc_header_fr = '''
 '''
 
 gc_footer_fr = '''
-<div class="global-footer">
-    <footer id="wb-info">
+
         <div class="landscape">
         <nav class="container wb-navcurr">
             <h2 class="wb-inv">Au sujet du gouvernement</h2>
@@ -1007,7 +1004,4 @@ gc_footer_fr = '''
                 </div>
             </div>
         </div>
-    </footer>
-
-</div>
 '''

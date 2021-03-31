@@ -24,18 +24,26 @@ import datetime
 
 class CustomDash(dash.Dash):
 
-    analytics_code = '<h1>Hello Worlds asdfsdf </h1>'
-    metadata = '<h1>Meta stuff</h1>'
+    analytics_code = ''
     lang = ''
+    header = ''
+    footer = ''
+    meta_html = ''
 
     def set_analytics(self, code):
         self.analytics_code = code
 
-    def set_metadata(self, meta):
-        self.metadata = meta
-
     def set_lang(self, lang):
         self.lang = lang
+
+    def set_header(self, header):
+        self.header = header
+
+    def set_footer(self, footer):
+        self.footer = footer
+
+    def set_meta_tags(self, meta_html):
+        self.meta_html = meta_html
 
     def interpolate_index(self, **kwargs):
         # Inspect the arguments by printing them
@@ -53,12 +61,16 @@ class CustomDash(dash.Dash):
                 {meta}
             </head>
             <body>
+                {header}
                 {app_entry}
-                <footer>
+                <div class="global-footer">
+                    <footer id="wb-info">
+                    {footer}
                     {config}
                     {scripts}
                     {renderer}
-                </footer>
+                    </footer>
+                </div>
             </body>
         </html>
         '''.format(
@@ -71,8 +83,10 @@ class CustomDash(dash.Dash):
             css = kwargs['css'],
             title = kwargs['title'],
             analytics = self.analytics_code,
-            meta = self.metadata,
-            lang = self.lang
+            meta = self.meta_html,
+            lang = self.lang,
+            header = self.header,
+            footer = self.footer
             )
 
 #==========================================================================================
@@ -124,16 +138,20 @@ def get_config_dict():
         get_config_dict.config_dict = dict(config.items('TOKENS'))
     return get_config_dict.config_dict
 
+def generate_meta_tag(name, content):
+    return "<meta name=\"" + name + "\" content=\"" + content + "\">"
+
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-    path_data=r"data"
-    prefixe=""
-#     app.run_server(debug=True)  # For development/testing
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
     from analytics import analytics_code
     from config import Config
-    tokens = get_config_dict()
+    app_config = Config()
 
+    path_data=app_config.DATA_PATH
+    prefixe= app_config.APP_PREFIX
+
+    tokens = get_config_dict()
     app = CustomDash(
         __name__,
         meta_tags=[{"name": "viewport", "content": "width=device-width"}],
@@ -141,11 +159,6 @@ if __name__ == '__main__':
         external_scripts=external_scripts,
         # analytics = analytics_code
     )
-    app.set_analytics(analytics_code)
-    app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
-    server = app.server
-    server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
-    babel = Babel(server)  # Hook flask-babel to the app
 
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
@@ -154,24 +167,44 @@ else :
     app_config = Config()
 
     path_data=app_config.DATA_PATH
-    prefixe="/scisat"
+    prefixe= app_config.APP_PREFIX
 
-    print('SCISAT LANG = '+ app_config.DEFAULT_LANGUAGE)
     tokens = get_config_dict()
     app = CustomDash(
-    __name__,
-    requests_pathname_prefix='/scisat/',
-    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    external_stylesheets=external_stylesheets,
-    external_scripts=external_scripts,
-    # analytics = analytics_code
-)
-    app.set_analytics(analytics_code)
-    app.set_lang(app_config.DEFAULT_LANGUAGE)
-    app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
-    server = app.server
-    server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
-    babel = Babel(server)  # Hook flask-babel to the app
+        __name__,
+        requests_pathname_prefix=prefixe,
+        meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+        external_stylesheets=external_stylesheets,
+        external_scripts=external_scripts,
+        # analytics = analytics_code
+        )
+
+meta_html = ''
+if app_config.DEFAULT_LANGUAGE == 'en':
+    app.set_header(gc_header_en)
+    app.set_footer(gc_footer_en)
+    meta_html += generate_meta_tag(
+        'description',
+        'Explore the composition of the Earth’s atmosphere with data from the SCISAT satellite! SCISAT has been monitoring the atmospheric concentrations of ozone and 70 other gases since 2003.'
+        )
+    meta_html += generate_meta_tag('keywords', '')
+    app.title="SCISAT : data exploration application for atmospheric composition"
+else:
+    app.set_header(gc_header_fr)
+    app.set_footer(gc_footer_fr)
+    meta_html += generate_meta_tag(
+        'description',
+        "Explorez la composition de l’atmosphère terrestre avec les données du satellite SCISAT! SCISAT surveille les concentrations atmosphériques d'ozone et de 70 gaz supplémentaires depuis 2003."
+        )
+    meta_html += generate_meta_tag('keywords', '')
+    app.title="SCISAT : application d’exploration des données de composition atmosphérique"
+
+app.set_meta_tags(meta_html)
+app.set_analytics(analytics_code)
+app.set_lang(app_config.DEFAULT_LANGUAGE)
+server = app.server
+server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
+babel = Babel(server)  # Hook flask-babel to the app
 
 
 # Loads data file based on values provided into a pandas dataframe.
@@ -216,6 +249,9 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
 
     """
+
+    print('datareader path')
+    print(path_to_files)
     if type(file)==list:
         file=file[0]
 
@@ -843,7 +879,6 @@ def build_stats():
 # Create app layout
 app.layout = html.Div(
     [
-        html.Div([""], id='gc-header'),
         html.Div(
             [
                 dcc.Store(id="aggregate_data"),
@@ -856,7 +891,6 @@ app.layout = html.Div(
             id="mainContainer",
             style={"display": "flex", "flex-direction": "column", "margin": "auto", "width":"75%"},
         ),
-        html.Div([""], id='gc-footer'),
         html.Div(id='none2', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
     ]
 )
@@ -956,6 +990,8 @@ def gas_validation(gaz_list):
     try:
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
+        print('Path to data:')
+        print(path_data)
         name=path_data+'/'+gaz_list
         nc = netcdf.netcdf_file(name,'r')
     except FileNotFoundError:
@@ -1317,7 +1353,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
-    df = data_reader(GAZ_LIST, app_config.DATA_PATH, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     fig1 = generate_geo_map(df)
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
@@ -1374,7 +1410,7 @@ def update_filtering_text(df):
     )
 def update_picker(gaz_list):
      global DEFAULT_DF, START_DATE, END_DATE
-     df = data_reader(gaz_list, app_config.DATA_PATH)
+     df = data_reader(gaz_list, path_data)
      DEFAULT_DF = df
      START_DATE = df.date.min().to_pydatetime()
      END_DATE = df.date.max().to_pydatetime()
@@ -1490,7 +1526,7 @@ def download_csv():
     alt_range = alt_range[1:-1].split(',')
     alt_range[0] = int(alt_range[0])
     alt_range[1] = int(alt_range[1])
-    df =data_reader(gaz_list,r'applications/scisat/data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -1732,23 +1768,23 @@ def translate_static(x):
     ]
 
 
-# Translate the header and the footer by injecting raw HTML
-@app.callback(
-    [
-        Output('gc-header', 'children'),
-        Output('gc-footer', 'children')
-    ],
-    [Input('none2', 'children')]
-)
-def translate_header_footer(x):
-    """ Translates the government header and footer
-    """
-    # to be deprecated
+# # Translate the header and the footer by injecting raw HTML
+# @app.callback(
+#     [
+#         Output('gc-header', 'children'),
+#         Output('gc-footer', 'children')
+#     ],
+#     [Input('none2', 'children')]
+# )
+# def translate_header_footer(x):
+#     """ Translates the government header and footer
+#     """
+#     # to be deprecated
 
-    if app_config.DEFAULT_LANGUAGE == 'fr':
-        return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_fr), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_fr)]
-    else:
-        return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
+#     if app_config.DEFAULT_LANGUAGE == 'fr':
+#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_fr), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_fr)]
+#     else:
+#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
 
 
 @app.callback(

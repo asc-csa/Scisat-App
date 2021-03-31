@@ -29,6 +29,7 @@ class CustomDash(dash.Dash):
     header = ''
     footer = ''
     meta_html = ''
+    app_header = ''
 
     def set_analytics(self, code):
         self.analytics_code = code
@@ -44,6 +45,9 @@ class CustomDash(dash.Dash):
 
     def set_meta_tags(self, meta_html):
         self.meta_html = meta_html
+
+    def set_app_header(self, header):
+        self.app_header = header
 
     def interpolate_index(self, **kwargs):
         # Inspect the arguments by printing them
@@ -62,6 +66,7 @@ class CustomDash(dash.Dash):
             </head>
             <body>
                 {header}
+                {app_header}
                 {app_entry}
                 <div class="global-footer">
                     <footer id="wb-info">
@@ -86,7 +91,8 @@ class CustomDash(dash.Dash):
             meta = self.meta_html,
             lang = self.lang,
             header = self.header,
-            footer = self.footer
+            footer = self.footer,
+            app_header = self.app_header
             )
 
 #==========================================================================================
@@ -143,7 +149,7 @@ def generate_meta_tag(name, content):
 
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
     from analytics import analytics_code
     from config import Config
     app_config = Config()
@@ -161,7 +167,7 @@ if __name__ == '__main__':
     )
 
 else :
-    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
     from .analytics import analytics_code
     from .config import Config
     app_config = Config()
@@ -189,6 +195,7 @@ if app_config.DEFAULT_LANGUAGE == 'en':
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : data exploration application for atmospheric composition"
+    # app.set_app_header(app_title_fr)
 else:
     app.set_header(gc_header_fr)
     app.set_footer(gc_footer_fr)
@@ -198,11 +205,13 @@ else:
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : application d’exploration des données de composition atmosphérique"
+    app.set_app_header(app_title_en)
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
+app.set_app_header(app_title_en)
 server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
 
@@ -882,7 +891,6 @@ app.layout = html.Div(
                 dcc.Store(id="aggregate_data"),
                 html.Div(id="output-clientside"),  # empty Div to trigger javascript file for graph resizing
 
-                build_header(),
                 build_filtering(),
                 build_stats(),
             ],
@@ -1594,8 +1602,6 @@ def download_csv():
 # The variables in controls.py are placed here; babel does not work for translation unless it is hard coded here, not sure why. Likely has to with the way Dash builds the web app.
 @app.callback(
     [
-        Output("page-title", "children"),
-        Output("learn-more-button", "children"),
         Output("data-ratio", "children"),
         Output("description-1", "children"),
         Output("description-2", "children"),
@@ -1632,8 +1638,6 @@ def download_csv():
 def translate_static(x):
     print('Translating...')
     return [
-                _("SCISAT data visualisation"),
-                _("Learn more about SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
@@ -1785,26 +1789,26 @@ def translate_static(x):
 #         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
 
 
-@app.callback(
-    [
-        Output('language-button', 'children'),
-        Output('language-link', 'href'),
-        Output("learn-more-link", 'href')
-    ],
-    [Input('none2', 'children')]
-)
-def update_language_button(x):
-    """Updates the button to switch languages
-    """
+# @app.callback(
+#     [
+#         Output('language-button', 'children'),
+#         Output('language-link', 'href'),
+#         Output("learn-more-link", 'href')
+#     ],
+#     [Input('none2', 'children')]
+# )
+# def update_language_button(x):
+#     """Updates the button to switch languages
+#     """
 
-    try:
-        language = session['language']
-    except KeyError:
-        language = None
-    if language == 'fr':
-        return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
-    else:
-        return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
+#     try:
+#         language = session['language']
+#     except KeyError:
+#         language = None
+#     if language == 'fr':
+#         return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
+#     else:
+#         return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
 
 
 @babel.localeselector

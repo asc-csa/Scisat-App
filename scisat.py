@@ -616,7 +616,7 @@ def build_filtering():
                             ], className="one-third column", style={"margin-right":"4em", "textAlign":"right"}
                 )
                 ], style={"textAlign":"left"}),
-                html.Hr(),
+                html.Br(),
                 html.Div([ #Choix altitude
                         html.P(id="altitude-text"),
                         dcc.RangeSlider(
@@ -630,6 +630,9 @@ def build_filtering():
                            ),
                         html.Div(id='output-container-alt-picker-range'),
                         ],style={"margin-top":"75px"}),
+                html.Br(),
+                html.Div(dcc.Checklist(options=[{'label':_('Fixed Legend'), 'value':'fx'}], id='box', value=[])),
+                html.Div(html.P(id="legend-checkbox-text")),
                 html.Div([html.Div([
                         html.A(
                             html.Button(id='generate-button', n_clicks=0, className="dash_button", style={'padding-left': '112px', 'padding-right':'112px'}),
@@ -922,7 +925,7 @@ def make_count_figure(df):
     return figure
 
 # This generates the geographical representation of the data
-def generate_geo_map(df):
+def generate_geo_map(df, fixed):
     """Create and update the map of gas concentrations for selected variables.
 
     The color of the data points indicates the mean gas concentration at that coordinate.
@@ -985,6 +988,15 @@ def generate_geo_map(df):
         x_coords.extend([k[0] for k in coord_seq.coords] + [np.nan])
         y_coords.extend([k[1] for k in coord_seq.coords] + [np.nan])
 
+    if fixed:
+        max_bound = interval_max
+        min_bound = 0
+        title = _("Gas Concentration [ppv] (mean on altitude and position) ")
+    else:
+        max_bound = df['Alt_Mean'].max()
+        min_bound = df['Alt_Mean'].min()
+        title = _("Gas Concentration [ppv] (mean on altitude and position)<br> Range will vary")
+
     # We create a heatmap of the binned data
     if hm:
         fig= go.Figure(
@@ -993,8 +1005,8 @@ def generate_geo_map(df):
                             x=df['long'],
                             y=df['lat'],
                             z=df['Alt_Mean'],
-                            zmax=interval_max,
-                            zmin=0,
+                            zmax=max_bound,
+                            zmin=min_bound,
                             #zsmooth='fast', # Turned off smoothing to avoid interpolations
                             opacity=1,
                             name = "",
@@ -1002,7 +1014,7 @@ def generate_geo_map(df):
                             hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
                             colorbar=dict(
                                 title=dict(
-                                    text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                                    text=title,
                                 ),
                                 titleside="right",
                                 showexponent = 'all',
@@ -1035,7 +1047,7 @@ def generate_geo_map(df):
                        [0.9230769230769231, '#cc2727'], [1.0, '#a50026']],
                     colorbar=dict(
                         title=dict(
-                            text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                            text=_("Gas Concentration [ppv] (mean on altitude and position)<br> Range will vary"),
                         ),
                         titleside="right",
                         showexponent = 'all',
@@ -1175,12 +1187,12 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 # The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
 @app.callback(
     [Output("selector_map", "figure"),Output("viz_chart", "figure"),Output("count_graph", "figure"),Output("download-link-1", "href"),Output("filtering_text", "children")],
-    [Input("generate-button","n_clicks"),Input("gaz_list","value")]
+    [Input("generate-button","n_clicks"),Input("gaz_list","value"),Input("box","value")]
 )
-def controller(n_clicks, gaz_list):
+def controller(n_clicks, gaz_list, box):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
     df = data_reader(GAZ_LIST, r'data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
+    fig1 = generate_geo_map(df,box==['fx'])
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
     link = update_csv_link()
@@ -1433,6 +1445,7 @@ def download_csv():
         Output("pos_alert", "children"),
         Output("date_alert", "children"),
         Output("gas_alert", "children"),
+        Output("legend-checkbox-text","children"),
         Output("latitude-text", "children"),
         Output("lat_min-text", "children"),
         Output("lat_max-text", "children"),
@@ -1472,6 +1485,7 @@ def translate_static(x):
                 _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
+                _("This checkbox fixes the range of the legend of the world concentration map. Fixing the legend allows for better comparisons while disabling it allows for better visuals."),
                 _("Filter by Latitude:"),
                 _("Minimum latitude"),
                 _("Maximum latitude"),

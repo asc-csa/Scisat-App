@@ -771,7 +771,6 @@ def detail_table(id):
         if ctx.triggered:
             start_page = curr_page
             # curr_page = curr_page + 1
-            if curr_page < 0: curr_page = 0
             print(ctx.triggered)
             if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
                 curr_page += 1
@@ -783,6 +782,9 @@ def detail_table(id):
                 curr_page = btn3_value
             if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
                 curr_page -= 1
+
+            if curr_page < 0: 
+                curr_page = 0
 
         aria_prefix = _('Goto page ')
         

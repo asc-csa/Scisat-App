@@ -740,7 +740,9 @@ def build_filtering():
                                         max_date_allowed=dt.date.today(),
                                         start_date_placeholder_text='Select start date',
                                         end_date_placeholder_text='Select end date',
-                                        display_format="Y/MM/DD"
+                                        display_format="Y/MM/DD",
+                                        start_date_aria_label = 'Start Date test',
+                                        end_date_aria_label = 'End Date test'
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
                                     html.Span(children=html.P(id="date_selection"),className="wb-inv")

@@ -721,6 +721,174 @@ def build_filtering():
             )
     ])
 
+def detail_table(id):
+    #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
+    @app.callback(
+        [
+            Output( id, 'page_current'),
+            Output( id+'-btn-1', 'data-value'),
+            Output( id+'-btn-2', 'data-value'),
+            Output( id+'-btn-3', 'data-value'),
+            Output( id+'-btn-1-a', "children"),
+            Output( id+'-btn-2-a', "children"),
+            Output( id+'-btn-3-a', "children"),
+            Output( id+'-btn-1', "aria-label"),
+            Output( id+'-btn-2', "aria-label"),
+            Output( id+'-btn-3', "aria-label"),
+            Output( id+'-btn-1', "aria-current"),
+            Output( id+'-btn-2', "aria-current"),
+            Output( id+'-btn-3', "aria-current"),
+            Output( id+'-btn-1', "className"),
+            Output( id+'-btn-2', "className"),
+        ],
+        [
+            Input( id+'-btn-prev', 'n_clicks'),
+            Input( id+'-btn-1', 'n_clicks'),
+            Input( id+'-btn-2', 'n_clicks'),
+            Input( id+'-btn-3', 'n_clicks'),
+            Input( id+'-btn-next', 'n_clicks')
+        ],
+        [
+            State( id, 'page_current'),
+            State( id+'-btn-1', 'data-value'),
+            State( id+'-btn-2', 'data-value'),
+            State( id+'-btn-3', 'data-value'),
+        ]
+    )
+    def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
+        ctx = dash.callback_context
+        btn1_current = 'false'
+        btn2_current = 'false'
+        btn3_current = 'false'
+
+        btn1_class = ''
+        btn2_class = ''
+
+        btn1_aria = ''
+        btn2_aria = ''
+        btn3_aria = ''
+
+        if ctx.triggered:
+            start_page = curr_page
+            # curr_page = curr_page + 1
+            if curr_page < 0: curr_page = 0
+            print(ctx.triggered)
+            if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
+                curr_page += 1
+            if ctx.triggered[0]['prop_id'] == id+'-btn-1.n_clicks':
+                curr_page = btn1_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-2.n_clicks':
+                curr_page = btn2_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-3.n_clicks':
+                curr_page = btn3_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
+                curr_page -= 1
+
+        aria_prefix = _('Goto page ')
+        
+        if curr_page < 1:
+            btn1_value = curr_page
+            btn2_value = curr_page+1
+            btn3_value = curr_page+2
+            btn1_current = 'true'
+            btn1_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1) + ', Current Page'
+            btn2_aria = aria_prefix + str(btn2_value+1)
+            btn3_aria = aria_prefix + str(btn3_value+1)
+        else:
+            btn1_value = curr_page -1
+            btn2_value = curr_page
+            btn3_value = curr_page + 1
+            btn2_current = 'true'
+            btn2_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1)
+            btn2_aria = aria_prefix + str(btn2_value+1) + ', Current Page'
+            btn3_aria = aria_prefix + str(btn3_value+1)
+
+        print('curr_page: '+ str(curr_page))
+        
+        return [
+            curr_page,
+            btn1_value,
+            btn2_value,
+            btn3_value,
+            btn1_value+1,
+            btn2_value+1,
+            btn3_value+1,
+            btn1_aria,
+            btn2_aria,
+            btn3_aria,
+            btn1_current,
+            btn2_current,
+            btn3_current,
+            btn1_class,
+            btn2_class
+        ]
+
+    return html.Div([
+        html.Details(
+            [
+                html.Summary(_("Text Version - World Graph of Mean Concentrations")),
+                html.Div(
+                    dst.DataTable(
+                        id=id,
+                        page_size= 10,
+                        page_current = 0
+                    ),
+                    style={"margin":"4rem"}
+                ),
+                html.Nav(
+                    html.Ul(
+                        [
+                            html.Li(
+                                html.A( 
+                                    'Previous', 
+                                    id=id+'-btn-prev-a',
+                                    className='page-prev'
+                                ),
+                                id=id+'-btn-prev',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
+                            ),
+                            html.Li(
+                                html.A( '1', id=id+'-btn-1-a'),
+                                id=id+'-btn-1',
+                                n_clicks=0,
+                                **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                            ),
+                            html.Li(
+                                html.A( '2', id=id+'-btn-2-a'),
+                                className='active',
+                                id=id+'-btn-2',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                            ),
+                            html.Li(
+                                html.A( '3', id=id+'-btn-3-a'),
+                                id=id+'-btn-3',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                            ),
+                            html.Li(
+                                html.A( 
+                                    'Next',
+                                    id=id+'-btn-next-a',
+                                    className='page-next'
+                                ),
+                                id=id+'-btn-next',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto Next Page'), 'data-value': -2}
+                            )
+                        ],
+                        className = 'pagination'
+                    ),
+                    **{'aria-label': _('Pagination Navigation')},
+                    role = _('navigation'),
+                    className = 'table_pagination'
+                )
+            ]
+        )
+    ])
 
 # Builds the layout for the map displaying the time series
 def build_stats():
@@ -737,44 +905,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
-                    html.Div([
-                        html.Details(
-                            [
-                                html.Summary(_("Text Version - World Graph of Mean Concentrations")),
-                                html.Div(
-                                    dst.DataTable(
-                                        id="world-table",
-                                        page_size= 10,
-                                        page_current = 0
-                                    ),
-                                    style={"margin":"4rem"}
-                                ),
-                                html.Nav(
-                                    html.Ul(
-                                        [
-                                            html.Li(
-                                                html.Button( 'Previous', id='world-table-prev', n_clicks=0, value=-1, **{'aria-label': _('Goto Previous Page')} )
-                                            ),
-                                            html.Li(
-                                                html.Button( '1', id='world-table-1', n_clicks=0, value=0, **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true')} )
-                                            ),
-                                            html.Li(
-                                                html.Button( '2', id='world-table-2', n_clicks=0,value=1, **{'aria-label': _('Goto page 2')} )
-                                            ),
-                                            html.Li(
-                                                html.Button( '3', id='world-table-3', n_clicks=0,value=2, **{'aria-label': _('Goto page 3')} )
-                                            ),
-                                            html.Li(
-                                                html.Button( 'Next', id='world-table-next', n_clicks=0, value=-2, **{'aria-label': _('Goto Next Page')} )
-                                            )
-                                        ]
-                                    ),
-                                    **{'aria-label': _('Pagination Navigation')},
-                                    role = _('navigation')
-                                )
-                            ]
-                        )
-                    ]),
+                    detail_table('world-table'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -836,99 +967,7 @@ app.layout = html.Div(
 #=======================================================================================================================
 # Input functions and validation functions
 
-#next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
-@app.callback(
-    [
-        Output('world-table', 'page_current'),
-        Output('world-table-1', 'value'),
-        Output('world-table-2', 'value'),
-        Output('world-table-3', 'value'),
-        Output("world-table-1", "children"),
-        Output("world-table-2", "children"),
-        Output("world-table-3", "children"),
-        Output("world-table-1", "aria-label"),
-        Output("world-table-2", "aria-label"),
-        Output("world-table-3", "aria-label"),
-        Output("world-table-1", "aria-current"),
-        Output("world-table-2", "aria-current"),
-        Output("world-table-3", "aria-current"),
-    ],
-    [
-        Input('world-table-prev', 'n_clicks'),
-        Input('world-table-1', 'n_clicks'),
-        Input('world-table-2', 'n_clicks'),
-        Input('world-table-3', 'n_clicks'),
-        Input('world-table-next', 'n_clicks')
-    ],
-    [
-        State('world-table', 'page_current'),
-        State('world-table-1', 'value'),
-        State('world-table-2', 'value'),
-        State('world-table-3', 'value'),
-    ]
-)
-def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
-    ctx = dash.callback_context
-    btn1_current = 'false'
-    btn2_current = 'false'
-    btn3_current = 'false'
 
-    btn1_aria = ''
-    btn2_aria = ''
-    btn3_aria = ''
-
-    if ctx.triggered:
-        start_page = curr_page
-        # curr_page = curr_page + 1
-        if curr_page < 0: curr_page = 0
-        print(ctx.triggered)
-        if ctx.triggered[0]['prop_id'] == 'world-table-next.n_clicks':
-            curr_page += 1
-        if ctx.triggered[0]['prop_id'] == 'world-table-1.n_clicks':
-            curr_page = btn1_value
-        if ctx.triggered[0]['prop_id'] == 'world-table-2.n_clicks':
-            curr_page = btn2_value
-        if ctx.triggered[0]['prop_id'] == 'world-table-3.n_clicks':
-            curr_page = btn3_value
-        if ctx.triggered[0]['prop_id'] == 'world-table-prev.n_clicks':
-            curr_page -= 1
-
-    aria_prefix = _('Goto page ')
-    
-    if curr_page < 1:
-        btn1_value = curr_page
-        btn2_value = curr_page+1
-        btn3_value = curr_page+2
-        btn1_current = 'true'
-        btn1_aria = aria_prefix + str(btn1_value+1) + ', Current Page'
-        btn2_aria = aria_prefix + str(btn2_value+1)
-        btn3_aria = aria_prefix + str(btn3_value+1)
-    else:
-        btn1_value = curr_page -1
-        btn2_value = curr_page
-        btn3_value = curr_page + 1
-        btn2_current = 'true'
-        btn1_aria = aria_prefix + str(btn1_value+1)
-        btn2_aria = aria_prefix + str(btn2_value+1) + ', Current Page'
-        btn3_aria = aria_prefix + str(btn3_value+1)
-
-    print('curr_page: '+ str(curr_page))
-    
-    return [
-        curr_page,
-        btn1_value,
-        btn2_value,
-        btn3_value,
-        btn1_value+1,
-        btn2_value+1,
-        btn3_value+1,
-        btn1_aria,
-        btn2_aria,
-        btn3_aria,
-        btn1_current,
-        btn2_current,
-        btn3_current
-    ]
 
 # Update global values of lat/long using validation
 @app.callback(

@@ -105,26 +105,25 @@ class CustomDash(dash.Dash):
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
 external_stylesheets = [
+    'https://canada.ca/etc/designs/canada/wet-boew/css/wet-boew.min.css',
+    'https://canada.ca/etc/designs/canada/wet-boew/css/theme.min.css',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
     # 'assets/gc_theme_cdn/assets/favicon.ico',
-    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    # 'assets/gc_theme_cdn/css/theme.min.css',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
 ]  # Link to external CSS
 
-# external_scripts = [
-#     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-#     'https://cdn.plot.ly/plotly-locale-de-latest.js',
-
-# ]
-
 external_scripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+    # 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'assets/gc_theme_cdn/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    # 'assets/gc_theme_cdn/js/theme.min.js',
+    # 'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/wet-boew.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/theme.min.js',
     'assets/scripts.js'
+
 
 ]
 

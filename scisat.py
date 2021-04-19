@@ -15,8 +15,8 @@ from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
-# import sass
-
+import dash_table as dst
+from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
 from scipy import mean
@@ -635,12 +635,12 @@ def build_filtering():
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
                                 ),
-            
+
                                 # html.Span(children=html.P(),className="wb-inv")
                             ],
                             role='listbox',
                             **{'aria-label': 'Gas Dropdown'}
-                            
+
                         )
                     ],
                     style={"textAlign":"left"}
@@ -730,7 +730,7 @@ def build_filtering():
                                     debounce=True
                                 ),
                             ]),
-                            html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
+                            html.Span(children=html.P(id="lon_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                         style={"textAlign":"left"}
@@ -763,7 +763,7 @@ def build_filtering():
                                     html.Span(children=html.P(id="date_selection"),className="wb-inv")
                                 ]
                                 ),
-                        ], 
+                        ],
                         className="col-md-12 col-lg-4",
                     ),
                 ],
@@ -849,6 +849,176 @@ def build_filtering():
             )
     ])
 
+def detail_table(id):
+    #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
+    @app.callback(
+        [
+            Output( id, 'page_current'),
+            Output( id+'-btn-1', 'data-value'),
+            Output( id+'-btn-2', 'data-value'),
+            Output( id+'-btn-3', 'data-value'),
+            Output( id+'-btn-1-a', "children"),
+            Output( id+'-btn-2-a', "children"),
+            Output( id+'-btn-3-a', "children"),
+            Output( id+'-btn-1', "aria-label"),
+            Output( id+'-btn-2', "aria-label"),
+            Output( id+'-btn-3', "aria-label"),
+            Output( id+'-btn-1', "aria-current"),
+            Output( id+'-btn-2', "aria-current"),
+            Output( id+'-btn-3', "aria-current"),
+            Output( id+'-btn-1', "className"),
+            Output( id+'-btn-2', "className"),
+        ],
+        [
+            Input( id+'-btn-prev', 'n_clicks'),
+            Input( id+'-btn-1', 'n_clicks'),
+            Input( id+'-btn-2', 'n_clicks'),
+            Input( id+'-btn-3', 'n_clicks'),
+            Input( id+'-btn-next', 'n_clicks')
+        ],
+        [
+            State( id, 'page_current'),
+            State( id+'-btn-1', 'data-value'),
+            State( id+'-btn-2', 'data-value'),
+            State( id+'-btn-3', 'data-value'),
+        ]
+    )
+    def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
+        ctx = dash.callback_context
+        btn1_current = 'false'
+        btn2_current = 'false'
+        btn3_current = 'false'
+
+        btn1_class = ''
+        btn2_class = ''
+
+        btn1_aria = ''
+        btn2_aria = ''
+        btn3_aria = ''
+
+        if ctx.triggered:
+            start_page = curr_page
+            # curr_page = curr_page + 1
+            print(ctx.triggered)
+            if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
+                curr_page += 1
+            if ctx.triggered[0]['prop_id'] == id+'-btn-1.n_clicks':
+                curr_page = btn1_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-2.n_clicks':
+                curr_page = btn2_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-3.n_clicks':
+                curr_page = btn3_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
+                curr_page -= 1
+
+            if curr_page < 0: 
+                curr_page = 0
+
+        aria_prefix = _('Goto page ')
+        
+        if curr_page < 1:
+            btn1_value = curr_page
+            btn2_value = curr_page+1
+            btn3_value = curr_page+2
+            btn1_current = 'true'
+            btn1_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1) + ', Current Page'
+            btn2_aria = aria_prefix + str(btn2_value+1)
+            btn3_aria = aria_prefix + str(btn3_value+1)
+        else:
+            btn1_value = curr_page -1
+            btn2_value = curr_page
+            btn3_value = curr_page + 1
+            btn2_current = 'true'
+            btn2_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1)
+            btn2_aria = aria_prefix + str(btn2_value+1) + ', Current Page'
+            btn3_aria = aria_prefix + str(btn3_value+1)
+
+        print('curr_page: '+ str(curr_page))
+        
+        return [
+            curr_page,
+            btn1_value,
+            btn2_value,
+            btn3_value,
+            btn1_value+1,
+            btn2_value+1,
+            btn3_value+1,
+            btn1_aria,
+            btn2_aria,
+            btn3_aria,
+            btn1_current,
+            btn2_current,
+            btn3_current,
+            btn1_class,
+            btn2_class
+        ]
+
+    return html.Div([
+        html.Details(
+            [
+                html.Summary(_("Text Version - World Graph of Mean Concentrations")),
+                html.Div(
+                    dst.DataTable(
+                        id=id,
+                        page_size= 10,
+                        page_current = 0
+                    ),
+                    style={"margin":"4rem"}
+                ),
+                html.Nav(
+                    html.Ul(
+                        [
+                            html.Li(
+                                html.A( 
+                                    'Previous', 
+                                    id=id+'-btn-prev-a',
+                                    className='page-prev'
+                                ),
+                                id=id+'-btn-prev',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
+                            ),
+                            html.Li(
+                                html.A( '1', id=id+'-btn-1-a'),
+                                id=id+'-btn-1',
+                                n_clicks=0,
+                                **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                            ),
+                            html.Li(
+                                html.A( '2', id=id+'-btn-2-a'),
+                                className='active',
+                                id=id+'-btn-2',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                            ),
+                            html.Li(
+                                html.A( '3', id=id+'-btn-3-a'),
+                                id=id+'-btn-3',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                            ),
+                            html.Li(
+                                html.A( 
+                                    'Next',
+                                    id=id+'-btn-next-a',
+                                    className='page-next'
+                                ),
+                                id=id+'-btn-next',
+                                n_clicks=0,
+                                **{'aria-label': _('Goto Next Page'), 'data-value': -2}
+                            )
+                        ],
+                        className = 'pagination'
+                    ),
+                    **{'aria-label': _('Pagination Navigation')},
+                    role = _('navigation'),
+                    className = 'table_pagination'
+                )
+            ]
+        )
+    ])
 
 # Builds the layout for the map displaying the time series
 def build_stats():
@@ -865,6 +1035,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
+                    detail_table('world-table'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -922,6 +1093,8 @@ app.layout = html.Div(
 
 #=======================================================================================================================
 # Input functions and validation functions
+
+
 
 # Update global values of lat/long using validation
 @app.callback(
@@ -1265,7 +1438,11 @@ def generate_geo_map(df):
             hoverinfo = "skip",
             line = dict(color='black')))
 
-    return fig
+    # Here, we set the attributes that pertain to the text table
+    data = df[['lat','long','Alt_Mean']].to_dict('records')
+    columns = [{"name":_("Latitude"), "id":"lat"},{"name":_("Longitude"),"id":"long"},{"name":_("Mean Concentration"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+
+    return [fig, columns, data]
 
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
@@ -1365,6 +1542,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 @app.callback(
     [
         Output("selector_map", "figure"),
+        Output("world-table", "columns"),
+        Output("world-table", "data"),
         Output("viz_chart", "figure"),
         Output("count_graph", "figure"),
         Output("download-link-1", "href"),
@@ -1377,13 +1556,15 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
+    # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    # fig1 = generate_geo_map(df)
     df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
+    [fig1, columns, data] = generate_geo_map(df)
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, fig2, fig3, link, nbr
+    return fig1, columns, data, fig2, fig3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):

@@ -730,7 +730,7 @@ def build_filtering():
                                     debounce=True
                                 ),
                             ]),
-                            html.Span(children=html.P(id="lon_selection"),className="wb-inv")
+                            html.Div(children=html.P(id="lon_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                         style={"textAlign":"left"}
@@ -760,7 +760,7 @@ def build_filtering():
                                         end_date_aria_label = 'End Date test'
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
-                                    html.Span(children=html.P(id="date_selection"),className="wb-inv")
+                                    html.Div(children=html.P(id="date_selection"),className="wb-inv")
                                 ]
                                 ),
                         ],
@@ -800,7 +800,7 @@ def build_filtering():
                                             target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(
                                             id="generate_selection"
                                             ),
@@ -828,7 +828,7 @@ def build_filtering():
                                             target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(id="download_selection"),
                                             className="wb-inv"
                                         )

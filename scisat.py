@@ -625,15 +625,18 @@ def build_filtering():
                             [
                                 html.Label(
                                     id="gas_selection",
-                                    htmlFor='gaz_list',
+                                    htmlFor='gaz_list_dropdown',
                                     className="control_label",
                                 ),
                                 dcc.Dropdown(
                                     id="gaz_list",
                                     options= gaz_name_options,
+                                    placeholder=_('Select a gas'),
                                     multi=False,
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
+                                    label = 'Label test'
+                                    
                                 ),
 
                                 # html.Span(children=html.P(),className="wb-inv")
@@ -757,7 +760,7 @@ def build_filtering():
                                         end_date_placeholder_text='Select end date',
                                         display_format="Y/MM/DD",
                                         start_date_aria_label = 'Start Date test',
-                                        end_date_aria_label = 'End Date test'
+                                        end_date_aria_label = 'End Date test',
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
                                     html.Div(children=html.P(id="date_selection"),className="wb-inv")

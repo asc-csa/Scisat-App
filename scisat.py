@@ -15,6 +15,7 @@ from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
+# import sass
 
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
@@ -49,20 +50,33 @@ class CustomDash(dash.Dash):
     def set_app_header(self, header):
         self.app_header = header
 
+    # def _generate_css_dist_html(self):
+    #     external_links = self.config.external_stylesheets
+    #     links = self._collect_and_register_resources(self.css.get_all_css())
+
+    #     return "\n".join(
+    #         [
+    #             format_tag("link", link, opened=True)
+    #             if isinstance(link, dict)
+    #             else '<link rel="stylesheet" href="{}">'.format(link)
+    #             for link in (external_links + links)
+    #         ]
+    #     )
+
     def interpolate_index(self, **kwargs):
         # Inspect the arguments by printing them
         return '''
         <!DOCTYPE html>
         <html lang='{lang}'>
             <head>
-                {analytics}
                 {metas}
+                {meta}
+                {analytics}
                 {favicon}
                 <title>
                 {title}
                 </title>
                 {css}
-                {meta}
             </head>
             <body>
                 {header}
@@ -94,6 +108,7 @@ class CustomDash(dash.Dash):
             footer = self.footer,
             app_header = self.app_header
             )
+
 
 #==========================================================================================
 # load data and transform as needed
@@ -601,6 +616,7 @@ def build_filtering():
         ),
 
         html.Div(
+            html.Form(
             [
                 html.Div(
                     [
@@ -751,7 +767,7 @@ def build_filtering():
                         className="col-md-12 col-lg-4",
                     ),
                 ],
-                className='row align-items-start',
+                className='row align-items-start ',
                 style={"textAlign":"left"}
                 ),
                 html.Hr(),
@@ -827,7 +843,8 @@ def build_filtering():
                     style={"margin-top":"30px"}
                 )
             ],
-            className="pretty_container twelve column",
+            ),
+            className="pretty_container twelve column wb-frmvld",
             style={"justify-content": "space-evenly"}
             )
     ])

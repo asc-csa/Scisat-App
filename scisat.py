@@ -163,7 +163,7 @@ def generate_meta_tag(name, content):
 
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from analytics import analytics_code
     from config import Config
     app_config = Config()
@@ -181,7 +181,7 @@ if __name__ == '__main__':
     )
 
 else :
-    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
+    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from .analytics import analytics_code
     from .config import Config
     app_config = Config()
@@ -209,7 +209,7 @@ if app_config.DEFAULT_LANGUAGE == 'en':
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : data exploration application for atmospheric composition"
-    # app.set_app_header(app_title_fr)
+    app.set_app_header(app_title_en)
 else:
     app.set_header(gc_header_fr)
     app.set_footer(gc_footer_fr)
@@ -219,13 +219,13 @@ else:
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : application d’exploration des données de composition atmosphérique"
-    app.set_app_header(app_title_en)
+    app.set_app_header(app_title_fr)
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
-app.set_app_header(app_title_en)
+# app.set_app_header(app_title_en)
 server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
 

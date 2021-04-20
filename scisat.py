@@ -871,6 +871,11 @@ def detail_table(id):
             Output( id+'-btn-3-a', "aria-current"),
             Output( id+'-btn-1', "className"),
             Output( id+'-btn-2', "className"),
+            Output( id+'-btn-prev-a', 'children'),
+            Output( id+'-btn-next-a', 'children'),
+            Output( id+'-btn-prev-a', "aria-label"),
+            Output( id+'-btn-next-a', "aria-label"),
+            Output( id+'-navigation', "aria-label"),
         ],
         [
             Input( id+'-btn-prev', 'n_clicks'),
@@ -887,6 +892,7 @@ def detail_table(id):
         ]
     )
     def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
+        session['language'] = app_config.DEFAULT_LANGUAGE
         ctx = dash.callback_context
         btn1_current = 'false'
         btn2_current = 'false'
@@ -925,7 +931,7 @@ def detail_table(id):
             btn3_value = curr_page+2
             btn1_current = 'true'
             btn1_class = 'active'
-            btn1_aria = aria_prefix + str(btn1_value+1) + ', Current Page'
+            btn1_aria = aria_prefix + str(btn1_value+1) + ', ' + _('Current Page')
             btn2_aria = aria_prefix + str(btn2_value+1)
             btn3_aria = aria_prefix + str(btn3_value+1)
         else:
@@ -935,10 +941,10 @@ def detail_table(id):
             btn2_current = 'true'
             btn2_class = 'active'
             btn1_aria = aria_prefix + str(btn1_value+1)
-            btn2_aria = aria_prefix + str(btn2_value+1) + ', Current Page'
+            btn2_aria = aria_prefix + str(btn2_value+1) + ', ' + _('Current Page')
             btn3_aria = aria_prefix + str(btn3_value+1)
 
-        print('curr_page: '+ str(curr_page))
+        # print('curr_page: '+ str(curr_page))
         
         return [
             curr_page,
@@ -955,7 +961,12 @@ def detail_table(id):
             btn2_current,
             btn3_current,
             btn1_class,
-            btn2_class
+            btn2_class,
+            _('Previous'),
+            _('Next'),
+            _('Goto Previous Page'),
+            _('Goto Next Page'),
+            _('Pagination Navigation')
         ]
 
     return html.Div([
@@ -975,7 +986,7 @@ def detail_table(id):
                         [
                             html.Li(
                                 html.A( 
-                                    'Previous', 
+                                    _('Previous'), 
                                     id=id+'-btn-prev-a',
                                     className='page-prev',
                                     **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
@@ -1026,7 +1037,8 @@ def detail_table(id):
                     ),
                     **{'aria-label': _('Pagination Navigation')},
                     role = _('navigation'),
-                    className = 'table_pagination'
+                    className = 'table_pagination',
+                    id = id+'-navigation'
                 )
             ]
         )

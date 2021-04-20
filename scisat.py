@@ -759,8 +759,8 @@ def build_filtering():
                                         start_date_placeholder_text='Select start date',
                                         end_date_placeholder_text='Select end date',
                                         display_format="Y/MM/DD",
-                                        start_date_aria_label = 'Start Date test',
-                                        end_date_aria_label = 'End Date test',
+                                        start_date_aria_label = 'Start Date',
+                                        end_date_aria_label = 'End Date',
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
                                     html.Div(children=html.P(id="date_selection"),className="wb-inv")

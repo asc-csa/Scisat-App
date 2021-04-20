@@ -857,18 +857,18 @@ def detail_table(id):
     @app.callback(
         [
             Output( id, 'page_current'),
-            Output( id+'-btn-1', 'data-value'),
-            Output( id+'-btn-2', 'data-value'),
-            Output( id+'-btn-3', 'data-value'),
+            Output( id+'-btn-1-a', 'data-value'),
+            Output( id+'-btn-2-a', 'data-value'),
+            Output( id+'-btn-3-a', 'data-value'),
             Output( id+'-btn-1-a', "children"),
             Output( id+'-btn-2-a', "children"),
             Output( id+'-btn-3-a', "children"),
-            Output( id+'-btn-1', "aria-label"),
-            Output( id+'-btn-2', "aria-label"),
-            Output( id+'-btn-3', "aria-label"),
-            Output( id+'-btn-1', "aria-current"),
-            Output( id+'-btn-2', "aria-current"),
-            Output( id+'-btn-3', "aria-current"),
+            Output( id+'-btn-1-a', "aria-label"),
+            Output( id+'-btn-2-a', "aria-label"),
+            Output( id+'-btn-3-a', "aria-label"),
+            Output( id+'-btn-1-a', "aria-current"),
+            Output( id+'-btn-2-a', "aria-current"),
+            Output( id+'-btn-3-a', "aria-current"),
             Output( id+'-btn-1', "className"),
             Output( id+'-btn-2', "className"),
         ],
@@ -881,9 +881,9 @@ def detail_table(id):
         ],
         [
             State( id, 'page_current'),
-            State( id+'-btn-1', 'data-value'),
-            State( id+'-btn-2', 'data-value'),
-            State( id+'-btn-3', 'data-value'),
+            State( id+'-btn-1-a', 'data-value'),
+            State( id+'-btn-2-a', 'data-value'),
+            State( id+'-btn-3-a', 'data-value'),
         ]
     )
     def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
@@ -977,40 +977,49 @@ def detail_table(id):
                                 html.A( 
                                     'Previous', 
                                     id=id+'-btn-prev-a',
-                                    className='page-prev'
+                                    className='page-prev',
+                                    **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
                                 ),
                                 id=id+'-btn-prev',
-                                n_clicks=0,
-                                **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
+                                n_clicks=0
                             ),
                             html.Li(
-                                html.A( '1', id=id+'-btn-1-a'),
+                                html.A( 
+                                    '1',
+                                    id=id+'-btn-1-a',
+                                    **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                                ),
                                 id=id+'-btn-1',
-                                n_clicks=0,
-                                **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                                n_clicks=0
                             ),
                             html.Li(
-                                html.A( '2', id=id+'-btn-2-a'),
+                                html.A( 
+                                    '2', 
+                                    id=id+'-btn-2-a',
+                                    **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                                ),
                                 className='active',
                                 id=id+'-btn-2',
-                                n_clicks=0,
-                                **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                                n_clicks=0
                             ),
                             html.Li(
-                                html.A( '3', id=id+'-btn-3-a'),
+                                html.A( 
+                                    '3', 
+                                    id=id+'-btn-3-a',
+                                    **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                                ),
                                 id=id+'-btn-3',
-                                n_clicks=0,
-                                **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                                n_clicks=0
                             ),
                             html.Li(
                                 html.A( 
                                     'Next',
                                     id=id+'-btn-next-a',
-                                    className='page-next'
+                                    className='page-next',
+                                    **{'aria-label': _('Goto Next Page'), 'data-value': -2}
                                 ),
                                 id=id+'-btn-next',
-                                n_clicks=0,
-                                **{'aria-label': _('Goto Next Page'), 'data-value': -2}
+                                n_clicks=0
                             )
                         ],
                         className = 'pagination'

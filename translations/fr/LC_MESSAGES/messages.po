@@ -312,23 +312,23 @@ msgstr "Dioxyde de soufre"
 
 #: scisat.py:634
 msgid "Select a gas"
-msgstr ""
+msgstr "Sélectionnez un gaz"
 
 #: scisat.py:759 scisat.py:1904
 msgid "Select start date"
-msgstr "Select Start date french"
+msgstr "Sélectionnez la date de début"
 
 #: scisat.py:760 scisat.py:1905
 msgid "Select end date"
-msgstr "Select end date french"
+msgstr "Sélectionnez la date de fin"
 
 #: scisat.py:762 scisat.py:1906
 msgid "Start Date"
-msgstr "Start Date French"
+msgstr "Date de début"
 
 #: scisat.py:763 scisat.py:1907
 msgid "End Date"
-msgstr "End date French"
+msgstr "date de fin"
 
 #: scisat.py:927
 msgid "Goto page "

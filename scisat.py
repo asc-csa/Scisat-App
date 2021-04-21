@@ -690,7 +690,7 @@ def build_filtering():
                                     debounce=True
                                 )
                             ]),
-                            html.Span(children=html.P(id="lat_selection"),className="wb-inv")
+                            html.Div(children=html.P(id="lat_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                     ),
@@ -783,6 +783,7 @@ def build_filtering():
                             max=150,
                             step=1,
                             value=[0, 150] ,
+                            # slider_labels=['Altitude Minimum', 'Altitude Maximum'],
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
@@ -1180,13 +1181,19 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
-    Output("placeholder","value"),
+    [
+        Output("placeholder","value"),
+        Output("alt_range","slider_labels"), 
+    ],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
     global ALT_RANGE
     ALT_RANGE = alt_range
-    return ""
+    return [
+        "",
+        [_('Altitude Maximum'),_('Altitude Minimum')]
+        ]
 
 # Lat/long validation
 def pos_validation(lat_min,lat_max,lon_min,lon_max):

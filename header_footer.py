@@ -28,7 +28,7 @@ app_title_fr = '''
         <img id="csa-image" alt="CSA Logo" src="/scisat/assets/csa-logo.png" style="height: 60px; width: auto; margin: 25px;">
       </div>
       <div id="title" class="">
-        <h1 id="page-title" >SCISAT data visualisation</h1>
+        <h1 id="page-title" >Visualisation des données de SCISAT</h1>
       </div>
       <div id="button-div" style="display: flex; align-items: center;" >
         <a id="learn-more-link" href="https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp" class="btn btn-primary">

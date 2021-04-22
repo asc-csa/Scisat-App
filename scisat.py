@@ -1192,7 +1192,7 @@ def update_alt(alt_range):
     ALT_RANGE = alt_range
     return [
         "",
-        [_('Altitude Maximum'),_('Altitude Minimum')]
+        [_('Altitude Minimum'),_('Altitude Maximum')]
         ]
 
 # Lat/long validation

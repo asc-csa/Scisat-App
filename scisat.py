@@ -22,6 +22,7 @@ from scipy.stats import sem, t
 from scipy import mean
 import numpy as np
 import datetime
+from os import path
 
 class CustomDash(dash.Dash):
 
@@ -164,8 +165,11 @@ def generate_meta_tag(name, content):
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
-    from analytics import analytics_code
     from config import Config
+    if(path.exists("analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -182,8 +186,11 @@ if __name__ == '__main__':
 
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
-    from .analytics import analytics_code
     from .config import Config
+    if(path.exists("./analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH

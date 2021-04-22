@@ -15,7 +15,8 @@ from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
-
+import dash_table as dst
+from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
 from scipy import mean
@@ -49,20 +50,33 @@ class CustomDash(dash.Dash):
     def set_app_header(self, header):
         self.app_header = header
 
+    # def _generate_css_dist_html(self):
+    #     external_links = self.config.external_stylesheets
+    #     links = self._collect_and_register_resources(self.css.get_all_css())
+
+    #     return "\n".join(
+    #         [
+    #             format_tag("link", link, opened=True)
+    #             if isinstance(link, dict)
+    #             else '<link rel="stylesheet" href="{}">'.format(link)
+    #             for link in (external_links + links)
+    #         ]
+    #     )
+
     def interpolate_index(self, **kwargs):
         # Inspect the arguments by printing them
         return '''
         <!DOCTYPE html>
         <html lang='{lang}'>
             <head>
-                {analytics}
                 {metas}
+                {meta}
+                {analytics}
                 {favicon}
                 <title>
                 {title}
                 </title>
                 {css}
-                {meta}
             </head>
             <body>
                 {header}
@@ -95,6 +109,7 @@ class CustomDash(dash.Dash):
             app_header = self.app_header
             )
 
+
 #==========================================================================================
 # load data and transform as needed
 
@@ -105,26 +120,25 @@ class CustomDash(dash.Dash):
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
 external_stylesheets = [
+    'https://canada.ca/etc/designs/canada/wet-boew/css/wet-boew.min.css',
+    'https://canada.ca/etc/designs/canada/wet-boew/css/theme.min.css',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
     # 'assets/gc_theme_cdn/assets/favicon.ico',
-    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    # 'assets/gc_theme_cdn/css/theme.min.css',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
 ]  # Link to external CSS
 
-# external_scripts = [
-#     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-#     'https://cdn.plot.ly/plotly-locale-de-latest.js',
-
-# ]
-
 external_scripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+    # 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'assets/gc_theme_cdn/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    # 'assets/gc_theme_cdn/js/theme.min.js',
+    # 'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/wet-boew.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/theme.min.js',
     'assets/scripts.js'
+
 
 ]
 
@@ -149,7 +163,7 @@ def generate_meta_tag(name, content):
 
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from analytics import analytics_code
     from config import Config
     app_config = Config()
@@ -167,7 +181,7 @@ if __name__ == '__main__':
     )
 
 else :
-    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en
+    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from .analytics import analytics_code
     from .config import Config
     app_config = Config()
@@ -195,7 +209,7 @@ if app_config.DEFAULT_LANGUAGE == 'en':
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : data exploration application for atmospheric composition"
-    # app.set_app_header(app_title_fr)
+    app.set_app_header(app_title_en)
 else:
     app.set_header(gc_header_fr)
     app.set_footer(gc_footer_fr)
@@ -205,13 +219,13 @@ else:
         )
     meta_html += generate_meta_tag('keywords', '')
     app.title="SCISAT : application d’exploration des données de composition atmosphérique"
-    app.set_app_header(app_title_en)
+    app.set_app_header(app_title_fr)
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
-app.set_app_header(app_title_en)
+# app.set_app_header(app_title_en)
 server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
 
@@ -602,6 +616,7 @@ def build_filtering():
         ),
 
         html.Div(
+            html.Form(
             [
                 html.Div(
                     [
@@ -610,22 +625,25 @@ def build_filtering():
                             [
                                 html.Label(
                                     id="gas_selection",
-                                    htmlFor='gaz_list',
+                                    htmlFor='gaz_list_dropdown',
                                     className="control_label",
                                 ),
                                 dcc.Dropdown(
                                     id="gaz_list",
                                     options= gaz_name_options,
+                                    placeholder=_('Select a gas'),
                                     multi=False,
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
+                                    label = 'Label test'
+                                    
                                 ),
-            
+
                                 # html.Span(children=html.P(),className="wb-inv")
                             ],
                             role='listbox',
                             **{'aria-label': 'Gas Dropdown'}
-                            
+
                         )
                     ],
                     style={"textAlign":"left"}
@@ -672,7 +690,7 @@ def build_filtering():
                                     debounce=True
                                 )
                             ]),
-                            html.Span(children=html.P(id="lat_selection"),className="wb-inv")
+                            html.Div(children=html.P(id="lat_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                     ),
@@ -715,7 +733,7 @@ def build_filtering():
                                     debounce=True
                                 ),
                             ]),
-                            html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
+                            html.Div(children=html.P(id="lon_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                         style={"textAlign":"left"}
@@ -738,19 +756,21 @@ def build_filtering():
                                         end_date=dt.datetime(2020, 5, 5),
                                         min_date_allowed=dt.datetime(2004, 2, 1),
                                         max_date_allowed=dt.date.today(),
-                                        start_date_placeholder_text='Select start date',
-                                        end_date_placeholder_text='Select end date',
-                                        display_format="Y/MM/DD"
+                                        start_date_placeholder_text=_('Select start date'),
+                                        end_date_placeholder_text=_('Select end date'),
+                                        display_format="Y/MM/DD",
+                                        start_date_aria_label = _('Start Date'),
+                                        end_date_aria_label = _('End Date'),
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
-                                    html.Span(children=html.P(id="date_selection"),className="wb-inv")
+                                    html.Div(children=html.P(id="date_selection"),className="wb-inv")
                                 ]
                                 ),
-                        ], 
+                        ],
                         className="col-md-12 col-lg-4",
                     ),
                 ],
-                className='row align-items-start',
+                className='row align-items-start ',
                 style={"textAlign":"left"}
                 ),
                 html.Hr(),
@@ -763,6 +783,7 @@ def build_filtering():
                             max=150,
                             step=1,
                             value=[0, 150] ,
+                            # slider_labels=['Altitude Minimum', 'Altitude Maximum'],
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
@@ -783,7 +804,7 @@ def build_filtering():
                                             target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(
                                             id="generate_selection"
                                             ),
@@ -811,7 +832,7 @@ def build_filtering():
                                             target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(id="download_selection"),
                                             className="wb-inv"
                                         )
@@ -826,11 +847,203 @@ def build_filtering():
                     style={"margin-top":"30px"}
                 )
             ],
-            className="pretty_container twelve column",
+            ),
+            className="pretty_container twelve column wb-frmvld",
             style={"justify-content": "space-evenly"}
             )
     ])
 
+def detail_table(id):
+    #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
+    @app.callback(
+        [
+            Output( id, 'page_current'),
+            Output( id+'-btn-1-a', 'data-value'),
+            Output( id+'-btn-2-a', 'data-value'),
+            Output( id+'-btn-3-a', 'data-value'),
+            Output( id+'-btn-1-a', "children"),
+            Output( id+'-btn-2-a', "children"),
+            Output( id+'-btn-3-a', "children"),
+            Output( id+'-btn-1-a', "aria-label"),
+            Output( id+'-btn-2-a', "aria-label"),
+            Output( id+'-btn-3-a', "aria-label"),
+            Output( id+'-btn-1-a', "aria-current"),
+            Output( id+'-btn-2-a', "aria-current"),
+            Output( id+'-btn-3-a', "aria-current"),
+            Output( id+'-btn-1', "className"),
+            Output( id+'-btn-2', "className"),
+            Output( id+'-btn-prev-a', 'children'),
+            Output( id+'-btn-next-a', 'children'),
+            Output( id+'-btn-prev-a', "aria-label"),
+            Output( id+'-btn-next-a', "aria-label"),
+            Output( id+'-navigation', "aria-label"),
+        ],
+        [
+            Input( id+'-btn-prev', 'n_clicks'),
+            Input( id+'-btn-1', 'n_clicks'),
+            Input( id+'-btn-2', 'n_clicks'),
+            Input( id+'-btn-3', 'n_clicks'),
+            Input( id+'-btn-next', 'n_clicks')
+        ],
+        [
+            State( id, 'page_current'),
+            State( id+'-btn-1-a', 'data-value'),
+            State( id+'-btn-2-a', 'data-value'),
+            State( id+'-btn-3-a', 'data-value'),
+        ]
+    )
+    def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
+        session['language'] = app_config.DEFAULT_LANGUAGE
+        ctx = dash.callback_context
+        btn1_current = 'false'
+        btn2_current = 'false'
+        btn3_current = 'false'
+
+        btn1_class = ''
+        btn2_class = ''
+
+        btn1_aria = ''
+        btn2_aria = ''
+        btn3_aria = ''
+
+        if ctx.triggered:
+            start_page = curr_page
+            # curr_page = curr_page + 1
+            print(ctx.triggered)
+            if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
+                curr_page += 1
+            if ctx.triggered[0]['prop_id'] == id+'-btn-1.n_clicks':
+                curr_page = btn1_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-2.n_clicks':
+                curr_page = btn2_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-3.n_clicks':
+                curr_page = btn3_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
+                curr_page -= 1
+
+            if curr_page < 0: 
+                curr_page = 0
+
+        aria_prefix = _('Goto page ')
+        
+        if curr_page < 1:
+            btn1_value = curr_page
+            btn2_value = curr_page+1
+            btn3_value = curr_page+2
+            btn1_current = 'true'
+            btn1_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1) + ', ' + _('Current Page')
+            btn2_aria = aria_prefix + str(btn2_value+1)
+            btn3_aria = aria_prefix + str(btn3_value+1)
+        else:
+            btn1_value = curr_page -1
+            btn2_value = curr_page
+            btn3_value = curr_page + 1
+            btn2_current = 'true'
+            btn2_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1)
+            btn2_aria = aria_prefix + str(btn2_value+1) + ', ' + _('Current Page')
+            btn3_aria = aria_prefix + str(btn3_value+1)
+
+        # print('curr_page: '+ str(curr_page))
+        
+        return [
+            curr_page,
+            btn1_value,
+            btn2_value,
+            btn3_value,
+            btn1_value+1,
+            btn2_value+1,
+            btn3_value+1,
+            btn1_aria,
+            btn2_aria,
+            btn3_aria,
+            btn1_current,
+            btn2_current,
+            btn3_current,
+            btn1_class,
+            btn2_class,
+            _('Previous'),
+            _('Next'),
+            _('Goto Previous Page'),
+            _('Goto Next Page'),
+            _('Pagination Navigation')
+        ]
+
+    return html.Div([
+        html.Details(
+            [
+                html.Summary(_("Text Version - World Graph of Mean Concentrations")),
+                html.Div(
+                    dst.DataTable(
+                        id=id,
+                        page_size= 10,
+                        page_current = 0
+                    ),
+                    style={"margin":"4rem"}
+                ),
+                html.Nav(
+                    html.Ul(
+                        [
+                            html.Li(
+                                html.A( 
+                                    _('Previous'), 
+                                    id=id+'-btn-prev-a',
+                                    className='page-prev',
+                                    **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
+                                ),
+                                id=id+'-btn-prev',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A( 
+                                    '1',
+                                    id=id+'-btn-1-a',
+                                    **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                                ),
+                                id=id+'-btn-1',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A( 
+                                    '2', 
+                                    id=id+'-btn-2-a',
+                                    **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                                ),
+                                className='active',
+                                id=id+'-btn-2',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A( 
+                                    '3', 
+                                    id=id+'-btn-3-a',
+                                    **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                                ),
+                                id=id+'-btn-3',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A( 
+                                    'Next',
+                                    id=id+'-btn-next-a',
+                                    className='page-next',
+                                    **{'aria-label': _('Goto Next Page'), 'data-value': -2}
+                                ),
+                                id=id+'-btn-next',
+                                n_clicks=0
+                            )
+                        ],
+                        className = 'pagination'
+                    ),
+                    **{'aria-label': _('Pagination Navigation')},
+                    role = _('navigation'),
+                    className = 'table_pagination',
+                    id = id+'-navigation'
+                )
+            ]
+        )
+    ])
 
 # Builds the layout for the map displaying the time series
 def build_stats():
@@ -847,6 +1060,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
+                    detail_table('world-table'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -904,6 +1118,8 @@ app.layout = html.Div(
 
 #=======================================================================================================================
 # Input functions and validation functions
+
+
 
 # Update global values of lat/long using validation
 @app.callback(
@@ -965,13 +1181,19 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
-    Output("placeholder","value"),
+    [
+        Output("placeholder","value"),
+        Output("alt_range","slider_labels"), 
+    ],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
     global ALT_RANGE
     ALT_RANGE = alt_range
-    return ""
+    return [
+        "",
+        [_('Altitude Maximum'),_('Altitude Minimum')]
+        ]
 
 # Lat/long validation
 def pos_validation(lat_min,lat_max,lon_min,lon_max):
@@ -1247,7 +1469,11 @@ def generate_geo_map(df):
             hoverinfo = "skip",
             line = dict(color='black')))
 
-    return fig
+    # Here, we set the attributes that pertain to the text table
+    data = df[['lat','long','Alt_Mean']].to_dict('records')
+    columns = [{"name":_("Latitude"), "id":"lat"},{"name":_("Longitude"),"id":"long"},{"name":_("Mean Concentration"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+
+    return [fig, columns, data]
 
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
@@ -1347,6 +1573,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 @app.callback(
     [
         Output("selector_map", "figure"),
+        Output("world-table", "columns"),
+        Output("world-table", "data"),
         Output("viz_chart", "figure"),
         Output("count_graph", "figure"),
         Output("download-link-1", "href"),
@@ -1359,13 +1587,15 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
+    # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    # fig1 = generate_geo_map(df)
     df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
+    [fig1, columns, data] = generate_geo_map(df)
     fig2 = make_viz_chart(df)
     fig3 = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, fig2, fig3, link, nbr
+    return fig1, columns, data, fig2, fig3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):
@@ -1631,6 +1861,10 @@ def download_csv():
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
         Output("download-button-1", "children"),
+        Output("date_picker_range", "start_date_placeholder_text"),
+        Output("date_picker_range", "end_date_placeholder_text"),
+        Output("date_picker_range", "start_date_aria_label"),
+        Output("date_picker_range", "end_date_aria_label"),
         Output("gaz_list", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
@@ -1667,6 +1901,10 @@ def translate_static(x):
                 _("Select altitude range:"),
                 _("Select date:"),
                 _('Download summary data as CSV'),
+                _('Select start date'),
+                _('Select end date'),
+                _('Start Date'),
+                _('End Date'),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),

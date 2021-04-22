@@ -1,6 +1,10 @@
 var expected_canvas_count = 0;
 
 $(document).ready(function(){
+
+    var pagination = $('details').find('.previous-next-container');
+    pagination.remove();
+
     if(expected_canvas_count > 0){
         var canvas_check = setInterval(checkForCanvases, 3000);
     }

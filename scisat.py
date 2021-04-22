@@ -1182,7 +1182,7 @@ def update_gas(gaz_list, is_open):
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
     [
-        Output("placeholder","value"),
+        Output("placeholder","data-value"),
         Output("alt_range","slider_labels"), 
     ],
     [Input("alt_range", "value")]

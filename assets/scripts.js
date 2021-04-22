@@ -23,6 +23,10 @@ $(document).ready(function(){
         }
     };
 
+    var ariaOwnsRemove = setInterval(function(){
+        $('.Select-input input').removeAttr('aria-owns');
+    }, 3000);
+
     // Create an observer instance linked to the callback function
     const observer = new MutationObserver(callback);
 

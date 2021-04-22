@@ -1575,9 +1575,14 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         transition={'duration': 500},
     )
 
+    table_data = []
+    for index, value in bins.items():
+        template = {"date":index.strftime("%Y-%m-%d"), 'conc':value}
+        table_data.append(template)
+    columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)}]
     figure = dict(data=data, layout=layout)
 
-    return figure
+    return [figure, columns, table_data]
 
 #=======================================================================================================================
 #  Controller and other major callback function.
@@ -1589,6 +1594,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         Output("world-table", "columns"),
         Output("world-table", "data"),
         Output("viz_chart", "figure"),
+        Output("time-table","columns"),
+        Output("time-table","data"),
         Output("count_graph", "figure"),
         Output("altitude-table","columns"),
         Output("altitude-table","data"),
@@ -1605,12 +1612,12 @@ def controller(n_clicks, gaz_list):
     # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     # fig1 = generate_geo_map(df)
     df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    [fig1, columns, data] = generate_geo_map(df)
-    fig2 = make_viz_chart(df)
+    [fig1, columns1, data1] = generate_geo_map(df)
+    [fig2, columns2, data2] = make_viz_chart(df)
     [fig3, columns3, data3] = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, columns, data, fig2, fig3, columns3, data3, link, nbr
+    return fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):

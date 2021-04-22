@@ -636,7 +636,7 @@ def build_filtering():
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
                                     label = 'Label test'
-                                    
+
                                 ),
 
                                 # html.Span(children=html.P(),className="wb-inv")
@@ -783,7 +783,6 @@ def build_filtering():
                             max=150,
                             step=1,
                             value=[0, 150] ,
-                            # slider_labels=['Altitude Minimum', 'Altitude Maximum'],
                            # tooltip = { 'always_visible': True }
                            ),
                         html.Div(id='output-container-alt-picker-range'),
@@ -853,7 +852,7 @@ def build_filtering():
             )
     ])
 
-def detail_table(id):
+def detail_table(id, title):
     #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
     @app.callback(
         [
@@ -921,11 +920,11 @@ def detail_table(id):
             if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
                 curr_page -= 1
 
-            if curr_page < 0: 
+            if curr_page < 0:
                 curr_page = 0
 
         aria_prefix = _('Goto page ')
-        
+
         if curr_page < 1:
             btn1_value = curr_page
             btn2_value = curr_page+1
@@ -946,7 +945,7 @@ def detail_table(id):
             btn3_aria = aria_prefix + str(btn3_value+1)
 
         # print('curr_page: '+ str(curr_page))
-        
+
         return [
             curr_page,
             btn1_value,
@@ -973,7 +972,7 @@ def detail_table(id):
     return html.Div([
         html.Details(
             [
-                html.Summary(_("Text Version - World Graph of Mean Concentrations")),
+                html.Summary(title),
                 html.Div(
                     dst.DataTable(
                         id=id,
@@ -986,8 +985,8 @@ def detail_table(id):
                     html.Ul(
                         [
                             html.Li(
-                                html.A( 
-                                    _('Previous'), 
+                                html.A(
+                                    _('Previous'),
                                     id=id+'-btn-prev-a',
                                     className='page-prev',
                                     **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
@@ -996,7 +995,7 @@ def detail_table(id):
                                 n_clicks=0
                             ),
                             html.Li(
-                                html.A( 
+                                html.A(
                                     '1',
                                     id=id+'-btn-1-a',
                                     **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
@@ -1005,8 +1004,8 @@ def detail_table(id):
                                 n_clicks=0
                             ),
                             html.Li(
-                                html.A( 
-                                    '2', 
+                                html.A(
+                                    '2',
                                     id=id+'-btn-2-a',
                                     **{'aria-label': _('Goto page 2'), 'data-value': 1}
                                 ),
@@ -1015,8 +1014,8 @@ def detail_table(id):
                                 n_clicks=0
                             ),
                             html.Li(
-                                html.A( 
-                                    '3', 
+                                html.A(
+                                    '3',
                                     id=id+'-btn-3-a',
                                     **{'aria-label': _('Goto page 3'), 'data-value': 2}
                                 ),
@@ -1024,7 +1023,7 @@ def detail_table(id):
                                 n_clicks=0
                             ),
                             html.Li(
-                                html.A( 
+                                html.A(
                                     'Next',
                                     id=id+'-btn-next-a',
                                     className='page-next',
@@ -1060,7 +1059,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
-                    detail_table('world-table'),
+                    detail_table('world-table',_("Text Version - World Graph of Mean Concentrations")),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -1075,6 +1074,7 @@ def build_stats():
                         html.Div ([ #Altitude graph description
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
+                    detail_table('altitude-table', _("Text Version - Altitude of Mean Concentrations")),
                     ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
@@ -1088,6 +1088,7 @@ def build_stats():
                     html.Div ([
                        html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
+                    detail_table('time-table', _("Text Version - Time Series")),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -1181,10 +1182,10 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
-    [
-        Output("placeholder","value"),
-        Output("alt_range","slider_labels"), 
-    ],
+[
+    Output("placeholder","value"),
+    Output("alt_range","slider_labels"),
+],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
@@ -1315,8 +1316,20 @@ def make_count_figure(df):
     )
 
     figure = dict(data=data, layout=layout)
+    table_data= []
 
-    return figure
+    for i in range(0,150):
+        template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
+        template["alt"] = i+0.5
+        template["int_min"]= xx[i]-err_xx[i]
+        template["mean"]=xx[i]
+        template["int_max"]=xx[i]+err_xx[i]
+        table_data.append(template)
+    columns=[{"name":_("Altitude (km)"), "id":"alt"},
+            {"name":_("Min. Confidence Interval Concentration (ppv)"), "id":"int_min","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Mean Concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Max. Confidence Interval Concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+    return [figure, columns, table_data]
 
 # This generates the geographical representation of the data
 def generate_geo_map(df):
@@ -1471,7 +1484,7 @@ def generate_geo_map(df):
 
     # Here, we set the attributes that pertain to the text table
     data = df[['lat','long','Alt_Mean']].to_dict('records')
-    columns = [{"name":_("Latitude"), "id":"lat"},{"name":_("Longitude"),"id":"long"},{"name":_("Mean Concentration"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+    columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean Concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
 
     return [fig, columns, data]
 
@@ -1577,6 +1590,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         Output("world-table", "data"),
         Output("viz_chart", "figure"),
         Output("count_graph", "figure"),
+        Output("altitude-table","columns"),
+        Output("altitude-table","data"),
         Output("download-link-1", "href"),
         Output("filtering_text", "children")
     ],
@@ -1592,10 +1607,10 @@ def controller(n_clicks, gaz_list):
     df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     [fig1, columns, data] = generate_geo_map(df)
     fig2 = make_viz_chart(df)
-    fig3 = make_count_figure(df)
+    [fig3, columns3, data3] = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, columns, data, fig2, fig3, link, nbr
+    return fig1, columns, data, fig2, fig3, columns3, data3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):

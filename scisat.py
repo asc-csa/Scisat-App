@@ -794,14 +794,13 @@ def build_filtering():
                             [
                                 html.Div(
                                     [
-                                        html.A(
+                                        html.Span(
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
                                                 style={'padding-left': '112px', 'padding-right':'112px'}
                                             ),
                                             id='generate',
-                                            target="_blank",
                                             className="btn btn-primary"
                                         ),
                                         html.Div(

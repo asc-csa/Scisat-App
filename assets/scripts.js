@@ -10,7 +10,7 @@ $(document).ready(function(){
     }
 
     var css_fixer = setInterval(removeBaddCss, 3500);
-    console.log('set remove css interval');
+    // console.log('set remove css interval');
 
     // Callback function to execute when mutations are observed
     const callback = function(mutationsList, observer) {
@@ -35,7 +35,7 @@ $(document).ready(function(){
 
     function removeBaddCss(){
         $("head").find('style').each(function () {
-            console.log('removing css');
+            // console.log('removing css');
             html = $(this).html();
             if(html.match(/border-color:\s*transparent\s*inherit\s*transparent\s*transparent\s*!important/gm)){
                 $(this).html( html.replace(/border-color:\s*transparent\s*inherit\s*transparent\s*transparent\s*!important/gm,"") );

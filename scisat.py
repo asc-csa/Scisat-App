@@ -22,6 +22,7 @@ from scipy.stats import sem, t
 from scipy import mean
 import numpy as np
 import datetime
+from os import path
 
 class CustomDash(dash.Dash):
 
@@ -164,8 +165,11 @@ def generate_meta_tag(name, content):
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
-    from analytics import analytics_code
     from config import Config
+    if(path.exists("analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -182,8 +186,11 @@ if __name__ == '__main__':
 
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
-    from .analytics import analytics_code
     from .config import Config
+    if(path.exists("./analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -793,14 +800,13 @@ def build_filtering():
                             [
                                 html.Div(
                                     [
-                                        html.A(
+                                        html.Span(
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
                                                 style={'padding-left': '112px', 'padding-right':'112px'}
                                             ),
                                             id='generate',
-                                            target="_blank",
                                             className="btn btn-primary"
                                         ),
                                         html.Div(
@@ -1182,10 +1188,10 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
-[
-    Output("placeholder","value"),
-    Output("alt_range","slider_labels"),
-],
+    [
+        Output("placeholder","data-value"),
+        Output("alt_range","slider_labels"), 
+    ],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
@@ -1193,7 +1199,7 @@ def update_alt(alt_range):
     ALT_RANGE = alt_range
     return [
         "",
-        [_('Altitude Maximum'),_('Altitude Minimum')]
+        [_('Altitude Minimum'),_('Altitude Maximum')]
         ]
 
 # Lat/long validation

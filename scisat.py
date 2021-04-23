@@ -1065,7 +1065,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
-                    detail_table('world-table',_("Text Version - World Graph of Mean Concentrations")),
+                    detail_table('world-table',_("Text version - World graph of mean gas concentrations")),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -1080,7 +1080,7 @@ def build_stats():
                         html.Div ([ #Altitude graph description
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
-                    detail_table('altitude-table', _("Text Version - Altitude of Mean Concentrations")),
+                    detail_table('altitude-table', _("Text version - Mean concentration distribution on altitude")),
                     ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
@@ -1094,7 +1094,7 @@ def build_stats():
                     html.Div ([
                        html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
-                    detail_table('time-table', _("Text Version - Time Series")),
+                    detail_table('time-table', _("Text version - Time series")),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -1188,10 +1188,10 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
-    [
-        Output("placeholder","data-value"),
-        Output("alt_range","slider_labels"), 
-    ],
+[
+    Output("placeholder","value"),
+    Output("alt_range","slider_labels"),
+],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
@@ -1199,7 +1199,7 @@ def update_alt(alt_range):
     ALT_RANGE = alt_range
     return [
         "",
-        [_('Altitude Minimum'),_('Altitude Maximum')]
+        [_('Altitude Maximum'),_('Altitude Minimum')]
         ]
 
 # Lat/long validation

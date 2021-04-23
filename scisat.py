@@ -858,7 +858,7 @@ def build_filtering():
             )
     ])
 
-def detail_table(id, title):
+def detail_table(id, id2):
     #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
     @app.callback(
         [
@@ -978,7 +978,7 @@ def detail_table(id, title):
     return html.Div([
         html.Details(
             [
-                html.Summary(title),
+                html.Summary(id=id2),
                 html.Div(
                     dst.DataTable(
                         id=id,
@@ -1065,7 +1065,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
-                    detail_table('world-table',_("Text version - World map of mean gas concentrations")),
+                    detail_table('world-table','world-table-text'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -1080,7 +1080,7 @@ def build_stats():
                         html.Div ([ #Altitude graph description
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
-                    detail_table('altitude-table', _("Text version - Mean gas concentration as a function of altitude")),
+                    detail_table('altitude-table', 'altitude-table-text'),
                     ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
@@ -1094,7 +1094,7 @@ def build_stats():
                     html.Div ([
                        html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
-                    detail_table('time-table', _("Text version - Mean gas concentration over time")),
+                    detail_table('time-table', 'time-table-text'),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -1893,6 +1893,9 @@ def download_csv():
         Output("date_picker_range", "end_date_placeholder_text"),
         Output("date_picker_range", "start_date_aria_label"),
         Output("date_picker_range", "end_date_aria_label"),
+        Output("world-table-text","children"),
+        Output("altitude-table-text","children"),
+        Output("time-table-text","children"),
         Output("gaz_list", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
@@ -1933,6 +1936,9 @@ def translate_static(x):
                 _('Select end date'),
                 _('Start Date'),
                 _('End Date'),
+                _("Text version - World map of mean gas concentrations"),
+                _("Text version - Mean gas concentration as a function of altitude"),
+                _("Text version - Mean gas concentration over time"),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),

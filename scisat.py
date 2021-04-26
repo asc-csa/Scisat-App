@@ -15,12 +15,101 @@ from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
-
+import dash_table as dst
+from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
 from scipy.stats import sem, t
 from scipy import mean
 import numpy as np
 import datetime
+from os import path
+
+class CustomDash(dash.Dash):
+
+    analytics_code = ''
+    lang = ''
+    header = ''
+    footer = ''
+    meta_html = ''
+    app_header = ''
+
+    def set_analytics(self, code):
+        self.analytics_code = code
+
+    def set_lang(self, lang):
+        self.lang = lang
+
+    def set_header(self, header):
+        self.header = header
+
+    def set_footer(self, footer):
+        self.footer = footer
+
+    def set_meta_tags(self, meta_html):
+        self.meta_html = meta_html
+
+    def set_app_header(self, header):
+        self.app_header = header
+
+    # def _generate_css_dist_html(self):
+    #     external_links = self.config.external_stylesheets
+    #     links = self._collect_and_register_resources(self.css.get_all_css())
+
+    #     return "\n".join(
+    #         [
+    #             format_tag("link", link, opened=True)
+    #             if isinstance(link, dict)
+    #             else '<link rel="stylesheet" href="{}">'.format(link)
+    #             for link in (external_links + links)
+    #         ]
+    #     )
+
+    def interpolate_index(self, **kwargs):
+        # Inspect the arguments by printing them
+        return '''
+        <!DOCTYPE html>
+        <html lang='{lang}'>
+            <head>
+                {metas}
+                {meta}
+                {analytics}
+                {favicon}
+                <title>
+                {title}
+                </title>
+                {css}
+            </head>
+            <body>
+                {header}
+                {app_header}
+                {app_entry}
+                <div class="global-footer">
+                    <footer id="wb-info">
+                    {footer}
+                    {config}
+                    {scripts}
+                    {renderer}
+                    </footer>
+                </div>
+            </body>
+        </html>
+        '''.format(
+            app_entry=kwargs['app_entry'],
+            config=kwargs['config'],
+            scripts=kwargs['scripts'],
+            renderer=kwargs['renderer'],
+            metas = kwargs['metas'],
+            favicon = kwargs['favicon'],
+            css = kwargs['css'],
+            title = kwargs['title'],
+            analytics = self.analytics_code,
+            meta = self.meta_html,
+            lang = self.lang,
+            header = self.header,
+            footer = self.footer,
+            app_header = self.app_header
+            )
+
 
 #==========================================================================================
 # load data and transform as needed
@@ -32,26 +121,25 @@ import datetime
 #                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
 
 external_stylesheets = [
+    'https://canada.ca/etc/designs/canada/wet-boew/css/wet-boew.min.css',
+    'https://canada.ca/etc/designs/canada/wet-boew/css/theme.min.css',
+    'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
     # 'assets/gc_theme_cdn/assets/favicon.ico',
-    'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-    'assets/gc_theme_cdn/css/theme.min.css',
+    # 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+    # 'assets/gc_theme_cdn/css/theme.min.css',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
 ]  # Link to external CSS
 
-# external_scripts = [
-#     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-#     'https://wet-boew.github.io/themes-dist/GCWeb/js/theme.min.js',
-#     'https://cdn.plot.ly/plotly-locale-de-latest.js',
-
-# ]
-
 external_scripts = [
-    'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
+    # 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
     # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    'assets/gc_theme_cdn/js/theme.min.js',
-    'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    # 'assets/gc_theme_cdn/js/theme.min.js',
+    # 'https://cdn.plot.ly/plotly-locale-de-latest.js',
+    '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/wet-boew.min.js',
+    'https://canada.ca/etc/designs/canada/wet-boew/js/theme.min.js',
     'assets/scripts.js'
+
 
 ]
 
@@ -71,39 +159,82 @@ def get_config_dict():
         get_config_dict.config_dict = dict(config.items('TOKENS'))
     return get_config_dict.config_dict
 
+def generate_meta_tag(name, content):
+    return "<meta name=\"" + name + "\" content=\"" + content + "\">"
+
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-     path_data=r"data"
-     prefixe=""
-#     app.run_server(debug=True)  # For development/testing
-     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
-     tokens = get_config_dict()
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
+    from config import Config
+    if(path.exists("analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
+    app_config = Config()
 
+    path_data=app_config.DATA_PATH
+    prefixe= app_config.APP_PREFIX
 
-
-     app = dash.Dash(__name__,meta_tags=[{"name": "viewport", "content": "width=device-width"}],external_stylesheets=external_stylesheets,external_scripts=external_scripts,)
-     app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
-     server = app.server
-     server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
-     babel = Babel(server)  # Hook flask-babel to the app
+    tokens = get_config_dict()
+    app = CustomDash(
+        __name__,
+        meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+        external_stylesheets=external_stylesheets,
+        external_scripts=external_scripts,
+        # analytics = analytics_code
+    )
 
 else :
+    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
+    from .config import Config
+    if(path.exists("./analytics.py")):
+        from analytics import analytics_code
+    else:
+        analytics_code = ''
+    app_config = Config()
 
-    path_data=r"applications/scisat/data"
-    prefixe="/scisat"
-    from applications.scisat.header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr
+    path_data=app_config.DATA_PATH
+    prefixe= app_config.APP_PREFIX
+
     tokens = get_config_dict()
-    app = dash.Dash(
-    __name__,
-    requests_pathname_prefix='/scisat/',
-    meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    external_stylesheets=external_stylesheets,
-    external_scripts=external_scripts,
-)
-    app.title="SCISAT : application d’exploration des données de composition atmosphérique | data exploration application for atmospheric composition"
-    server = app.server
-    server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
-    babel = Babel(server)  # Hook flask-babel to the app
+    app = CustomDash(
+        __name__,
+        requests_pathname_prefix=prefixe,
+        meta_tags=[{"name": "viewport", "content": "width=device-width"}],
+        external_stylesheets=external_stylesheets,
+        external_scripts=external_scripts,
+        # analytics = analytics_code
+        )
+
+meta_html = ''
+if app_config.DEFAULT_LANGUAGE == 'en':
+    app.set_header(gc_header_en)
+    app.set_footer(gc_footer_en)
+    meta_html += generate_meta_tag(
+        'description',
+        'Explore the composition of the Earth’s atmosphere with data from the SCISAT satellite! SCISAT has been monitoring the atmospheric concentrations of ozone and 70 other gases since 2003.'
+        )
+    meta_html += generate_meta_tag('keywords', '')
+    app.title="SCISAT : data exploration application for atmospheric composition"
+    app.set_app_header(app_title_en)
+else:
+    app.set_header(gc_header_fr)
+    app.set_footer(gc_footer_fr)
+    meta_html += generate_meta_tag(
+        'description',
+        "Explorez la composition de l’atmosphère terrestre avec les données du satellite SCISAT! SCISAT surveille les concentrations atmosphériques d'ozone et de 70 gaz supplémentaires depuis 2003."
+        )
+    meta_html += generate_meta_tag('keywords', '')
+    app.title="SCISAT : application d’exploration des données de composition atmosphérique"
+    app.set_app_header(app_title_fr)
+
+app.set_meta_tags(meta_html)
+app.set_analytics(analytics_code)
+app.set_lang(app_config.DEFAULT_LANGUAGE)
+server = app.server
+# app.set_app_header(app_title_en)
+server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
+babel = Babel(server)  # Hook flask-babel to the app
 
 
 # Loads data file based on values provided into a pandas dataframe.
@@ -148,6 +279,9 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
 
     """
+
+    print('datareader path')
+    print(path_to_files)
     if type(file)==list:
         file=file[0]
 
@@ -489,6 +623,7 @@ def build_filtering():
         ),
 
         html.Div(
+            html.Form(
             [
                 html.Div(
                     [
@@ -497,22 +632,25 @@ def build_filtering():
                             [
                                 html.Label(
                                     id="gas_selection",
-                                    htmlFor='gaz_list',
+                                    htmlFor='gaz_list_dropdown',
                                     className="control_label",
                                 ),
                                 dcc.Dropdown(
                                     id="gaz_list",
                                     options= gaz_name_options,
+                                    placeholder=_('Select a gas'),
                                     multi=False,
                                     value='ACEFTS_L2_v4p1_O3.nc',
                                     className="dcc_control",
+                                    label = 'Label test'
+
                                 ),
-            
+
                                 # html.Span(children=html.P(),className="wb-inv")
                             ],
                             role='listbox',
                             **{'aria-label': 'Gas Dropdown'}
-                            
+
                         )
                     ],
                     style={"textAlign":"left"}
@@ -559,7 +697,7 @@ def build_filtering():
                                     debounce=True
                                 )
                             ]),
-                            html.Span(children=html.P(id="lat_selection"),className="wb-inv")
+                            html.Div(children=html.P(id="lat_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                     ),
@@ -602,7 +740,7 @@ def build_filtering():
                                     debounce=True
                                 ),
                             ]),
-                            html.Span(children=html.P(id="lon_selection"),className="wb-inv") 
+                            html.Div(children=html.P(id="lon_selection"),className="wb-inv")
                         ],
                         className="col-md-4",
                         style={"textAlign":"left"}
@@ -619,27 +757,27 @@ def build_filtering():
 
                             html.Div(
                                 [
-                                    html.Label(
-                                        dcc.DatePickerRange(
-                                            id='date_picker_range',
-                                            start_date=dt.datetime(2004, 2, 1),
-                                            end_date=dt.datetime(2020, 5, 5),
-                                            min_date_allowed=dt.datetime(2004, 2, 1),
-                                            max_date_allowed=dt.date.today(),
-                                            start_date_placeholder_text='Select start date',
-                                            end_date_placeholder_text='Select end date',
-                                            display_format="Y/MM/DD"
-                                            ),
+                                    dcc.DatePickerRange(
+                                        id='date_picker_range',
+                                        start_date=dt.datetime(2004, 2, 1),
+                                        end_date=dt.datetime(2020, 5, 5),
+                                        min_date_allowed=dt.datetime(2004, 2, 1),
+                                        max_date_allowed=dt.date.today(),
+                                        start_date_placeholder_text=_('Select start date'),
+                                        end_date_placeholder_text=_('Select end date'),
+                                        display_format="Y/MM/DD",
+                                        start_date_aria_label = _('Start Date'),
+                                        end_date_aria_label = _('End Date'),
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
-                                    html.Span(children=html.P(id="date_selection"),className="wb-inv")
+                                    html.Div(children=html.P(id="date_selection"),className="wb-inv")
                                 ]
                                 ),
-                        ], 
+                        ],
                         className="col-md-12 col-lg-4",
                     ),
                 ],
-                className='row align-items-start',
+                className='row align-items-start ',
                 style={"textAlign":"left"}
                 ),
                 html.Hr(),
@@ -662,17 +800,16 @@ def build_filtering():
                             [
                                 html.Div(
                                     [
-                                        html.A(
+                                        html.Span(
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
                                                 style={'padding-left': '112px', 'padding-right':'112px'}
                                             ),
                                             id='generate',
-                                            target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(
                                             id="generate_selection"
                                             ),
@@ -700,7 +837,7 @@ def build_filtering():
                                             target="_blank",
                                             className="btn btn-primary"
                                         ),
-                                        html.Span(
+                                        html.Div(
                                             children=html.P(id="download_selection"),
                                             className="wb-inv"
                                         )
@@ -715,11 +852,203 @@ def build_filtering():
                     style={"margin-top":"30px"}
                 )
             ],
-            className="pretty_container twelve column",
+            ),
+            className="pretty_container twelve column wb-frmvld",
             style={"justify-content": "space-evenly"}
             )
     ])
 
+def detail_table(id, id2):
+    #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
+    @app.callback(
+        [
+            Output( id, 'page_current'),
+            Output( id+'-btn-1-a', 'data-value'),
+            Output( id+'-btn-2-a', 'data-value'),
+            Output( id+'-btn-3-a', 'data-value'),
+            Output( id+'-btn-1-a', "children"),
+            Output( id+'-btn-2-a', "children"),
+            Output( id+'-btn-3-a', "children"),
+            Output( id+'-btn-1-a', "aria-label"),
+            Output( id+'-btn-2-a', "aria-label"),
+            Output( id+'-btn-3-a', "aria-label"),
+            Output( id+'-btn-1-a', "aria-current"),
+            Output( id+'-btn-2-a', "aria-current"),
+            Output( id+'-btn-3-a', "aria-current"),
+            Output( id+'-btn-1', "className"),
+            Output( id+'-btn-2', "className"),
+            Output( id+'-btn-prev-a', 'children'),
+            Output( id+'-btn-next-a', 'children'),
+            Output( id+'-btn-prev-a', "aria-label"),
+            Output( id+'-btn-next-a', "aria-label"),
+            Output( id+'-navigation', "aria-label"),
+        ],
+        [
+            Input( id+'-btn-prev', 'n_clicks'),
+            Input( id+'-btn-1', 'n_clicks'),
+            Input( id+'-btn-2', 'n_clicks'),
+            Input( id+'-btn-3', 'n_clicks'),
+            Input( id+'-btn-next', 'n_clicks')
+        ],
+        [
+            State( id, 'page_current'),
+            State( id+'-btn-1-a', 'data-value'),
+            State( id+'-btn-2-a', 'data-value'),
+            State( id+'-btn-3-a', 'data-value'),
+        ]
+    )
+    def update_table_next(btn_prev, btn_1, btn_2, btn_3, btn_next, curr_page, btn1_value, btn2_value, btn3_value):
+        session['language'] = app_config.DEFAULT_LANGUAGE
+        ctx = dash.callback_context
+        btn1_current = 'false'
+        btn2_current = 'false'
+        btn3_current = 'false'
+
+        btn1_class = ''
+        btn2_class = ''
+
+        btn1_aria = ''
+        btn2_aria = ''
+        btn3_aria = ''
+
+        if ctx.triggered:
+            start_page = curr_page
+            # curr_page = curr_page + 1
+            print(ctx.triggered)
+            if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
+                curr_page += 1
+            if ctx.triggered[0]['prop_id'] == id+'-btn-1.n_clicks':
+                curr_page = btn1_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-2.n_clicks':
+                curr_page = btn2_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-3.n_clicks':
+                curr_page = btn3_value
+            if ctx.triggered[0]['prop_id'] == id+'-btn-prev.n_clicks':
+                curr_page -= 1
+
+            if curr_page < 0:
+                curr_page = 0
+
+        aria_prefix = _('Goto page ')
+
+        if curr_page < 1:
+            btn1_value = curr_page
+            btn2_value = curr_page+1
+            btn3_value = curr_page+2
+            btn1_current = 'true'
+            btn1_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1) + ', ' + _('Current Page')
+            btn2_aria = aria_prefix + str(btn2_value+1)
+            btn3_aria = aria_prefix + str(btn3_value+1)
+        else:
+            btn1_value = curr_page -1
+            btn2_value = curr_page
+            btn3_value = curr_page + 1
+            btn2_current = 'true'
+            btn2_class = 'active'
+            btn1_aria = aria_prefix + str(btn1_value+1)
+            btn2_aria = aria_prefix + str(btn2_value+1) + ', ' + _('Current Page')
+            btn3_aria = aria_prefix + str(btn3_value+1)
+
+        # print('curr_page: '+ str(curr_page))
+
+        return [
+            curr_page,
+            btn1_value,
+            btn2_value,
+            btn3_value,
+            btn1_value+1,
+            btn2_value+1,
+            btn3_value+1,
+            btn1_aria,
+            btn2_aria,
+            btn3_aria,
+            btn1_current,
+            btn2_current,
+            btn3_current,
+            btn1_class,
+            btn2_class,
+            _('Previous'),
+            _('Next'),
+            _('Goto Previous Page'),
+            _('Goto Next Page'),
+            _('Pagination Navigation')
+        ]
+
+    return html.Div([
+        html.Details(
+            [
+                html.Summary(id=id2),
+                html.Div(
+                    dst.DataTable(
+                        id=id,
+                        page_size= 10,
+                        page_current = 0
+                    ),
+                    style={"margin":"4rem"}
+                ),
+                html.Nav(
+                    html.Ul(
+                        [
+                            html.Li(
+                                html.A(
+                                    _('Previous'),
+                                    id=id+'-btn-prev-a',
+                                    className='page-prev',
+                                    **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
+                                ),
+                                id=id+'-btn-prev',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A(
+                                    '1',
+                                    id=id+'-btn-1-a',
+                                    **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
+                                ),
+                                id=id+'-btn-1',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A(
+                                    '2',
+                                    id=id+'-btn-2-a',
+                                    **{'aria-label': _('Goto page 2'), 'data-value': 1}
+                                ),
+                                className='active',
+                                id=id+'-btn-2',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A(
+                                    '3',
+                                    id=id+'-btn-3-a',
+                                    **{'aria-label': _('Goto page 3'), 'data-value': 2}
+                                ),
+                                id=id+'-btn-3',
+                                n_clicks=0
+                            ),
+                            html.Li(
+                                html.A(
+                                    'Next',
+                                    id=id+'-btn-next-a',
+                                    className='page-next',
+                                    **{'aria-label': _('Goto Next Page'), 'data-value': -2}
+                                ),
+                                id=id+'-btn-next',
+                                n_clicks=0
+                            )
+                        ],
+                        className = 'pagination'
+                    ),
+                    **{'aria-label': _('Pagination Navigation')},
+                    role = _('navigation'),
+                    className = 'table_pagination',
+                    id = id+'-navigation'
+                )
+            ]
+        )
+    ])
 
 # Builds the layout for the map displaying the time series
 def build_stats():
@@ -736,6 +1065,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
+                    detail_table('world-table','world-table-text'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -750,6 +1080,7 @@ def build_stats():
                         html.Div ([ #Altitude graph description
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
+                    detail_table('altitude-table', 'altitude-table-text'),
                     ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
@@ -763,6 +1094,7 @@ def build_stats():
                     html.Div ([
                        html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
+                    detail_table('time-table', 'time-table-text'),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -775,20 +1107,17 @@ def build_stats():
 # Create app layout
 app.layout = html.Div(
     [
-        html.Div([""], id='gc-header'),
         html.Div(
             [
                 dcc.Store(id="aggregate_data"),
                 html.Div(id="output-clientside"),  # empty Div to trigger javascript file for graph resizing
 
-                build_header(),
                 build_filtering(),
                 build_stats(),
             ],
             id="mainContainer",
             style={"display": "flex", "flex-direction": "column", "margin": "auto", "width":"75%"},
         ),
-        html.Div([""], id='gc-footer'),
         html.Div(id='none2', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
     ]
 )
@@ -796,6 +1125,8 @@ app.layout = html.Div(
 
 #=======================================================================================================================
 # Input functions and validation functions
+
+
 
 # Update global values of lat/long using validation
 @app.callback(
@@ -857,13 +1188,19 @@ def update_gas(gaz_list, is_open):
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
+[
     Output("placeholder","value"),
+    Output("alt_range","slider_labels"),
+],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
     global ALT_RANGE
     ALT_RANGE = alt_range
-    return ""
+    return [
+        "",
+        [_('Altitude Maximum'),_('Altitude Minimum')]
+        ]
 
 # Lat/long validation
 def pos_validation(lat_min,lat_max,lon_min,lon_max):
@@ -888,6 +1225,8 @@ def gas_validation(gaz_list):
     try:
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
+        print('Path to data:')
+        print(path_data)
         name=path_data+'/'+gaz_list
         nc = netcdf.netcdf_file(name,'r')
     except FileNotFoundError:
@@ -947,7 +1286,7 @@ def make_count_figure(df):
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[ALT_RANGE[0]:ALT_RANGE[1]],
+            y=concentration.columns[0:ALT_RANGE[1]-ALT_RANGE[0]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -983,8 +1322,21 @@ def make_count_figure(df):
     )
 
     figure = dict(data=data, layout=layout)
-
-    return figure
+    table_data= []
+    min = int(np.floor(ALT_RANGE[0]))
+    max = int(np.floor(ALT_RANGE[1]))
+    for i in range(0, max-min):
+        template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
+        template["alt"] = min+i+0.5
+        template["int_min"]= xx[i]-err_xx[i]
+        template["mean"]=xx[i]
+        template["int_max"]=xx[i]+err_xx[i]
+        table_data.append(template)
+    columns=[{"name":_("Altitude (km)"), "id":"alt"},
+            {"name":_("Min. confidence interval concentration (ppv)"), "id":"int_min","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Mean concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Max. confidence interval concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+    return [figure, columns, table_data]
 
 # This generates the geographical representation of the data
 def generate_geo_map(df):
@@ -1137,7 +1489,11 @@ def generate_geo_map(df):
             hoverinfo = "skip",
             line = dict(color='black')))
 
-    return fig
+    # Here, we set the attributes that pertain to the text table
+    data = df[['lat','long','Alt_Mean']].to_dict('records')
+    columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+
+    return [fig, columns, data]
 
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
@@ -1226,9 +1582,14 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         transition={'duration': 500},
     )
 
+    table_data = []
+    for index, value in bins.items():
+        template = {"date":index.strftime("%Y-%m-%d"), 'conc':value}
+        table_data.append(template)
+    columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)}]
     figure = dict(data=data, layout=layout)
 
-    return figure
+    return [figure, columns, table_data]
 
 #=======================================================================================================================
 #  Controller and other major callback function.
@@ -1237,8 +1598,14 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 @app.callback(
     [
         Output("selector_map", "figure"),
+        Output("world-table", "columns"),
+        Output("world-table", "data"),
         Output("viz_chart", "figure"),
+        Output("time-table","columns"),
+        Output("time-table","data"),
         Output("count_graph", "figure"),
+        Output("altitude-table","columns"),
+        Output("altitude-table","data"),
         Output("download-link-1", "href"),
         Output("filtering_text", "children")
     ],
@@ -1249,13 +1616,15 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 )
 def controller(n_clicks, gaz_list):
     global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
-    df = data_reader(GAZ_LIST, r'applications/scisat/data', START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    fig1 = generate_geo_map(df)
-    fig2 = make_viz_chart(df)
-    fig3 = make_count_figure(df)
+    # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    # fig1 = generate_geo_map(df)
+    df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
+    [fig1, columns1, data1] = generate_geo_map(df)
+    [fig2, columns2, data2] = make_viz_chart(df)
+    [fig3, columns3, data3] = make_count_figure(df)
     link = update_csv_link()
     nbr = update_filtering_text(df)
-    return fig1, fig2, fig3, link, nbr
+    return fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr
 
 # This function calculates the number of points selected
 def update_filtering_text(df):
@@ -1306,7 +1675,7 @@ def update_filtering_text(df):
     )
 def update_picker(gaz_list):
      global DEFAULT_DF, START_DATE, END_DATE
-     df = data_reader(gaz_list, r'applications/scisat/data')
+     df = data_reader(gaz_list, path_data)
      DEFAULT_DF = df
      START_DATE = df.date.min().to_pydatetime()
      END_DATE = df.date.max().to_pydatetime()
@@ -1422,7 +1791,7 @@ def download_csv():
     alt_range = alt_range[1:-1].split(',')
     alt_range[0] = int(alt_range[0])
     alt_range[1] = int(alt_range[1])
-    df =data_reader(gaz_list,r'applications/scisat/data',start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -1492,8 +1861,6 @@ def download_csv():
 # The variables in controls.py are placed here; babel does not work for translation unless it is hard coded here, not sure why. Likely has to with the way Dash builds the web app.
 @app.callback(
     [
-        Output("page-title", "children"),
-        Output("learn-more-button", "children"),
         Output("data-ratio", "children"),
         Output("description-1", "children"),
         Output("description-2", "children"),
@@ -1523,6 +1890,13 @@ def download_csv():
         Output("altitude-text","children"),
         Output("yearslider-text", "children"),
         Output("download-button-1", "children"),
+        Output("date_picker_range", "start_date_placeholder_text"),
+        Output("date_picker_range", "end_date_placeholder_text"),
+        Output("date_picker_range", "start_date_aria_label"),
+        Output("date_picker_range", "end_date_aria_label"),
+        Output("world-table-text","children"),
+        Output("altitude-table-text","children"),
+        Output("time-table-text","children"),
         Output("gaz_list", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
@@ -1530,8 +1904,6 @@ def download_csv():
 def translate_static(x):
     print('Translating...')
     return [
-                _("SCISAT data visualisation"),
-                _("Learn more about SCISAT"),
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),
                 _("This application provides users the ability to select, download and visualize SCISAT's data. The dataset can also be accessed in [CSA's Open Government Portal](https://data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24)."),
@@ -1561,6 +1933,13 @@ def translate_static(x):
                 _("Select altitude range:"),
                 _("Select date:"),
                 _('Download summary data as CSV'),
+                _('Select start date'),
+                _('Select end date'),
+                _('Start Date'),
+                _('End Date'),
+                _("Text version - World map of mean gas concentrations"),
+                _("Text version - Mean gas concentration as a function of altitude"),
+                _("Text version - Mean gas concentration over time"),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),
@@ -1664,67 +2043,67 @@ def translate_static(x):
     ]
 
 
-# Translate the header and the footer by injecting raw HTML
-@app.callback(
-    [
-        Output('gc-header', 'children'),
-        Output('gc-footer', 'children')
-    ],
-    [Input('none2', 'children')]
-)
-def translate_header_footer(x):
-    """ Translates the government header and footer
-    """
-    try: # On the first load of the webpage, there is a bug where the header won't load due to the session not being established yet. This try/except defaults the header/footer to english
-        if session['language'] == 'fr':
-            return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_fr), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_fr)]
-        else:
-            return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
-    except:
-        return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
+# # Translate the header and the footer by injecting raw HTML
+# @app.callback(
+#     [
+#         Output('gc-header', 'children'),
+#         Output('gc-footer', 'children')
+#     ],
+#     [Input('none2', 'children')]
+# )
+# def translate_header_footer(x):
+#     """ Translates the government header and footer
+#     """
+#     # to be deprecated
+
+#     if app_config.DEFAULT_LANGUAGE == 'fr':
+#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_fr), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_fr)]
+#     else:
+#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
 
 
-@app.callback(
-    [
-        Output('language-button', 'children'),
-        Output('language-link', 'href'),
-        Output("learn-more-link", 'href')
-    ],
-    [Input('none2', 'children')]
-)
-def update_language_button(x):
-    """Updates the button to switch languages
-    """
+# @app.callback(
+#     [
+#         Output('language-button', 'children'),
+#         Output('language-link', 'href'),
+#         Output("learn-more-link", 'href')
+#     ],
+#     [Input('none2', 'children')]
+# )
+# def update_language_button(x):
+#     """Updates the button to switch languages
+#     """
 
-    try:
-        language = session['language']
-    except KeyError:
-        language = None
-    if language == 'fr':
-        return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
-    else:
-        return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
+#     try:
+#         language = session['language']
+#     except KeyError:
+#         language = None
+#     if language == 'fr':
+#         return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
+#     else:
+#         return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
 
 
 @babel.localeselector
 def get_locale():
     # if the user has set up the language manually it will be stored in the session,
     # so we use the locale from the user settings
-    try:
-        language = session['language']
-    except KeyError:
-        language = None
-    if language is not None:
-        return language
-    else:
-        return 'en'
+    # try:
+    #     language = session['language']
+    # except KeyError:
+    #     language = None
+    # if language is not None:
+    #     return language
+    # else:
+    #     return 'en'
+    return app_config.DEFAULT_LANGUAGE
 
 
 @app.server.route('/language/<language>')
 def set_language(language=None):
     """Sets the session language, then refreshes the page
     """
-    session['language'] = language
+    session['language'] = app_config.DEFAULT_LANGUAGE
 
     return redirect(url_for('/'))
 

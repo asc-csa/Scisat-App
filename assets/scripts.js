@@ -1,9 +1,16 @@
 var expected_canvas_count = 0;
 
 $(document).ready(function(){
+
+    var pagination = $('details').find('.previous-next-container');
+    pagination.remove();
+
     if(expected_canvas_count > 0){
         var canvas_check = setInterval(checkForCanvases, 3000);
     }
+
+    var css_fixer = setInterval(removeBaddCss, 3500);
+    // console.log('set remove css interval');
 
     // Callback function to execute when mutations are observed
     const callback = function(mutationsList, observer) {
@@ -19,8 +26,23 @@ $(document).ready(function(){
         }
     };
 
+    var ariaOwnsRemove = setInterval(function(){
+        $('.Select-input input').removeAttr('aria-owns');
+    }, 3000);
+
     // Create an observer instance linked to the callback function
     const observer = new MutationObserver(callback);
+
+    function removeBaddCss(){
+        $("head").find('style').each(function () {
+            // console.log('removing css');
+            html = $(this).html();
+            if(html.match(/border-color:\s*transparent\s*inherit\s*transparent\s*transparent\s*!important/gm)){
+                $(this).html( html.replace(/border-color:\s*transparent\s*inherit\s*transparent\s*transparent\s*!important/gm,"") );
+            }
+        });
+        
+    }
 
     function canvasDimensionsAdjustment(canvas){
         if(canvas.getAttribute('width') % 1 != 0){

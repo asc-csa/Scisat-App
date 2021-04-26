@@ -380,6 +380,34 @@ hr {
   border-top: 1px solid #e1e1e1;
 }
 
+/* Pagination
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.page-next:after,
+.page-prev:before{
+  font-family: "Glyphicons Halflings";
+  font-weight: 400;
+  line-height: 1em;
+  position: relative;
+  top: .1em;
+}
+.page-next:after {
+  content: "\e092";
+  margin-left: .5em;
+}
+.page-prev:before
+{
+  content: "\e091";
+  margin-right: .5em;
+}
+.previous-next-container{
+  display:none !important;
+}
+
+.table_pagination{
+  text-align: center;
+}
+
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
@@ -581,6 +609,10 @@ there.
 
 .flex-display {
   display: flex;
+}
+
+.justify-space-between{
+  justify-content: space-between;
 }
 
 .container-display {

@@ -465,6 +465,14 @@ gc_menu_items_en='''
 '''
 
 gc_header_en = '''
+<div class='global-header'>
+<nav>
+  <ul id="wb-tphp" class="wb-init wb-disable-inited">
+	  <li class="wb-slc"><a class="wb-sl" href="#react-entry-point">Skip to main content</a></li>
+	  <!-- <li class="wb-slc"><a class="wb-sl" href="#wb-info">Skip to "About government"</a></li>
+    <li class="wb-slc"><a class="wb-sl" href="?wbdisable=true" rel="alternate">Switch to basic HTML version</a></li> -->
+  </ul>
+</nav>
 <header>
 	<div id="wb-bnr" class="container">
 		<div class="row">	
@@ -526,6 +534,7 @@ gc_header_en = '''
   '''+ gc_breadcrumb_en +'''
 	
 </header>
+</div>
 '''
 
 gc_header_en_old ='''
@@ -1029,6 +1038,13 @@ gc_menu_items_fr='''
 '''
 
 gc_header_fr = '''
+<div class='global-header'>
+<nav><ul id="wb-tphp" class="wb-init wb-disable-inited">
+	<li class="wb-slc"><a class="wb-sl" href="#react-entry-point">Passer au contenu principal</a></li>
+	<!--<li class="wb-slc"><a class="wb-sl" href="#wb-info">Passer à « Au sujet du gouvernement »</a></li>
+  <li class="wb-slc"><a class="wb-sl" href="?wbdisable=true" rel="alternate">Passer à la version HTML simplifiée</a></li>-->
+  </ul>
+</nav>
 <header>
 	<div id="wb-bnr" class="container">
 		<div class="row">
@@ -1113,9 +1129,16 @@ gc_header_fr = '''
 
 
 </header>
+</div>
 '''
 
 gc_header_fr_old = '''
+<div class='global-header'>
+<nav><ul id="wb-tphp" class="wb-init wb-disable-inited">
+	<li class="wb-slc"><a class="wb-sl" href="#wb-cont">Passer au contenu principal</a></li>
+	<li class="wb-slc"><a class="wb-sl" href="#wb-info">Passer à « Au sujet du gouvernement »</a></li>
+	
+<li class="wb-slc"><a class="wb-sl" href="?wbdisable=true" rel="alternate">Passer à la version HTML simplifiée</a></li></ul></nav>
 <header>
 				<div id="wb-bnr" class="container">
 					<div class="row">
@@ -1174,6 +1197,7 @@ gc_header_fr_old = '''
 	<div data-ajax-replace="/bin/canada/alert/messages.fr.html" class="original wb-init wb-data-ajax-replace-inited" id="wb-auto-4"></div>
 
 </header>
+</div>
 '''
 
 gc_footer_fr = '''

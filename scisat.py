@@ -1286,7 +1286,7 @@ def make_count_figure(df):
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[ALT_RANGE[0]:ALT_RANGE[1]],
+            y=concentration.columns[0:ALT_RANGE[1]-ALT_RANGE[0]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -1323,10 +1323,11 @@ def make_count_figure(df):
 
     figure = dict(data=data, layout=layout)
     table_data= []
-
-    for i in range(0,150):
+    min = int(np.floor(ALT_RANGE[0]))
+    max = int(np.floor(ALT_RANGE[1]))
+    for i in range(0, max-min):
         template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
-        template["alt"] = i+0.5
+        template["alt"] = min+i+0.5
         template["int_min"]= xx[i]-err_xx[i]
         template["mean"]=xx[i]
         template["int_max"]=xx[i]+err_xx[i]

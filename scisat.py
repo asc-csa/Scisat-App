@@ -625,9 +625,31 @@ def build_filtering():
         html.Div(
             html.Form(
             [
+                html.Section(
+                    [
+                        html.H2(
+                            id='error_header'
+                        ),
+                        html.Ul(
+                            id='form_errors'
+                        )
+                    ],
+                    id='filter_errors',
+                    hidden=True,
+                    className='alert alert-danger'
+                ),
                 html.Div(
                     [
-                        dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
+                        html.Div(
+                        [
+                            html.Div(
+                                className='label label-danger',
+                                id="gas_alert",
+                                hidden=True
+                            )
+                        ],
+                        className="error"
+                    ),
                         html.Div(
                             [
                                 html.Label(
@@ -656,7 +678,26 @@ def build_filtering():
                     style={"textAlign":"left"}
                 ),
                 html.Div(
-                    dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}), style={"textAlign":"left"}),
+                    [
+                    html.Div(
+                        [
+                            html.Div(
+                                className='label label-danger',
+                                id="pos_alert"
+                            )
+                        ],
+                        className="error"
+                    ),
+                    # dbc.Alert(
+                    #     color="secondary",
+                    #     id="pos_alert",
+                    #     is_open=False,
+                    #     fade=False,
+                    #     style={"margin-top":"0.5em"},
+                    #     className='dash-alert dash-alert-danger'
+                    # )
+                    ]
+                ),
                 html.Div([
                     html.Div( #Latitude picker
                         [
@@ -748,7 +789,7 @@ def build_filtering():
                     html.Div(
                         [ #Year selection + download button
                             html.Div([
-                                dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                                html.Div(id="date_alert", hidden=True, style={"margin-top":"0.5em"}, className='label label-danger'),
                             ]),
                             html.Label(
                                 id="yearslider-text",
@@ -1130,7 +1171,7 @@ app.layout = html.Div(
 
 # Update global values of lat/long using validation
 @app.callback(
-    Output("pos_alert", "is_open"),
+    Output("pos_alert", "hidden"),
     [
         Input('lat_min','value'),
         Input('lat_max','value'),
@@ -1140,50 +1181,85 @@ app.layout = html.Div(
 )
 def update_ranges(lat_min,lat_max,lon_min,lon_max):
     global LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
-    s = False
+    s = True
     if pos_validation(lat_min, lat_max, lon_min, lon_max):
         LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
     else:
-        s = True
+        s = False
     return s
+
+# Update error list             
+@app.callback(
+    [
+        Output("filter_errors", "hidden"),
+        Output("form_errors", 'children'),
+        Output("error_header", 'children')
+    ],
+    [
+        Input('lat_min','value'),
+        Input('lat_max','value'),
+        Input('lon_min','value'),
+        Input('lon_max','value'),
+        Input("date_picker_range", "start_date"),
+        Input("date_picker_range", "end_date"),
+        Input("gaz_list", "value")
+    ],
+)
+def update_error_list(lat_min,lat_max,lon_min,lon_max, start_date, end_date, gaz_list):
+    s = False
+    errors = []
+    if not pos_validation(lat_min, lat_max, lon_min, lon_max) or not date_validation(start_date,end_date,gaz_list) or not gas_validation(gaz_list):
+        if not gas_validation(gaz_list):
+            errors.append(html.Li(_("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca.")))
+        if not pos_validation(lat_min, lat_max, lon_min, lon_max):
+            errors.append(html.Li(_("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5.")))
+        if not date_validation(start_date,end_date,gaz_list):
+            errors.append(html.Li(_("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020).")))
+    else:
+        s = True
+    return [
+        s,
+        errors,
+        _('The form could not be submitted because errors were found.')
+    ]
 
 # Update global date values using validation
 @app.callback(
-    Output("date_alert", "is_open"),
+    Output("date_alert", "hidden"),
     [   Input("date_picker_range", "start_date"),
         Input("date_picker_range", "end_date"),
         Input("gaz_list", "value")
     ],
     [
-        State("date_alert", "is_open")
+        State("date_alert", "hidden")
     ],
 )
 def update_dates(start_date, end_date, gaz_list, is_open):
     global START_DATE, END_DATE
-    s = False
+    s = True
     if date_validation(start_date,end_date,gaz_list):
         START_DATE, END_DATE = start_date, end_date
     else:
-        s = True
+        s = False
     return s
 
 # Update gas value using validation
 @app.callback(
-    Output("gas_alert", "is_open"),
+    Output("gas_alert", "hidden"),
     [
         Input("gaz_list", "value"),
     ],
     [
-        State("gas_alert", "is_open")
+        State("gas_alert", "hidden")
     ],
 )
 def update_gas(gaz_list, is_open):
     global GAZ_LIST
-    s = False
+    s = True
     if gas_validation(gaz_list):
         GAZ_LIST = gaz_list
     else:
-        s = True
+        s = False
     return s
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.

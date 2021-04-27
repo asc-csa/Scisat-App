@@ -899,7 +899,7 @@ def build_filtering():
             )
     ])
 
-def detail_table(id, title):
+def detail_table(id, id2):
     #next button pagnation, for some reason the pages are 0 indexed but the dispalyed page isn't
     @app.callback(
         [
@@ -1019,7 +1019,7 @@ def detail_table(id, title):
     return html.Div([
         html.Details(
             [
-                html.Summary(title),
+                html.Summary(id=id2),
                 html.Div(
                     dst.DataTable(
                         id=id,
@@ -1106,7 +1106,7 @@ def build_stats():
                                    )],
                     ),
                     html.Div ([html.P(id="Map_description", style={"margin-top": "2em"})]),
-                    detail_table('world-table',_("Text version - World graph of mean gas concentrations")),
+                    detail_table('world-table','world-table-text'),
                     html.Div([ # Altitude graph
                         html.Div([ # Graphique
                             dcc.Graph(id="count_graph",
@@ -1121,7 +1121,7 @@ def build_stats():
                         html.Div ([ #Altitude graph description
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
-                    detail_table('altitude-table', _("Text version - Mean concentration distribution on altitude")),
+                    detail_table('altitude-table', 'altitude-table-text'),
                     ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
@@ -1135,7 +1135,7 @@ def build_stats():
                     html.Div ([
                        html.P( id = "TimeS_description", style = {"margin-top":"2em"})
                                ]),
-                    detail_table('time-table', _("Text version - Time series")),
+                    detail_table('time-table', 'time-table-text'),
                     ],
                     id="vizChartContainer",
                     className="pretty_container",
@@ -1362,7 +1362,7 @@ def make_count_figure(df):
         dict(
             type="scatter",
             x=xx,
-            y=df.columns[ALT_RANGE[0]:ALT_RANGE[1]],
+            y=concentration.columns[0:ALT_RANGE[1]-ALT_RANGE[0]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -1399,18 +1399,19 @@ def make_count_figure(df):
 
     figure = dict(data=data, layout=layout)
     table_data= []
-
-    for i in range(0,150):
+    min = int(np.floor(ALT_RANGE[0]))
+    max = int(np.floor(ALT_RANGE[1]))
+    for i in range(0, max-min):
         template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
-        template["alt"] = i+0.5
+        template["alt"] = min+i+0.5
         template["int_min"]= xx[i]-err_xx[i]
         template["mean"]=xx[i]
         template["int_max"]=xx[i]+err_xx[i]
         table_data.append(template)
     columns=[{"name":_("Altitude (km)"), "id":"alt"},
-            {"name":_("Min. Confidence Interval Concentration (ppv)"), "id":"int_min","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
-            {"name":_("Mean Concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
-            {"name":_("Max. Confidence Interval Concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+            {"name":_("Min. confidence interval concentration (ppv)"), "id":"int_min","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Mean concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
+            {"name":_("Max. confidence interval concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     return [figure, columns, table_data]
 
 # This generates the geographical representation of the data
@@ -1566,7 +1567,7 @@ def generate_geo_map(df):
 
     # Here, we set the attributes that pertain to the text table
     data = df[['lat','long','Alt_Mean']].to_dict('records')
-    columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean Concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
+    columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
 
     return [fig, columns, data]
 
@@ -1969,6 +1970,9 @@ def download_csv():
         Output("date_picker_range", "end_date_placeholder_text"),
         Output("date_picker_range", "start_date_aria_label"),
         Output("date_picker_range", "end_date_aria_label"),
+        Output("world-table-text","children"),
+        Output("altitude-table-text","children"),
+        Output("time-table-text","children"),
         Output("gaz_list", "options"),
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
@@ -2009,6 +2013,9 @@ def translate_static(x):
                 _('Select end date'),
                 _('Start Date'),
                 _('End Date'),
+                _("Text version - World map of mean gas concentrations"),
+                _("Text version - Mean gas concentration as a function of altitude"),
+                _("Text version - Mean gas concentration over time"),
                 #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),

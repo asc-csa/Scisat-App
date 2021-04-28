@@ -29,6 +29,8 @@ $(document).ready(function(){
     var ariaFixes = setInterval(function(){
         var dropdowns = $('.Select-input input');
         dropdowns.removeAttr('aria-owns');
+        var header_script = $('head script');
+        header_script.removeAttr('charset');
         // dropdowns.attr('role', 'option');
     }, 3000);
 

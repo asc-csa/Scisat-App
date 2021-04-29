@@ -1714,14 +1714,14 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
             .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range)
     values = {
-        'start_date': START_DATE,
-        'end_date': END_DATE,
-        'lat_min': LAT_MIN,
-        'lat_max': LAT_MAX,
-        'lon_min': LON_MIN,
-        'lon_max':LON_MAX,
-        'gaz_list': GAZ_LIST,
-        'alt_range': ALT_RANGE
+        'start_date': start_date,
+        'end_date': end_date,
+        'lat_min': lat_min,
+        'lat_max': lat_max,
+        'lon_min': lon_min,
+        'lon_max': lon_max,
+        'gaz_list': gaz_list,
+        'alt_range': alt_range
     }
     link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
 

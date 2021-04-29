@@ -1180,15 +1180,12 @@ app.layout = html.Div(
     ]
 )
 def update_ranges(lat_min,lat_max,lon_min,lon_max):
-    global LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
-    s = True
-    if pos_validation(lat_min, lat_max, lon_min, lon_max):
-        LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
-    else:
-        s = False
+    s = False
+    if not pos_validation(lat_min, lat_max, lon_min, lon_max):
+        s = True
     return s
 
-# Update error list             
+# Update error list
 @app.callback(
     [
         Output("filter_errors", "hidden"),
@@ -1235,12 +1232,9 @@ def update_error_list(lat_min,lat_max,lon_min,lon_max, start_date, end_date, gaz
     ],
 )
 def update_dates(start_date, end_date, gaz_list, is_open):
-    global START_DATE, END_DATE
-    s = True
-    if date_validation(start_date,end_date,gaz_list):
-        START_DATE, END_DATE = start_date, end_date
-    else:
-        s = False
+    s = False
+    if not date_validation(start_date,end_date,gaz_list):
+        s = True
     return s
 
 # Update gas value using validation
@@ -1254,12 +1248,9 @@ def update_dates(start_date, end_date, gaz_list, is_open):
     ],
 )
 def update_gas(gaz_list, is_open):
-    global GAZ_LIST
-    s = True
-    if gas_validation(gaz_list):
-        GAZ_LIST = gaz_list
-    else:
-        s = False
+    s = False
+    if not gas_validation(gaz_list):
+        s = True
     return s
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.

@@ -192,8 +192,8 @@ else :
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
-        analytics_code = '<h1>Did not load things</h1>'
-        analytics_footer = '<h1>Did not load things footer</h1>'
+        analytics_code = ''
+        analytics_footer = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH

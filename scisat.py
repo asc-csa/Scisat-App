@@ -23,10 +23,12 @@ from scipy import mean
 import numpy as np
 import datetime
 from os import path
+import os.path
 
 class CustomDash(dash.Dash):
 
     analytics_code = ''
+    analytics_footer = ''
     lang = ''
     header = ''
     footer = ''
@@ -35,6 +37,9 @@ class CustomDash(dash.Dash):
 
     def set_analytics(self, code):
         self.analytics_code = code
+
+    def set_analytics_footer(self, code):
+        self.analytics_footer = code
 
     def set_lang(self, lang):
         self.lang = lang
@@ -90,6 +95,7 @@ class CustomDash(dash.Dash):
                     {config}
                     {scripts}
                     {renderer}
+                    {analytics_footer}
                     </footer>
                 </div>
             </body>
@@ -104,6 +110,7 @@ class CustomDash(dash.Dash):
             css = kwargs['css'],
             title = kwargs['title'],
             analytics = self.analytics_code,
+            analytics_footer = self.analytics_footer,
             meta = self.meta_html,
             lang = self.lang,
             header = self.header,
@@ -160,10 +167,11 @@ def generate_meta_tag(name, content):
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from config import Config
-    if(path.exists("analytics.py")):
-        from analytics import analytics_code
+    if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
+        from .analytics import analytics_code, analytics_footer
     else:
-        analytics_code = ''
+        analytics_code = '<h1>Did not load things</h1>'
+        analytics_footer = '<h1>Did not load things footer</h1>'
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -181,10 +189,11 @@ if __name__ == '__main__':
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from .config import Config
-    if(path.exists("./analytics.py")):
-        from analytics import analytics_code
+    if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
+        from .analytics import analytics_code, analytics_footer
     else:
-        analytics_code = ''
+        analytics_code = '<h1>Did not load things</h1>'
+        analytics_footer = '<h1>Did not load things footer</h1>'
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -224,6 +233,7 @@ else:
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
+app.set_analytics_footer(analytics_footer)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
 # app.set_app_header(app_title_en)

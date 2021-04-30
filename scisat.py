@@ -674,12 +674,6 @@ def build_filtering():
                 html.Div(
                     [
                     html.Div(
-                        [
-                            html.Div(
-                                className='label label-danger',
-                                id="pos_alert"
-                            )
-                        ],
                         className="error"
                     ),
                     # dbc.Alert(
@@ -699,6 +693,11 @@ def build_filtering():
                                 id="latitude-text",
                                 className="control_label",
                                 style={"textAlign":"left"}
+                            ),
+                            html.Div(
+                                className='label label-danger',
+                                id="lat_alert",
+                                hidden=True
                             ),
                             html.Div([
                                 html.Label(
@@ -742,6 +741,11 @@ def build_filtering():
                                 id="longitude-text",
                                 className="control_label",
                                 style ={"textAlign":"left"}
+                            ),
+                            html.Div(
+                                className='label label-danger',
+                                id="lon_alert",
+                                hidden=True
                             ),
                             html.Div([
                                 html.Label(
@@ -1163,19 +1167,47 @@ app.layout = html.Div(
 
 
 
+# # Update global values of lat/long using validation
+# @app.callback(
+#     Output("pos_alert", "hidden"),
+#     [
+#         Input('lat_min','value'),
+#         Input('lat_max','value'),
+#         Input('lon_min','value'),
+#         Input('lon_max','value')
+#     ]
+# )
+# def update_ranges(lat_min,lat_max,lon_min,lon_max):
+#     s = True
+#     if not pos_validation(lat_min, lat_max, lon_min, lon_max):
+#         s = False
+#     return s
+
 # Update global values of lat/long using validation
 @app.callback(
-    Output("pos_alert", "hidden"),
+    Output("lat_alert", "hidden"),
     [
         Input('lat_min','value'),
-        Input('lat_max','value'),
+        Input('lat_max','value')
+    ]
+)
+def update_lat_alert(lat_min,lat_max):
+    s = True
+    if not lat_validation(lat_min, lat_max):
+        s = False
+    return s
+
+# Update global values of lat/long using validation
+@app.callback(
+    Output("lon_alert", "hidden"),
+    [
         Input('lon_min','value'),
         Input('lon_max','value')
     ]
 )
-def update_ranges(lat_min,lat_max,lon_min,lon_max):
+def update_lon_alert(lon_min,lon_max):
     s = True
-    if not pos_validation(lat_min, lat_max, lon_min, lon_max):
+    if not lon_validation(lon_min, lon_max):
         s = False
     return s
 
@@ -1187,25 +1219,52 @@ def update_ranges(lat_min,lat_max,lon_min,lon_max):
         Output("error_header", 'children')
     ],
     [
-        Input('lat_min','value'),
-        Input('lat_max','value'),
-        Input('lon_min','value'),
-        Input('lon_max','value'),
-        Input("date_picker_range", "start_date"),
-        Input("date_picker_range", "end_date"),
-        Input("gaz_list", "value")
+        Input("lat_alert", "hidden"),
+        Input("lon_alert", "hidden"),
+        Input("gas_alert", "hidden"),
+        Input("date_alert", "hidden")
     ],
 )
-def update_error_list(lat_min,lat_max,lon_min,lon_max, start_date, end_date, gaz_list):
+def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
     s = False
     errors = []
-    if not pos_validation(lat_min, lat_max, lon_min, lon_max) or not date_validation(start_date,end_date,gaz_list) or not gas_validation(gaz_list):
-        if not gas_validation(gaz_list):
-            errors.append(html.Li(_("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca.")))
-        if not pos_validation(lat_min, lat_max, lon_min, lon_max):
-            errors.append(html.Li(_("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5.")))
-        if not date_validation(start_date,end_date,gaz_list):
-            errors.append(html.Li(_("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020).")))
+    if not lat_alert or not lon_alert or not gas_alert or not date_alert:
+        if not gas_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
+                        href="#gas_alert",
+                    )
+                )
+            )
+        if not lat_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                        href="#lat_alert"
+                    )
+                )
+            )
+        if not lon_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                        href="#lon_alert"
+                    )
+                )
+            )
+        if not date_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                        href="#date_alert"
+                    )
+                )
+            )
     else:
         s = True
     return [
@@ -1220,12 +1279,9 @@ def update_error_list(lat_min,lat_max,lon_min,lon_max, start_date, end_date, gaz
     [   Input("date_picker_range", "start_date"),
         Input("date_picker_range", "end_date"),
         Input("gaz_list", "value")
-    ],
-    [
-        State("date_alert", "hidden")
-    ],
+    ]
 )
-def update_dates(start_date, end_date, gaz_list, is_open):
+def update_dates(start_date, end_date, gaz_list):
     s = True
     if not date_validation(start_date,end_date,gaz_list):
         s = False
@@ -1265,6 +1321,22 @@ def update_alt(alt_range):
 def pos_validation(lat_min,lat_max,lon_min,lon_max):
     try:
         s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90) and (lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
+    except TypeError:
+        s = False
+    return s
+
+# Lat/long validation
+def lat_validation(lat_min,lat_max):
+    try:
+        s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90))
+    except TypeError:
+        s = False
+    return s
+
+# Lat/long validation
+def lon_validation(lon_min,lon_max):
+    try:
+        s = ((lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
     except TypeError:
         s = False
     return s
@@ -1679,15 +1751,16 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         State("alt_range", "value"),
         State("date_picker_range", "start_date"),
         State("date_picker_range", "end_date"),
-        State("pos_alert", "is_open"),
-        State("gas_alert", "is_open"),
-        State("date_alert", "is_open")
+        State("lat_alert", "hidden"),
+        State("lon_alert", "hidden"),
+        State("gas_alert", "hidden"),
+        State("date_alert", "hidden")
     ]
 )
-def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, pos_alert, gas_alert, date_alert):
+def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
     # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     # fig1 = generate_geo_map(df)
-    if not (pos_alert or date_alert):
+    if (lat_alert or lon_alert or date_alert):
         df = data_reader(act_gaz_list, r'data', start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
         [fig1, columns1, data1] = generate_geo_map(df)
         [fig2, columns2, data2] = make_viz_chart(df)
@@ -1948,7 +2021,8 @@ def download_csv():
         Output("lon_selection", "children"),
         Output("date_selection", "children"),
         Output("download_selection", "children"),
-        Output("pos_alert", "children"),
+        Output("lat_alert", "children"),
+        Output("lon_alert", "children"),
         Output("date_alert", "children"),
         Output("gas_alert", "children"),
         Output("latitude-text", "children"),
@@ -1991,7 +2065,8 @@ def translate_static(x):
                 _("Selection of the range of longitude"),
                 _("Date selection"),
                 _("Download the selected dataset"),
-                _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
                 _("Filter by latitude:"),

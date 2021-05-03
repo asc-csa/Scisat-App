@@ -26,8 +26,12 @@ $(document).ready(function(){
         }
     };
 
-    var ariaOwnsRemove = setInterval(function(){
-        $('.Select-input input').removeAttr('aria-owns');
+    var ariaFixes = setInterval(function(){
+        var dropdowns = $('.Select-input input');
+        dropdowns.removeAttr('aria-owns');
+        var header_script = $('head script');
+        header_script.removeAttr('charset');
+        // dropdowns.attr('role', 'option');
     }, 3000);
 
     // Create an observer instance linked to the callback function

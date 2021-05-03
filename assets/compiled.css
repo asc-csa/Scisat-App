@@ -766,3 +766,20 @@ td.CalendarDay {
 #generate{
   color: #fff;
 }
+
+/* Alerts */
+.dash-alert-danger::before {
+  color: #d3080c;
+  content: "";
+}
+
+.label.label-danger{
+  white-space: normal;
+  text-align: left;
+  display: block;
+  font-size: 16px;
+}
+
+[hidden]{
+  display: none !important;
+}

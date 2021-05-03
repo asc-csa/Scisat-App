@@ -23,10 +23,12 @@ from scipy import mean
 import numpy as np
 import datetime
 from os import path
+import os.path
 
 class CustomDash(dash.Dash):
 
     analytics_code = ''
+    analytics_footer = ''
     lang = ''
     header = ''
     footer = ''
@@ -35,6 +37,9 @@ class CustomDash(dash.Dash):
 
     def set_analytics(self, code):
         self.analytics_code = code
+
+    def set_analytics_footer(self, code):
+        self.analytics_footer = code
 
     def set_lang(self, lang):
         self.lang = lang
@@ -77,6 +82,7 @@ class CustomDash(dash.Dash):
                 <title>
                 {title}
                 </title>
+                <style id='dash_components_css'></style>
                 {css}
             </head>
             <body>
@@ -89,6 +95,7 @@ class CustomDash(dash.Dash):
                     {config}
                     {scripts}
                     {renderer}
+                    {analytics_footer}
                     </footer>
                 </div>
             </body>
@@ -103,6 +110,7 @@ class CustomDash(dash.Dash):
             css = kwargs['css'],
             title = kwargs['title'],
             analytics = self.analytics_code,
+            analytics_footer = self.analytics_footer,
             meta = self.meta_html,
             lang = self.lang,
             header = self.header,
@@ -143,13 +151,6 @@ external_scripts = [
 
 ]
 
-## These are constant values from our input forms.
-# The reason we use constants rather than State (from dash dependencies) is so that we can provide validation and remember last valid value provided.
-LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = -90, 90, -180, 180
-START_DATE, END_DATE = None, None
-GAZ_LIST = 'ACEFTS_L2_v4p1_O3.nc'
-ALT_RANGE = [0,150]
-DEFAULT_DF = None
 
 # Loads the config file
 def get_config_dict():
@@ -166,10 +167,11 @@ def generate_meta_tag(name, content):
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from config import Config
-    if(path.exists("analytics.py")):
-        from analytics import analytics_code
+    if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
+        from .analytics import analytics_code, analytics_footer
     else:
-        analytics_code = ''
+        analytics_code = '<h1>Did not load things</h1>'
+        analytics_footer = '<h1>Did not load things footer</h1>'
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -187,10 +189,11 @@ if __name__ == '__main__':
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
     from .config import Config
-    if(path.exists("./analytics.py")):
-        from analytics import analytics_code
+    if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
+        from .analytics import analytics_code, analytics_footer
     else:
         analytics_code = ''
+        analytics_footer = ''
     app_config = Config()
 
     path_data=app_config.DATA_PATH
@@ -230,6 +233,7 @@ else:
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
+app.set_analytics_footer(analytics_footer)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
 # app.set_app_header(app_title_en)
@@ -625,9 +629,31 @@ def build_filtering():
         html.Div(
             html.Form(
             [
+                html.Section(
+                    [
+                        html.H2(
+                            id='error_header'
+                        ),
+                        html.Ul(
+                            id='form_errors'
+                        )
+                    ],
+                    id='filter_errors',
+                    hidden=True,
+                    className='alert alert-danger'
+                ),
                 html.Div(
                     [
-                        dbc.Alert(color="secondary", id="gas_alert", is_open=False, fade=False),
+                        html.Div(
+                        [
+                            html.Div(
+                                className='label label-danger',
+                                id="gas_alert",
+                                hidden=True
+                            )
+                        ],
+                        className="error"
+                    ),
                         html.Div(
                             [
                                 html.Label(
@@ -656,7 +682,20 @@ def build_filtering():
                     style={"textAlign":"left"}
                 ),
                 html.Div(
-                    dbc.Alert(color="secondary", id="pos_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}), style={"textAlign":"left"}),
+                    [
+                    html.Div(
+                        className="error"
+                    ),
+                    # dbc.Alert(
+                    #     color="secondary",
+                    #     id="pos_alert",
+                    #     is_open=False,
+                    #     fade=False,
+                    #     style={"margin-top":"0.5em"},
+                    #     className='dash-alert dash-alert-danger'
+                    # )
+                    ]
+                ),
                 html.Div([
                     html.Div( #Latitude picker
                         [
@@ -664,6 +703,11 @@ def build_filtering():
                                 id="latitude-text",
                                 className="control_label",
                                 style={"textAlign":"left"}
+                            ),
+                            html.Div(
+                                className='label label-danger',
+                                id="lat_alert",
+                                hidden=True
                             ),
                             html.Div([
                                 html.Label(
@@ -708,6 +752,11 @@ def build_filtering():
                                 className="control_label",
                                 style ={"textAlign":"left"}
                             ),
+                            html.Div(
+                                className='label label-danger',
+                                id="lon_alert",
+                                hidden=True
+                            ),
                             html.Div([
                                 html.Label(
                                     htmlFor="lon_min",
@@ -748,7 +797,7 @@ def build_filtering():
                     html.Div(
                         [ #Year selection + download button
                             html.Div([
-                                dbc.Alert(color="secondary", id="date_alert", is_open=False, fade=False, style={"margin-top":"0.5em"}),
+                                html.Div(id="date_alert", hidden=True, style={"margin-top":"0.5em"}, className='label label-danger'),
                             ]),
                             html.Label(
                                 id="yearslider-text",
@@ -1128,75 +1177,151 @@ app.layout = html.Div(
 
 
 
+# # Update global values of lat/long using validation
+# @app.callback(
+#     Output("pos_alert", "hidden"),
+#     [
+#         Input('lat_min','value'),
+#         Input('lat_max','value'),
+#         Input('lon_min','value'),
+#         Input('lon_max','value')
+#     ]
+# )
+# def update_ranges(lat_min,lat_max,lon_min,lon_max):
+#     s = True
+#     if not pos_validation(lat_min, lat_max, lon_min, lon_max):
+#         s = False
+#     return s
+
 # Update global values of lat/long using validation
 @app.callback(
-    Output("pos_alert", "is_open"),
+    Output("lat_alert", "hidden"),
     [
         Input('lat_min','value'),
-        Input('lat_max','value'),
+        Input('lat_max','value')
+    ]
+)
+def update_lat_alert(lat_min,lat_max):
+    s = True
+    if not lat_validation(lat_min, lat_max):
+        s = False
+    return s
+
+# Update global values of lat/long using validation
+@app.callback(
+    Output("lon_alert", "hidden"),
+    [
         Input('lon_min','value'),
         Input('lon_max','value')
     ]
 )
-def update_ranges(lat_min,lat_max,lon_min,lon_max):
-    global LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
+def update_lon_alert(lon_min,lon_max):
+    s = True
+    if not lon_validation(lon_min, lon_max):
+        s = False
+    return s
+
+# Update error list
+@app.callback(
+    [
+        Output("filter_errors", "hidden"),
+        Output("form_errors", 'children'),
+        Output("error_header", 'children')
+    ],
+    [
+        Input("lat_alert", "hidden"),
+        Input("lon_alert", "hidden"),
+        Input("gas_alert", "hidden"),
+        Input("date_alert", "hidden")
+    ],
+)
+def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
     s = False
-    if pos_validation(lat_min, lat_max, lon_min, lon_max):
-        LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = lat_min, lat_max, lon_min, lon_max
+    errors = []
+    if not lat_alert or not lon_alert or not gas_alert or not date_alert:
+        if not gas_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
+                        href="#gas_alert",
+                    )
+                )
+            )
+        if not lat_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                        href="#lat_alert"
+                    )
+                )
+            )
+        if not lon_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                        href="#lon_alert"
+                    )
+                )
+            )
+        if not date_alert:
+            errors.append(
+                html.Li(
+                    html.A(
+                        _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                        href="#date_alert"
+                    )
+                )
+            )
     else:
         s = True
-    return s
+    return [
+        s,
+        errors,
+        _('The form could not be submitted because errors were found.')
+    ]
 
 # Update global date values using validation
 @app.callback(
-    Output("date_alert", "is_open"),
+    Output("date_alert", "hidden"),
     [   Input("date_picker_range", "start_date"),
         Input("date_picker_range", "end_date"),
         Input("gaz_list", "value")
-    ],
-    [
-        State("date_alert", "is_open")
-    ],
+    ]
 )
-def update_dates(start_date, end_date, gaz_list, is_open):
-    global START_DATE, END_DATE
-    s = False
-    if date_validation(start_date,end_date,gaz_list):
-        START_DATE, END_DATE = start_date, end_date
-    else:
-        s = True
+def update_dates(start_date, end_date, gaz_list):
+    s = True
+    if not date_validation(start_date,end_date,gaz_list):
+        s = False
     return s
 
 # Update gas value using validation
 @app.callback(
-    Output("gas_alert", "is_open"),
+    Output("gas_alert", "hidden"),
     [
         Input("gaz_list", "value"),
     ],
     [
-        State("gas_alert", "is_open")
+        State("gas_alert", "hidden")
     ],
 )
 def update_gas(gaz_list, is_open):
-    global GAZ_LIST
-    s = False
-    if gas_validation(gaz_list):
-        GAZ_LIST = gaz_list
-    else:
-        s = True
+    s = True
+    if not gas_validation(gaz_list):
+        s = False
     return s
 
 # Update altitude range. The output is used as a placeholder because Dash does not allow to have no output on callbacks.
 @app.callback(
 [
-    Output("placeholder","value"),
+    Output("placeholder","data-value"),
     Output("alt_range","slider_labels"),
 ],
     [Input("alt_range", "value")]
 )
 def update_alt(alt_range):
-    global ALT_RANGE
-    ALT_RANGE = alt_range
     return [
         "",
         [_('Altitude Maximum'),_('Altitude Minimum')]
@@ -1210,12 +1335,27 @@ def pos_validation(lat_min,lat_max,lon_min,lon_max):
         s = False
     return s
 
+# Lat/long validation
+def lat_validation(lat_min,lat_max):
+    try:
+        s = ((lat_min < lat_max) and (lat_min >= -90) and (lat_max <= 90))
+    except TypeError:
+        s = False
+    return s
+
+# Lat/long validation
+def lon_validation(lon_min,lon_max):
+    try:
+        s = ((lon_min < lon_max) and (lon_min >= -180) and (lon_max <= 180))
+    except TypeError:
+        s = False
+    return s
+
 # Date validation
 def date_validation(start_date, end_date, gaz_list):
-    global DEFAULT_DF
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
-    df = DEFAULT_DF
+    df = data_reader(gaz_list,r'data')
     MIN_DATE=df['date'].min().to_pydatetime()
     MAX_DATE=df['date'].max().to_pydatetime()
     return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
@@ -1237,7 +1377,7 @@ def gas_validation(gaz_list):
 # This section is for graph generation. The 3 graphs are generated here.
 
 # This generates the concentration v.s. altitude figure
-def make_count_figure(df):
+def make_count_figure(df, alt_range):
     """Create and update the Gas Concentration vs Altitude over the given time range.
 
     Parameters
@@ -1274,8 +1414,7 @@ def make_count_figure(df):
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object.
     """
-    global ALT_RANGE
-    concentration=df[ALT_RANGE[0]:ALT_RANGE[1]]
+    concentration=df[alt_range[0]:alt_range[1]]
     # concentration=np.array(concentration,dtype=np.float32)
     # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
@@ -1286,7 +1425,7 @@ def make_count_figure(df):
         dict(
             type="scatter",
             x=xx,
-            y=concentration.columns[0:ALT_RANGE[1]-ALT_RANGE[0]],
+            y=concentration.columns[0:alt_range[1]-alt_range[0]],
             error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
             name=_("Altitude"),
             #orientation='h',
@@ -1323,8 +1462,8 @@ def make_count_figure(df):
 
     figure = dict(data=data, layout=layout)
     table_data= []
-    min = int(np.floor(ALT_RANGE[0]))
-    max = int(np.floor(ALT_RANGE[1]))
+    min = int(np.floor(alt_range[0]))
+    max = int(np.floor(alt_range[1]))
     for i in range(0, max-min):
         template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
         template["alt"] = min+i+0.5
@@ -1612,18 +1751,35 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     [
         Input("generate-button","n_clicks"),
         Input("gaz_list","value")
+    ],
+    [
+        State("gaz_list","value"),
+        State("lat_min","value"),
+        State("lat_max", "value"),
+        State("lon_min", "value"),
+        State("lon_max", "value"),
+        State("alt_range", "value"),
+        State("date_picker_range", "start_date"),
+        State("date_picker_range", "end_date"),
+        State("lat_alert", "hidden"),
+        State("lon_alert", "hidden"),
+        State("gas_alert", "hidden"),
+        State("date_alert", "hidden")
     ]
 )
-def controller(n_clicks, gaz_list):
-    global START_DATE, END_DATE, GAZ_LIST, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE
+def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
     # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
     # fig1 = generate_geo_map(df)
-    df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    [fig1, columns1, data1] = generate_geo_map(df)
-    [fig2, columns2, data2] = make_viz_chart(df)
-    [fig3, columns3, data3] = make_count_figure(df)
-    link = update_csv_link()
-    nbr = update_filtering_text(df)
+    if (lat_alert or lon_alert or date_alert):
+        df = data_reader(act_gaz_list, r'data', start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
+        [fig1, columns1, data1] = generate_geo_map(df)
+        [fig2, columns2, data2] = make_viz_chart(df)
+        [fig3, columns3, data3] = make_count_figure(df, alt_range)
+        link = update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, act_gaz_list, alt_range)
+        nbr = update_filtering_text(df)
+    else:
+        df, fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr = None, None, None, None, None, None, None, None, None, None, None, 0
+
     return fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr
 
 # This function calculates the number of points selected
@@ -1674,15 +1830,13 @@ def update_filtering_text(df):
     [ Input("gaz_list", "value")]
     )
 def update_picker(gaz_list):
-     global DEFAULT_DF, START_DATE, END_DATE
      df = data_reader(gaz_list, path_data)
-     DEFAULT_DF = df
      START_DATE = df.date.min().to_pydatetime()
      END_DATE = df.date.max().to_pydatetime()
      return START_DATE, END_DATE, START_DATE, END_DATE
 
 # This function updates the link that is opened when pressing the download button
-def update_csv_link():
+def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range):
     """Updates the link to the CSV download
 
     Parameters
@@ -1714,18 +1868,17 @@ def update_csv_link():
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
-    global START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
-            .format(START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, GAZ_LIST, ALT_RANGE)
+            .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range)
     values = {
-        'start_date': START_DATE,
-        'end_date': END_DATE,
-        'lat_min': LAT_MIN,
-        'lat_max': LAT_MAX,
-        'lon_min': LON_MIN,
-        'lon_max':LON_MAX,
-        'gaz_list': GAZ_LIST,
-        'alt_range': ALT_RANGE
+        'start_date': start_date,
+        'end_date': end_date,
+        'lat_min': lat_min,
+        'lat_max': lat_max,
+        'lon_min': lon_min,
+        'lon_max': lon_max,
+        'gaz_list': gaz_list,
+        'alt_range': alt_range
     }
     link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
 
@@ -1878,7 +2031,8 @@ def download_csv():
         Output("lon_selection", "children"),
         Output("date_selection", "children"),
         Output("download_selection", "children"),
-        Output("pos_alert", "children"),
+        Output("lat_alert", "children"),
+        Output("lon_alert", "children"),
         Output("date_alert", "children"),
         Output("gas_alert", "children"),
         Output("latitude-text", "children"),
@@ -1921,7 +2075,8 @@ def translate_static(x):
                 _("Selection of the range of longitude"),
                 _("Date selection"),
                 _("Download the selected dataset"),
-                _("Invalid values provided. Latitude values must be between -90 and 90. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
+                _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
                 _("Filter by latitude:"),

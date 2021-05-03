@@ -783,3 +783,8 @@ td.CalendarDay {
 [hidden]{
   display: none !important;
 }
+
+/* tables */
+.dash-table-container .dash-fixed-content{
+  overflow-x: scroll;
+}

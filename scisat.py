@@ -218,6 +218,13 @@ if app_config.DEFAULT_LANGUAGE == 'en':
         'Explore the composition of the Earth’s atmosphere with data from the SCISAT satellite! SCISAT has been monitoring the atmospheric concentrations of ozone and 70 other gases since 2003.'
         )
     meta_html += generate_meta_tag('keywords', '')
+
+    meta_html += generate_meta_tag('dcterms.title', 'SCISAT : data exploration application for atmospheric composition')
+    meta_html += generate_meta_tag('language', 'eng')
+    meta_html += generate_meta_tag('dcterms.creator', 'Canadian Space Agency')
+    meta_html += generate_meta_tag('dcterms.accessRights', '2')
+    meta_html += generate_meta_tag('dcterms.service', 'CSA-ASC')
+
     app.title="SCISAT : data exploration application for atmospheric composition"
     app.set_app_header(app_title_en)
 else:
@@ -228,6 +235,13 @@ else:
         "Explorez la composition de l’atmosphère terrestre avec les données du satellite SCISAT! SCISAT surveille les concentrations atmosphériques d'ozone et de 70 gaz supplémentaires depuis 2003."
         )
     meta_html += generate_meta_tag('keywords', '')
+    
+    meta_html += generate_meta_tag('dcterms.title', 'SCISAT : application d’exploration des données de composition atmosphérique ')
+    meta_html += generate_meta_tag('language', 'fra')
+    meta_html += generate_meta_tag('dcterms.creator', 'Agence spatiale canadienne')
+    meta_html += generate_meta_tag('dcterms.accessRights', '2')
+    meta_html += generate_meta_tag('dcterms.service', 'CSA-ASC')
+
     app.title="SCISAT : application d’exploration des données de composition atmosphérique"
     app.set_app_header(app_title_fr)
 

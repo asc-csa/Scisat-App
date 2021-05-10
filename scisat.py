@@ -867,7 +867,10 @@ def build_filtering():
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
-                                                style={'padding-left': '112px', 'padding-right':'112px'}
+                                                style={
+                                                    'padding': '0px 10px',
+                                                    'display': 'block'
+                                                }
                                             ),
                                             id='generate',
                                             className="btn btn-primary"
@@ -878,7 +881,8 @@ def build_filtering():
                                             ),
                                             className="wb-inv"
                                         )
-                                    ]
+                                    ],
+                                    style={'text-align': 'center'}
                                 )
                             ],
                             className="one-half column",

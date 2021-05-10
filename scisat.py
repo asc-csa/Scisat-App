@@ -828,7 +828,7 @@ def build_filtering():
                                         max_date_allowed=dt.date.today(),
                                         start_date_placeholder_text=_('Select start date'),
                                         end_date_placeholder_text=_('Select end date'),
-                                        display_format="Y/MM/DD",
+                                        display_format="Y-MM-DD",
                                         start_date_aria_label = _('Start Date'),
                                         end_date_aria_label = _('End Date'),
                                         ),

@@ -870,7 +870,8 @@ def build_filtering():
                                                 style={
                                                     'padding': '0px 10px',
                                                     'display': 'block'
-                                                }
+                                                },
+                                                tabIndex=0
                                             ),
                                             id='generate',
                                             className="btn btn-primary"

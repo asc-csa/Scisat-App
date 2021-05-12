@@ -828,7 +828,7 @@ def build_filtering():
                                         max_date_allowed=dt.date.today(),
                                         start_date_placeholder_text=_('Select start date'),
                                         end_date_placeholder_text=_('Select end date'),
-                                        display_format="Y/MM/DD",
+                                        display_format="Y-MM-DD",
                                         start_date_aria_label = _('Start Date'),
                                         end_date_aria_label = _('End Date'),
                                         ),
@@ -867,7 +867,11 @@ def build_filtering():
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
-                                                style={'padding-left': '112px', 'padding-right':'112px'}
+                                                style={
+                                                    'padding': '0px 10px',
+                                                    'display': 'block'
+                                                },
+                                                tabIndex=0
                                             ),
                                             id='generate',
                                             className="btn btn-primary"
@@ -878,7 +882,8 @@ def build_filtering():
                                             ),
                                             className="wb-inv"
                                         )
-                                    ]
+                                    ],
+                                    style={'text-align': 'center'}
                                 )
                             ],
                             className="one-half column",
@@ -1061,7 +1066,8 @@ def detail_table(id, id2):
                                     **{'aria-label': _('Goto Previous Page'), 'data-value': -1}
                                 ),
                                 id=id+'-btn-prev',
-                                n_clicks=0
+                                n_clicks=0,
+                                tabIndex=0
                             ),
                             html.Li(
                                 html.A(
@@ -1070,7 +1076,8 @@ def detail_table(id, id2):
                                     **{'aria-label': _("Goto page 1, Current Page"), 'aria-current': _('true'), 'data-value': 0}
                                 ),
                                 id=id+'-btn-1',
-                                n_clicks=0
+                                n_clicks=0,
+                                tabIndex=0
                             ),
                             html.Li(
                                 html.A(
@@ -1080,7 +1087,8 @@ def detail_table(id, id2):
                                 ),
                                 className='active',
                                 id=id+'-btn-2',
-                                n_clicks=0
+                                n_clicks=0,
+                                tabIndex=0
                             ),
                             html.Li(
                                 html.A(
@@ -1089,7 +1097,8 @@ def detail_table(id, id2):
                                     **{'aria-label': _('Goto page 3'), 'data-value': 2}
                                 ),
                                 id=id+'-btn-3',
-                                n_clicks=0
+                                n_clicks=0,
+                                tabIndex=0
                             ),
                             html.Li(
                                 html.A(
@@ -1099,7 +1108,8 @@ def detail_table(id, id2):
                                     **{'aria-label': _('Goto Next Page'), 'data-value': -2}
                                 ),
                                 id=id+'-btn-next',
-                                n_clicks=0
+                                n_clicks=0,
+                                tabIndex=0
                             )
                         ],
                         className = 'pagination'

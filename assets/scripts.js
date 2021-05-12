@@ -9,8 +9,20 @@ $(document).ready(function(){
         var canvas_check = setInterval(checkForCanvases, 3000);
     }
 
+    var datepicker_fixer = setInterval(date_picker_closer, 3500);
+
     var css_fixer = setInterval(removeBaddCss, 3500);
     // console.log('set remove css interval');
+
+    $('#react-entry-point').keydown(function(e) {
+        var code = e.keyCode || e.which;
+    
+        if (code === 13 ) {  
+            // e.preventDefault();
+            // myFunction();
+            $(document.activeElement).click();
+        }
+    });
 
     // Callback function to execute when mutations are observed
     const callback = function(mutationsList, observer) {
@@ -25,6 +37,32 @@ $(document).ready(function(){
             }
         }
     };
+
+    function date_picker_closer(){
+        console.log("looking for datepicker");
+        if($('#react-entry-point')){
+            clearInterval(datepicker_fixer);
+            $('#react-entry-point').keyup(function(e) {
+                var code = e.keyCode || e.which;
+            
+                if (code === 9) {  
+                    // e.preventDefault();
+                    // myFunction();
+                    console.log($(document.activeElement));
+                    if($(document.activeElement).parents('#date_picker_range').length){
+                        console.log('focused');
+                        $('.DateRangePicker_picker').show();
+                    }else{
+                        $('.DateRangePicker_picker').hide();
+                    }
+                }
+            });
+
+            $('.DateInput_input').focus(function(){
+                $('.DateRangePicker_picker').show();
+            });
+        }
+    }
 
     var ariaFixes = setInterval(function(){
         var dropdowns = $('.Select-input input');

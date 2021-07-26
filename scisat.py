@@ -235,7 +235,7 @@ else:
         "Explorez la composition de l’atmosphère terrestre avec les données du satellite SCISAT! SCISAT surveille les concentrations atmosphériques d'ozone et de 70 gaz supplémentaires depuis 2003."
         )
     meta_html += generate_meta_tag('keywords', '')
-    
+
     meta_html += generate_meta_tag('dcterms.title', 'SCISAT : application d’exploration des données de composition atmosphérique ')
     meta_html += generate_meta_tag('language', 'fra')
     meta_html += generate_meta_tag('dcterms.creator', 'Agence spatiale canadienne')
@@ -871,10 +871,12 @@ def build_filtering():
                                                     'padding': '0px 10px',
                                                     'display': 'block'
                                                 },
-                                                tabIndex=0
+
                                             ),
                                             id='generate',
-                                            className="btn btn-primary"
+                                            className="btn btn-primary",
+                                            role = 'button',
+                                            tabIndex=0
                                         ),
                                         html.Div(
                                             children=html.P(

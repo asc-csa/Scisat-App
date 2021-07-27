@@ -85,7 +85,7 @@ class CustomDash(dash.Dash):
                 <style id='dash_components_css'></style>
                 {css}
             </head>
-            <body>
+            <body id='wb-cont'>
                 {header}
                 {app_header}
                 {app_entry}

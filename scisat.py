@@ -863,20 +863,23 @@ def build_filtering():
                             [
                                 html.Div(
                                     [
-                                        html.Span(
+                                        html.Div(
                                             html.Span(
                                                 id='generate-button',
                                                 n_clicks=0,
                                                 style={
                                                     'padding': '0px 10px',
-                                                    'display': 'block'
+                                                    'display': 'inline-block',
+                                                    'padding' : '6px 22px'
                                                 },
-
+                                                className="btn btn-primary",
+                                                role = 'button',
+                                                tabIndex=0
                                             ),
+                                            style={
+                                                "text-align": "center"
+                                            },
                                             id='generate',
-                                            className="btn btn-primary",
-                                            role = 'button',
-                                            tabIndex=0
                                         ),
                                         html.Div(
                                             children=html.P(

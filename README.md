@@ -9,6 +9,7 @@
 
 Le satellite SCISAT, en orbite depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
 
+Vous pouvez accéder à cette micro application en direct au https://donnees-data.asc-csa.gc.ca/scisat-fr. 
 
 ![interface de l'application](Capture_app.PNG)
 
@@ -93,6 +94,8 @@ This project is an application that allows users to filter through the SCISAT da
 
 This project has been developped from the Alouette app, a case study for the development of future satellite data applications so that the data from
  from these satellites are able to be obtained and analyzed at a larger scale and in a more user-friendly way.
+
+The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
 
 ## Quick start
 

@@ -18,6 +18,10 @@ Les commandes suivantes peuvent être exécutées plus facilement dans un enviro
 
 Pour démarrer l'application :
 - Créer un dossier nommé "data" et y mettre les fichiers .nc des données de SCISAT
+>- Ces fichiers sont accessibles en suivant ce [lien](https://databace.scisat.ca/) vers l'accès aux données de niveau 2 de la mission ACE/SCISAT. Vous devrez remplir un formulaire décrivant votre demande de données, après quoi un courriel vous sera envoyé avec le lien vers les fichiers. Les fichiers à télécharger et à placer dans le dossier /data doivent avoir la convention de nommage suivante : 
+
+>>>>>>ACEFTS_L2_v4p1\__FormuleChimiqueDuGaz_.nc
+
 - Ajouter le fichier "config.cfg" que vous retrouverez sur [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1) dans le même dossier que scisat.py
 - D'abord, vous devrez créer un environment virtuel avec conda:
 ```
@@ -104,7 +108,11 @@ The following commands can be done more easily if in a virtual environment (like
 ![interface de l'application](Capture_app.PNG)
 
 For starting the application:
-- Create a folder nammed "data" and put the .nc files containing the SCISAT data
+- Create a folder named "data" and put the .nc files containing the SCISAT data
+>- These files can be accessed by following this [link](https://databace.scisat.ca/) to the Level 2 data access of the ACE/SCISAT mission. You will need to complete a form describing your data request after which an email will be sent to you with the link to the files. The files to download and place in the /data folder should have the following naming convention: 
+
+>>>>>>ACEFTS_L2_v4p1\__ChemicalFormulaOfGas_.nc
+
 - Add the "config.cfg" file (found on [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1)) in the folder where "scisat.py" is.
 - First, you will have to create a conda virtual environment:
 ```

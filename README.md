@@ -13,6 +13,9 @@ Vous pouvez accéder à cette micro application en direct au https://donnees-dat
 
 ![interface de l'application](Capture_app.PNG)
 
+## Dépendances
+L'application repose sur l'architecture [App-Launcher](https://github.com/asc-csa/App-Launcher). Cette application doit être installée en premier lieu.
+
 ## Démarrage rapide
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
@@ -100,6 +103,9 @@ This project has been developped from the Alouette app, a case study for the dev
  from these satellites are able to be obtained and analyzed at a larger scale and in a more user-friendly way.
 
 The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
+
+## Dependancies
+This application is based on [App-Launcher](https://github.com/asc-csa/App-Launcher). Make sure to install App-Launcher before moving on with Alouette.
 
 ## Quick start
 

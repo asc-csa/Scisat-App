@@ -38,6 +38,8 @@ Pour démarrer l'application :
         conda install -v venv -c conda-forge --file requirements.txt
         python scisat.py
 
+Lors de l'exécution, l'[application](http://127.0.0.1:8888/scisat/) se trouve à cet endroit.
+
 ## Construit avec:
 
  - [Plotly Dash](https://dash.plot.ly/) - Le framework Python construit sur Flask a été utilisé pour développer l'application. Tous les composants et visualisations de l'application web sont des objets Dash qui sont créés et mis à jour dans les fonctions de rappel de l'application. Je vous recommande de consulter la documentation complète de Dash (lien) si vous n'êtes pas sûr de son fonctionnement.
@@ -132,7 +134,7 @@ For starting the application:
         conda -v venv -c conda-forge --file requirements.txt
         python scisat.py
 
-Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
+The URL is [http://127.0.0.1:8888/scisat/)](http://127.0.0.1:8888/scisat/). Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
 
 ## Built with
 

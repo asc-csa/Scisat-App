@@ -13,6 +13,9 @@ Vous pouvez accéder à cette micro application en direct au https://donnees-dat
 
 ![interface de l'application](Capture_app.PNG)
 
+## Dépendances
+L'application repose sur l'architecture [App-Launcher](https://github.com/asc-csa/App-Launcher). Cette application doit être installée en premier lieu.
+
 ## Démarrage rapide
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
@@ -34,6 +37,8 @@ Pour démarrer l'application :
         pip install -r requirements.txt
         conda install -v venv -c conda-forge --file requirements.txt
         python scisat.py
+
+Lors de l'exécution, l'[application](http://127.0.0.1:8888/scisat/) se trouve à cet endroit.
 
 ## Construit avec:
 
@@ -101,6 +106,9 @@ This project has been developped from the Alouette app, a case study for the dev
 
 The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
 
+## Dependancies
+This application is based on [App-Launcher](https://github.com/asc-csa/App-Launcher). Make sure to install App-Launcher before moving on with Alouette.
+
 ## Quick start
 
 The following commands can be done more easily if in a virtual environment (like conda) so it may be a good idea to install [Anaconda](https://www.anaconda.com/distribution/) beforehand. 
@@ -126,7 +134,7 @@ For starting the application:
         conda -v venv -c conda-forge --file requirements.txt
         python scisat.py
 
-Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
+The URL is [http://127.0.0.1:8888/scisat/)](http://127.0.0.1:8888/scisat/). Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
 
 ## Built with
 

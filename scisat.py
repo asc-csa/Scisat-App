@@ -540,16 +540,16 @@ def build_header():
                 html.Div([], className="one column"),
                 html.Div(
                     [
-                        #html.Img(
-                            #src=app.get_asset_url("csa-logo.png"),
-                            #id="csa-image",
-                            #style={
-                                #"height": "60px",
-                                #"width": "auto",
-                                #"margin": "25px",
-                            #},
-                            #alt="CSA Logo"
-                        #)
+                        html.Img(
+                            src=app.get_asset_url("csa-logo.png"),
+                            id="csa-image",
+                            style={
+                                "height": "60px",
+                                "width": "auto",
+                                "margin": "25px",
+                            },
+                            alt="CSA Logo"
+                        )
                     ],
                     className="one column",
                 ),

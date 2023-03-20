@@ -8,7 +8,9 @@ app_title_en = '''
   <div id="header" class="container" style="margin-bottom: 25px;">
     <div class='flex-display justify-space-between'>
       <div class="">
+      <!-- 
         <img id="csa-image" alt="CSA Logo" src="/scisat/assets/csa-logo.png" style="height: 60px; width: auto; margin: 25px;">
+      -->
       </div>
       <div id="title" class="">
         <h1 id="page-title" >SCISAT data visualisation</h1>
@@ -26,7 +28,9 @@ app_title_fr = '''
   <div id="header" class="container" style="margin-bottom: 25px;">
     <div class='flex-display justify-space-between'>
       <div class="">
+      <!-- 
         <img id="csa-image" alt="CSA Logo" src="/scisat/assets/csa-logo.png" style="height: 60px; width: auto; margin: 25px;">
+      -->
       </div>
       <div id="title" class="">
         <h1 id="page-title" >Visualisation des données de SCISAT</h1>

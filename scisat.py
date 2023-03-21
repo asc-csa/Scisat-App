@@ -1194,7 +1194,7 @@ app.layout = html.Div(
                 build_stats(),
             ],
             id="mainContainer",
-            style={"display": "flex", "flex-direction": "column", "margin": "auto", "width":"75%"},
+            style={"display": "flex", "flex-direction": "column", "margin": "auto", "width":"95%"},
         ),
         html.Div(id='none2', children=[], style={'display': 'none'}), # Placeholder element to trigger translations upon page load
     ]

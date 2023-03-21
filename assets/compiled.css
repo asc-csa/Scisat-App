@@ -34,10 +34,10 @@
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.container {
+.container_frame {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: border-box;
@@ -51,7 +51,7 @@
 
 /* For devices larger than 400px */
 @media (min-width: 400px) {
-  .container {
+  .container_frame {
     width: 85%;
     padding: 0;
   }
@@ -59,7 +59,7 @@
 
 /* For devices larger than 550px */
 @media (min-width: 550px) {
-  .container {
+  .container_frame {
     width: 80%;
   }
   .column,
@@ -181,11 +181,11 @@
 
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-a {
+/* a {
   color: #1eaedb;
   text-decoration: underline;
   cursor: pointer;
-}
+} */
 a:hover {
   color: #0fa0ce;
 }
@@ -218,8 +218,6 @@ input[type="button"] {
   font-size: 13px;
 }
 
-
-}
 .button:hover,
 button:hover,
 input[type="submit"]:hover,
@@ -280,6 +278,15 @@ select {
   font-family: inherit;
   font-size: inherit; /*https://stackoverflow.com/questions/6080413/why-doesnt-input-inherit-the-font-from-body*/
 }
+
+.Select-placeholder{
+  color: #000000;
+}
+
+.Select--multi .Select-value-label {
+  max-width: calc( 100% - 20px );
+}
+
 /* Removes awkward default styles on some inputs for iOS */
 input[type="email"],
 input[type="number"],
@@ -514,15 +521,7 @@ there.
   margin-top: 30px;
 } */
 
-/* #language-button {
-  text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  text-transform: none;
-  float: right;
-  margin-right: 10px;
-  margin-top: 30px;
-} */
+
 
 /* Larger than desktop */
 @media (min-width: 1000px) {
@@ -579,7 +578,7 @@ there.
 .dcc_control {
   margin: 0;
   padding: 5px;
-  width: 350px;
+  /* width: 350px;  */
 }
 
 .control_label {
@@ -617,6 +616,10 @@ there.
 
 .container-display {
   display: flex;
+}
+
+.csa-graph, .map-filters{
+  margin-bottom: 15px;
 }
 
 #individual_graph,
@@ -765,6 +768,24 @@ td.CalendarDay {
 
 #generate{
   color: #fff;
+
+#ground_station_list > div.dcc_control{
+  padding-left: 0;
+}
+
+
+/* #Map_description-1 {
+  float: left;
+}
+
+#Graph_description-1 {
+  float: left;
+  margin: 15px 0px 0px;
+} */
+
+#Graph_description-2, #Map_description-2{
+float: left;
+margin: 15px 10px 0px;
 }
 
 /* Alerts */

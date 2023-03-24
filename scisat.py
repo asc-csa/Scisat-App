@@ -540,6 +540,16 @@ def build_header():
                 html.Div([], className="one column"),
                 html.Div(
                     [
+                        html.H1(
+                            "",
+                            style={"margin-bottom": "10px", "margin-left": "15%"},
+                            id="page-title"),
+                    ],
+                    className="six columns",
+                    id="title",
+                ),
+                html.Div(
+                    [
                         html.Img(
                             src=app.get_asset_url("csa-logo.png"),
                             id="csa-image",
@@ -552,16 +562,6 @@ def build_header():
                         )
                     ],
                     className="one column",
-                ),
-                html.Div(
-                    [
-                        html.H1(
-                            "",
-                            style={"margin-bottom": "10px", "margin-left": "15%"},
-                            id="page-title"),
-                    ],
-                    className="six columns",
-                    id="title",
                 ),
                 html.Div(
                     [

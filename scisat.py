@@ -34,6 +34,7 @@ class CustomDash(dash.Dash):
     footer = ''
     meta_html = ''
     app_header = ''
+    app_footer = ''
 
     def set_analytics(self, code):
         self.analytics_code = code
@@ -55,6 +56,9 @@ class CustomDash(dash.Dash):
 
     def set_app_header(self, header):
         self.app_header = header
+
+    def set_app_footer(self, footer):
+        self.app_footer = footer
 
     # def _generate_css_dist_html(self):
     #     external_links = self.config.external_stylesheets
@@ -87,8 +91,11 @@ class CustomDash(dash.Dash):
             </head>
             <body id='wb-cont'>
                 {header}
-                {app_header}
-                {app_entry}
+                <main property="mainContentOfPage" typeof="WebPageElement" class="container">
+                    {app_header}
+                    {app_entry}
+                    {app_footer}
+                </main>
                 <div class="global-footer">
                     <footer id="wb-info">
                     {footer}
@@ -115,7 +122,8 @@ class CustomDash(dash.Dash):
             lang = self.lang,
             header = self.header,
             footer = self.footer,
-            app_header = self.app_header
+            app_header = self.app_header,
+            app_footer = self.app_footer
             )
 
 
@@ -165,7 +173,7 @@ def generate_meta_tag(name, content):
 
 # Runs the application based on what executed this file.
 if __name__ == '__main__':
-    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
+    from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from config import Config
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
@@ -187,7 +195,7 @@ if __name__ == '__main__':
     )
 
 else :
-    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr
+    from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from .config import Config
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
@@ -227,6 +235,7 @@ if app_config.DEFAULT_LANGUAGE == 'en':
 
     app.title="SCISAT : data exploration application for atmospheric composition"
     app.set_app_header(app_title_en)
+    app.set_app_footer(app_footer_en)
 else:
     app.set_header(gc_header_fr)
     app.set_footer(gc_footer_fr)
@@ -244,13 +253,13 @@ else:
 
     app.title="SCISAT : application d’exploration des données de composition atmosphérique"
     app.set_app_header(app_title_fr)
+    app.set_app_footer(app_footer_fr)
 
 app.set_meta_tags(meta_html)
 app.set_analytics(analytics_code)
 app.set_analytics_footer(analytics_footer)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
-# app.set_app_header(app_title_en)
 server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
 babel = Babel(server)  # Hook flask-babel to the app
 

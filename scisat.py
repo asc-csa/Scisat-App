@@ -25,6 +25,7 @@ import datetime
 from os import path
 import os.path
 
+
 class CustomDash(dash.Dash):
 
     analytics_code = ''

@@ -1,6 +1,5 @@
 # Raw header and footer code copied from GC websites. This html is injected into the webapp using dash-dangerously-set-inner-html
 
-
 from .config import Config
 app_config = Config()
 

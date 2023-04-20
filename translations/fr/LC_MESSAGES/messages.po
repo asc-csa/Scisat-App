@@ -570,7 +570,9 @@ msgid ""
 msgstr ""
 "Graphique montrant la concentration du gaz en parties par volume (ppv) "
 "selon l'intervalle d'altitude sélectionnée. La moyenne est faite sur "
-"toutes les positions ainsi que toutes les dates sélectionnées."
+"toutes les positions ainsi que toutes les dates sélectionnées. "
+"Les marges d'erreur représentent des intervalles de confiance à 95 % "
+"autour de la moyenne."
 
 #: scisat.py:2034
 msgid ""

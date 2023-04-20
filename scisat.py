@@ -1505,7 +1505,7 @@ def make_count_figure(df, alt_range):
     max = int(np.floor(alt_range[1]))
     for i in range(0, max-min):
         template = {"alt":'', 'int_min':'', 'mean':'', 'int_max':''}
-        template["alt"] = min+i+0.5
+        template["alt"] = min + i + 0.5
         template["int_min"]= xx[i]-err_xx[i]
         template["mean"]=xx[i]
         template["int_max"]=xx[i]+err_xx[i]
@@ -1590,7 +1590,7 @@ def generate_geo_map(df):
                             opacity=1,
                             name = "",
                             hoverongaps = False,
-                            hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{z:.3e} ppv",
+                            hovertemplate = "Latitude: %{y}°<br>Longitude: %{x}°<br>Concentration: %{z:.3e} ppv",
                             colorbar=dict(
                                 title=dict(
                                     text=_("Gas concentration [ppv] (mean on altitude and position) "),
@@ -1614,7 +1614,7 @@ def generate_geo_map(df):
                 y=df['lat'],
                 meta=df['Alt_Mean'],
                 mode="markers",
-                hovertemplate = "Lat.: %{y}°<br>Long.: %{x}°<br>Concentration: %{meta:.3e} ppv",
+                hovertemplate = "Latitude: %{y}°<br>Longitude: %{x}°<br>Concentration: %{meta:.3e} ppv",
                 marker= dict(
                     size=10,
                     color=df['Alt_Mean'],
@@ -2107,7 +2107,7 @@ def translate_static(x):
                 _("Update"),
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
-                _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the latitudes and longitudes selected, as well as the selected dates."),
+                _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the selected latitudes, longitudes and dates. Error bars are 95% confidence intervals around the mean."),
                 _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
                 _("Select gas:"),
                 _("Selection of the range of latitude "),

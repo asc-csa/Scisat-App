@@ -1444,7 +1444,7 @@ def date_validation(start_date, end_date, gaz_list):
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
     print('\nReading data from date_validation()')
-    df = data_reader(gaz_list,r'data')
+    df = data_reader(gaz_list, path_data)
     MIN_DATE=df['date'].min().to_pydatetime()
     MAX_DATE=df['date'].max().to_pydatetime()
     return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
@@ -1881,11 +1881,9 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     ]
 )
 def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
-    # df = data_reader(GAZ_LIST, path_data, START_DATE, END_DATE, LAT_MIN, LAT_MAX, LON_MIN, LON_MAX, ALT_RANGE)
-    # fig1 = generate_geo_map(df)
     if (lat_alert or lon_alert or date_alert):
         print('\nReading data from controller()')
-        df = data_reader(act_gaz_list, r'data', start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
+        df = data_reader(act_gaz_list, path_data, start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
         [fig1, columns1, data1] = generate_geo_map(df)
         [fig2, columns2, data2] = make_viz_chart(df)
         [fig3, columns3, data3] = make_count_figure(df, alt_range)

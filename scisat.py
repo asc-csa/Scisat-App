@@ -62,19 +62,6 @@ class CustomDash(dash.Dash):
     def set_app_footer(self, footer):
         self.app_footer = footer
 
-    # def _generate_css_dist_html(self):
-    #     external_links = self.config.external_stylesheets
-    #     links = self._collect_and_register_resources(self.css.get_all_css())
-
-    #     return "\n".join(
-    #         [
-    #             format_tag("link", link, opened=True)
-    #             if isinstance(link, dict)
-    #             else '<link rel="stylesheet" href="{}">'.format(link)
-    #             for link in (external_links + links)
-    #         ]
-    #     )
-
     def interpolate_index(self, **kwargs):
         # Inspect the arguments by printing them
         return '''
@@ -133,32 +120,17 @@ class CustomDash(dash.Dash):
 # load data and transform as needed
 
 
-# external_stylesheets = ['https://wet-boew.github.io/themes-dist/GCWeb/assets/favicon.ico',
-#                         'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-#                         'https://wet-boew.github.io/themes-dist/GCWeb/css/theme.min.css',
-#                         'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css']  # Link to external CSS
-
 external_stylesheets = [
     'https://canada.ca/etc/designs/canada/wet-boew/css/wet-boew.min.css',
     'https://canada.ca/etc/designs/canada/wet-boew/css/theme.min.css',
     'https://use.fontawesome.com/releases/v5.8.1/css/all.css'
-    # 'assets/gc_theme_cdn/assets/favicon.ico',
-    # 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-    # 'assets/gc_theme_cdn/css/theme.min.css',
-    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/css/noscript.min.css'
 ]  # Link to external CSS
 
 external_scripts = [
-    # 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js',
-    # 'https://wet-boew.github.io/themes-dist/GCWeb/wet-boew/js/wet-boew.min.js',
-    # 'assets/gc_theme_cdn/js/theme.min.js',
-    # 'https://cdn.plot.ly/plotly-locale-de-latest.js',
     '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js',
     'https://canada.ca/etc/designs/canada/wet-boew/js/wet-boew.min.js',
     'https://canada.ca/etc/designs/canada/wet-boew/js/theme.min.js',
     'assets/scripts.js'
-
-
 ]
 
 
@@ -340,55 +312,45 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     months=np.copy(nc.variables['month'][:])
     years = np.copy(nc.variables['year'][:])
     days = np.copy(nc.variables['day'][:])
-    #hours = np.copy(nc.variables['hour'][:])
 
     lat = np.copy(nc.variables['latitude'][:])
     long =np.copy( nc.variables['longitude'][:])
     alt = np.copy(nc.variables['altitude'][:])
 
-    data = np.copy(nc.variables[gaz][:]) #valeurs de concentration [ppv]
-    data[data == fillvalue1] = np.nan #Remplacer les données vides
+    #valeurs de concentration [ppv]
+    data = np.copy(nc.variables[gaz][:])
+    
+    #Remplacer les données vides
+    data[data == fillvalue1] = np.nan
 
-    data = data[:,alt_range[0]:alt_range[1]] #Choisir les données dans le range d'altitude
+    #Choisir les données dans le range d'altitude
+    data = data[:,alt_range[0]:alt_range[1]]
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
     print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
     print('DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     #Trie données abérrantes
-    # TODO: This part takes a long time. We should optmize it. --> numpy.nan is too slow
+    # TODO: This part takes a long time. We should optmize it. numpy.nan is too slow
     #slow
     df[df>1e-5]=np.nan
-    #print ('nan: ' + str(time.time()))
     #slow
     std=df.std()
-    #print ('std: ' + str(time.time()))
     mn=df.mean()
-    #print ('mean: ' + str(time.time()))
     maxV = mn+3*std
-    #print ('std: ' + str(time.time()))
     minV = mn-3*std
-    #print ('std: ' + str(time.time()))
     # slow
     df[df>maxV]=np.nan
-    #print ('nan: ' + str(time.time()))
     #slow
     df[df<minV]=np.nan
-    #print ('nan: ' + str(time.time()))
 
     print('DEBUG: data_reader() - Time spent so far (#3): ' + str(time.time() - start_time1))
 
     #Colonne de dates
-    # TODO-DONE: Creating the array and the datetime objects takes too much time. It works with 98 920 days, which is too much.
-    # NOTE: Libraries that perform computationally heavy tasks like numpy, scipy and pytorch utilise C-based implementations under the hood, allowing the use of multiple cores.
     date=[]
     nbDays = len(days)
     print('DEBUG: Number of days to loop: ' + str(nbDays))
-    #for i in range (nbDays):
-        #date.append(dt.datetime(years[i],months[i],days[i]))
     date = np.array([dt.datetime(years[i],months[i],days[i]) for i in range (nbDays)])
-    #date = [dt.datetime(years[i],months[i],days[i]) for i in range (nbDays)]
-
     print('DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
 
     data_meanAlt = np.nanmean(df,1)
@@ -1263,24 +1225,6 @@ app.layout = html.Div(
 #=======================================================================================================================
 # Input functions and validation functions
 
-
-
-# # Update global values of lat/long using validation
-# @app.callback(
-#     Output("pos_alert", "hidden"),
-#     [
-#         Input('lat_min','value'),
-#         Input('lat_max','value'),
-#         Input('lon_min','value'),
-#         Input('lon_max','value')
-#     ]
-# )
-# def update_ranges(lat_min,lat_max,lon_min,lon_max):
-#     s = True
-#     if not pos_validation(lat_min, lat_max, lon_min, lon_max):
-#         s = False
-#     return s
-
 # Update global values of lat/long using validation
 @app.callback(
     Output("lat_alert", "hidden"),
@@ -1289,6 +1233,7 @@ app.layout = html.Div(
         Input('lat_max','value')
     ]
 )
+
 def update_lat_alert(lat_min,lat_max):
     s = True
     if not lat_validation(lat_min, lat_max):
@@ -1303,6 +1248,7 @@ def update_lat_alert(lat_min,lat_max):
         Input('lon_max','value')
     ]
 )
+
 def update_lon_alert(lon_min,lon_max):
     s = True
     if not lon_validation(lon_min, lon_max):
@@ -1323,6 +1269,7 @@ def update_lon_alert(lon_min,lon_max):
         Input("date_alert", "hidden")
     ],
 )
+
 def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
     s = False
     errors = []
@@ -1379,6 +1326,7 @@ def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
         Input("gaz_list", "value")
     ]
 )
+
 def update_dates(start_date, end_date, gaz_list):
     s = True
     if not date_validation(start_date,end_date,gaz_list):
@@ -1507,8 +1455,6 @@ def make_count_figure(df, alt_range):
     start_time1 = time.time()
 
     concentration=df[alt_range[0]:alt_range[1]]
-    # concentration=np.array(concentration,dtype=np.float32)
-    # concentration=np.ma.masked_array(concentration, np.isnan(concentration))
     xx=concentration.mean(axis=0)
     err_xx=concentration.std(axis=0)
 
@@ -1578,10 +1524,8 @@ def generate_geo_map(df):
 
     The color of the data points indicates the mean gas concentration at that coordinate.
 
-
     Parameters
     ----------
-
 
     start_date : Datetime
         First day in the date range selected by user. The default is the first day of data available.
@@ -1607,7 +1551,6 @@ def generate_geo_map(df):
     alt_range : List
         Range of altitudes
 
-
     Returns
     -------
     dict
@@ -1615,7 +1558,6 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
 
-    # TODO: This function takes more than 5 seconds to run. We should optimize databin().
     print('\nDEBUG: entering generate_geo_map()')
     start_time1 = time.time()
 
@@ -1723,6 +1665,7 @@ def generate_geo_map(df):
     # This makes sure pixels are square so that we can accurately lay our data on an equirectangular map. We also set the background color to white
     fig['layout']['yaxis']['scaleanchor']='x'
     fig['layout'].update(plot_bgcolor='white')
+    
     # We add the coastlines on top of our heatmap and skip hoverinfo so that it does not overlap heatmap labels
     fig.add_trace(
         go.Scatter(
@@ -1739,13 +1682,11 @@ def generate_geo_map(df):
     columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     
     print('DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
-
     return [fig, columns, data]
 
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
-
 
     Parameters
     ----------
@@ -1780,7 +1721,6 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     alt_range : List
         Range of altitudes
 
-
     Returns
     -------
     dict
@@ -1808,7 +1748,6 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
             connectgaps=True,
             showlegend=False,
         ),
-
     ]
 
     layout = dict(
@@ -1840,7 +1779,6 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     figure = dict(data=data, layout=layout)
     
     print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
-
     return [figure, columns, table_data]
 
 #=======================================================================================================================
@@ -1880,6 +1818,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         State("date_alert", "hidden")
     ]
 )
+
 def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
     if (lat_alert or lon_alert or date_alert):
         print('\nReading data from controller()')
@@ -2001,7 +1940,6 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
     
     print('DEBUG: end of update_csv_link() - Time spent: ' + str(time.time() - start_time1) + '\n')
-
     return link
 
 #=======================================================================================================================
@@ -2088,51 +2026,6 @@ def download_csv():
 
     return output
 
-
-
-#============================================================================
-# Unused code
-
-# Selected Data by sliding mouse
-#!!!!!!!!!!!!!!!!!!!
-#@app.callback(
-#    [Output("lat_min", "value"),
-#    Output("lat_max", "value"),
-#    Output("lon_min", "value"),
-#    Output("lon_max", "value")],
-#    [Input("selector_map", "selectedData"), Input("selector_map", "clickData")]
-#)
-#def update_bar_selector(value, clickData):
-#    holder_lat = []
-#    holder_lon = []
-#    if clickData:
-#        try:
-#            holder_lat.append(str(int(clickData["points"][0]["lat"])))
-#            holder_lon.append(str(int(clickData["points"][0]["long"])))
-#        except KeyError:
-#            ""
-#    if value:
-#        for x in value["points"]:
-#            holder_lat.append(((x["lat"])))
-#            holder_lon.append(((x["long"])))
-#
-#    holder_lat  = np.array( holder_lat)
-#    holder_lon  = np.array( holder_lon)
-#    if len(holder_lat)!=0 :
-#        return int(np.min(holder_lat)),int(np.max(holder_lat)),int(np.min(holder_lon)),int(np.max(holder_lon))
-#    else :
-#        return -90,90,-180,180
-
-
-# Clear Selected Data if Click Data is used
-#@app.callback(
-#    Output("selector_map", "selectedData"),
-#    [Input("selector_map", "clickData")]
-#    )
-#def update_selected_data(clickData):
-#    if clickData:
-#        return {"points": []}
-
 #============================================================================
 # Translation
 
@@ -2181,6 +2074,7 @@ def download_csv():
     ],
         [Input('none', 'children')], # A placeholder to call the translations upon startup
 )
+
 def translate_static(x):
     print('Translating...')
     return [
@@ -2324,47 +2218,6 @@ def translate_static(x):
     ]
 
 
-# # Translate the header and the footer by injecting raw HTML
-# @app.callback(
-#     [
-#         Output('gc-header', 'children'),
-#         Output('gc-footer', 'children')
-#     ],
-#     [Input('none2', 'children')]
-# )
-# def translate_header_footer(x):
-#     """ Translates the government header and footer
-#     """
-#     # to be deprecated
-
-#     if app_config.DEFAULT_LANGUAGE == 'fr':
-#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_fr), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_fr)]
-#     else:
-#         return [dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_header_en), dash_dangerously_set_inner_html.DangerouslySetInnerHTML(gc_footer_en)]
-
-
-# @app.callback(
-#     [
-#         Output('language-button', 'children'),
-#         Output('language-link', 'href'),
-#         Output("learn-more-link", 'href')
-#     ],
-#     [Input('none2', 'children')]
-# )
-# def update_language_button(x):
-#     """Updates the button to switch languages
-#     """
-
-#     try:
-#         language = session['language']
-#     except KeyError:
-#         language = None
-#     if language == 'fr':
-#         return 'EN', prefixe+'/language/en','https://www.asc-csa.gc.ca/fra/satellites/scisat/a-propos.asp' #! Le code est bizarre et fait l'inverse
-#     else:
-#         return 'FR', prefixe+'/language/fr','https://www.asc-csa.gc.ca/eng/satellites/scisat/about.asp'
-
-
 @babel.localeselector
 def get_locale():
     # if the user has set up the language manually it will be stored in the session,
@@ -2387,8 +2240,6 @@ def set_language(language=None):
     session['language'] = app_config.DEFAULT_LANGUAGE
 
     return redirect(url_for('/'))
-
-
 
 
 # Main

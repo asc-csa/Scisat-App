@@ -3,9 +3,8 @@ import dash
 import cartopy.feature as cf
 import configparser
 import dash_core_components as dcc
-import dash_bootstrap_components as dbc
+#import dash_bootstrap_components as dbc
 import dash_html_components as html
-import dash_dangerously_set_inner_html
 import plotly.graph_objs as go
 import pandas as pd
 import datetime as dt
@@ -18,13 +17,13 @@ import urllib.parse
 import dash_table as dst
 from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
-from scipy.stats import sem, t
-from scipy import mean
+#from scipy.stats import sem, t
+#from scipy import mean
 import numpy as np
 import datetime
 from os import path
 import os.path
-import time
+#import time
 
 
 class CustomDash(dash.Dash):
@@ -150,7 +149,7 @@ def generate_meta_tag(name, content):
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from config import Config
-    print ('DEBUG: SCISAT Main Block used')
+    #print ('DEBUG: SCISAT Main Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -173,7 +172,7 @@ if __name__ == '__main__':
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from .config import Config
-    print ('DEBUG: SCISAT Alternate Block used')
+    #print ('DEBUG: SCISAT Alternate Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -287,11 +286,11 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     if data_reader.page_df.size != 0:
         return data_reader.page_df
 
-    print('\nDEBUG: entering data_reader()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering data_reader()')
+    #start_time1 = time.time()
     
-    print('data_reader() -> file: ' + file)
-    print('data_reader() -> datareader path: ' + path_to_files)
+    #print('data_reader() -> file: ' + file)
+    #print('data_reader() -> datareader path: ' + path_to_files)
     
     if type(file)==list:
         file=file[0]
@@ -305,7 +304,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     name=path_to_files+'/'+file
     nc = netcdf.netcdf_file(name,'r')
 
-    print('DEBUG: data_reader() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('DEBUG: data_reader() - Time spent so far (#1): ' + str(time.time() - start_time1))
     
     #Trier / définir rapido les données et les variables
     fillvalue1 = -999.
@@ -327,8 +326,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     data = data[:,alt_range[0]:alt_range[1]]
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
-    print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
-    print('DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
+    #print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
+    #print('DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     #Trie données abérrantes
     # TODO: This part takes a long time. We should optmize it. numpy.nan is too slow
@@ -344,14 +343,14 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #slow
     df[df<minV]=np.nan
 
-    print('DEBUG: data_reader() - Time spent so far (#3): ' + str(time.time() - start_time1))
+    #print('DEBUG: data_reader() - Time spent so far (#3): ' + str(time.time() - start_time1))
 
     #Colonne de dates
     date=[]
     nbDays = len(days)
-    print('DEBUG: Number of days to loop: ' + str(nbDays))
+    #print('DEBUG: Number of days to loop: ' + str(nbDays))
     date = np.array([dt.datetime(years[i],months[i],days[i]) for i in range (nbDays)])
-    print('DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
+    #print('DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
 
     data_meanAlt = np.nanmean(df,1)
     df['Alt_Mean'] = data_meanAlt
@@ -369,7 +368,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['long']>lon_min,True,False)]
     df=df[np.where(df['long']<lon_max,True,False)]
 
-    print('DEBUG: end of data_reader() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
+    #print('DEBUG: end of data_reader() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
     data_reader.page_df = df
     return df
 data_reader.page_df = pd.DataFrame()
@@ -416,10 +415,10 @@ def databin(df, step):
         A dataframe contained the binned data provided in steps of specified degrees.
     """
     # We create a binning map
-    print('\n\nDEBUG: entering databin()')
-    start_time1 = time.time()
+    #print('\n\nDEBUG: entering databin()')
+    #start_time1 = time.time()
     to_bin = lambda x: np.round(x / step) * step
-    print('DEBUG: databin() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('DEBUG: databin() - Time spent so far (#1): ' + str(time.time() - start_time1))
     
     # We map the current data into the bins
     # TODO: This part takes a long time, but it looks like we already use the optimized way
@@ -427,7 +426,7 @@ def databin(df, step):
     df["long"] = df['long'].map(to_bin)
     
     # We return a mean value of all overlapping data to ensure there are no overlaps
-    print('DEBUG: end of databin() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
+    #print('DEBUG: end of databin() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
     return df.groupby(["lat", "long"]).mean().reset_index()
 
 
@@ -1008,7 +1007,7 @@ def detail_table(id, id2):
         if ctx.triggered:
             start_page = curr_page
             # curr_page = curr_page + 1
-            print(ctx.triggered)
+            #print(ctx.triggered)
             if ctx.triggered[0]['prop_id'] == id+'-btn-next.n_clicks':
                 curr_page += 1
             if ctx.triggered[0]['prop_id'] == id+'-btn-1.n_clicks':
@@ -1391,7 +1390,7 @@ def lon_validation(lon_min,lon_max):
 def date_validation(start_date, end_date, gaz_list):
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
-    print('\nReading data from date_validation()')
+    #print('\nReading data from date_validation()')
     df = data_reader(gaz_list, path_data)
     MIN_DATE=df['date'].min().to_pydatetime()
     MAX_DATE=df['date'].max().to_pydatetime()
@@ -1402,8 +1401,8 @@ def gas_validation(gaz_list):
     try:
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
-        print('Path to data:')
-        print(path_data)
+        #print('Path to data:')
+        #print(path_data)
         name=path_data+'/'+gaz_list
         nc = netcdf.netcdf_file(name,'r')
     except FileNotFoundError:
@@ -1451,8 +1450,8 @@ def make_count_figure(df, alt_range):
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object.
     """
-    print('\nDEBUG: entering make_count_figure()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering make_count_figure()')
+    #start_time1 = time.time()
 
     concentration=df[alt_range[0]:alt_range[1]]
     xx=concentration.mean(axis=0)
@@ -1514,7 +1513,7 @@ def make_count_figure(df, alt_range):
             {"name":_("Mean concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
             {"name":_("Max. confidence interval concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     
-    print('DEBUG: end of make_count_figure() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('DEBUG: end of make_count_figure() - Time spent: ' + str(time.time() - start_time1) + '\n')
 
     return [figure, columns, table_data]
 
@@ -1558,8 +1557,8 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
 
-    print('\nDEBUG: entering generate_geo_map()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering generate_geo_map()')
+    #start_time1 = time.time()
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
     hm = True
@@ -1571,7 +1570,7 @@ def generate_geo_map(df):
     else:
         df = databin(df,3)
 
-    print('DEBUG: generate_geo_map() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('DEBUG: generate_geo_map() - Time spent so far (#1): ' + str(time.time() - start_time1))
 
     # We collect the coordinates of all coastlines geometries from cartopy
     x_coords = []
@@ -1580,7 +1579,7 @@ def generate_geo_map(df):
         x_coords.extend([k[0] for k in coord_seq.coords] + [np.nan])
         y_coords.extend([k[1] for k in coord_seq.coords] + [np.nan])
 
-    print('DEBUG: generate_geo_map() - Time spent so far (#2): ' + str(time.time() - start_time1))
+    #print('DEBUG: generate_geo_map() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     # We create a heatmap of the binned data
     if hm:
@@ -1643,7 +1642,7 @@ def generate_geo_map(df):
             )
         )
 
-    print('DEBUG: generate_geo_map() - Time spent so far (#3): ' + str(time.time() - start_time1))
+    #print('DEBUG: generate_geo_map() - Time spent so far (#3): ' + str(time.time() - start_time1))
 
     # We set the layout for margins and paddings
     fig.update_layout(
@@ -1681,7 +1680,7 @@ def generate_geo_map(df):
     data = df[['lat','long','Alt_Mean']].to_dict('records')
     columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     
-    print('DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [fig, columns, data]
 
 # This generate the time series chart.
@@ -1727,8 +1726,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the chart's layout
         as a Plotly layout graph object.
     """
-    print('\nDEBUG: entering make_viz_chart()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering make_viz_chart()')
+    #start_time1 = time.time()
 
     concentration =df.groupby('date')['Alt_Mean'].mean()
     concentration =  concentration.groupby(concentration.index.floor('D')).mean()
@@ -1778,7 +1777,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)}]
     figure = dict(data=data, layout=layout)
     
-    print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [figure, columns, table_data]
 
 #=======================================================================================================================
@@ -1821,7 +1820,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 
 def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
     if (lat_alert or lon_alert or date_alert):
-        print('\nReading data from controller()')
+        #print('\nReading data from controller()')
         df = data_reader(act_gaz_list, path_data, start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
         [fig1, columns1, data1] = generate_geo_map(df)
         [fig2, columns2, data2] = make_viz_chart(df)
@@ -1882,7 +1881,7 @@ def update_filtering_text(df):
     )
     
 def update_picker(gaz_list):
-    print('\nReading data from update_picker()')
+    #print('\nReading data from update_picker()')
     data_reader.page_df = pd.DataFrame()
     df = data_reader(gaz_list, path_data)
     START_DATE = df.date.min().to_pydatetime()
@@ -1922,8 +1921,8 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
-    print('\nDEBUG: entering update_csv_link()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering update_csv_link()')
+    #start_time1 = time.time()
 
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
             .format(start_date, end_date, lat_min, lat_max, lon_min, lon_max, gaz_list, alt_range)
@@ -1939,7 +1938,7 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     }
     link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
     
-    print('DEBUG: end of update_csv_link() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('DEBUG: end of update_csv_link() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return link
 
 #=======================================================================================================================
@@ -1985,8 +1984,8 @@ def download_csv():
         CSV file based on the applied filters
     """
 
-    print('\nDEBUG: entering download_csv()')
-    start_time1 = time.time()
+    #print('\nDEBUG: entering download_csv()')
+    #start_time1 = time.time()
 
     lat_min    = float(flask.request.args.get('lat_min'))
     lat_max    = float(flask.request.args.get('lat_max'))
@@ -2005,7 +2004,7 @@ def download_csv():
     alt_range = alt_range[1:-1].split(',')
     alt_range[0] = int(alt_range[0])
     alt_range[1] = int(alt_range[1])
-    print('Reading data from download_csv()')
+    #print('Reading data from download_csv()')
     df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
@@ -2022,7 +2021,7 @@ def download_csv():
         output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
     output.headers["Content-type"] = "text/csv"
     
-    print('DEBUG: end of download_csv() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('DEBUG: end of download_csv() - Time spent: ' + str(time.time() - start_time1) + '\n')
 
     return output
 
@@ -2076,7 +2075,7 @@ def download_csv():
 )
 
 def translate_static(x):
-    print('Translating...')
+    #print('Translating...')
     return [
                 _("Data selected"),
                 _("Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, with a special emphasis on the changes occurring over Canada and in the Arctic. "),

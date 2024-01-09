@@ -1510,6 +1510,10 @@ def make_count_figure(df, alt_range):
         template["int_min"]= xx[i]-err_xx[i]
         template["mean"]=xx[i]
         template["int_max"]=xx[i]+err_xx[i]
+        if template["int_min"] < 0:
+            template["int_min"]= 0
+        if template["mean"] < 0:
+            template["mean"]= 0
         table_data.append(template)
     columns=[{"name":_("Altitude (km)"), "id":"alt"},
             {"name":_("Min. confidence interval concentration (ppv)"), "id":"int_min","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
@@ -1686,6 +1690,63 @@ def generate_geo_map(df):
     #print('DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [fig, columns, data]
 
+# This removes the negative concentrations from the data frame
+def remove_nagative_concentrations(df):
+    """Remove the negative concentrations from the data frame.
+
+    Parameters
+    ----------
+
+    start_date : Datetime
+        First day in the date range selected by user. The default is the first day of data available.
+
+    end_date : Datetime
+        Last day in the date range selected by user. The default is the last day of data available.
+
+    x_axis_selection : string
+        The chart's x-axis parameter selected by the dropdown stored as a string (e.g 'timestamp')
+
+    y_axis_selection : string
+        The chart's y-axis parameter selected by the dropdown stored as a string (e.g 'max_depth')
+
+    lat_min : float
+        Minimum value of the latitude stored as a float.
+
+    lat_max : float
+        Maximum value of the latitude stored as a float.
+
+    lon_min : float
+        Minimum value of the longitude stored as a float.
+
+    lon_max : float
+        Maximum value of the longitude stored as a float.
+
+    gaz_list : list
+        Gas name strings stored in a list (e.g. ['Ozone'])
+
+    alt_range : List
+        Range of altitudes
+
+    Returns
+    -------
+    dict
+        Data frame that does not have negative concentrations anymore
+    """
+    
+    # Ignore negative concentration
+    #print ('Ignore negative concentrations')
+    previous_concentration = 0
+    for row in df.index:
+        if df['Alt_Mean'][row] >= 0:
+            previous_concentration = df['Alt_Mean'][row]
+        if df['Alt_Mean'][row] < 0:
+            #print('Date: ', df['date'][row], 'Alt_Mean: ', the_concentration)
+            if previous_concentration < 0:
+                print('ERROR: Negative previous concentration found.')
+            df.at[row, 'Alt_Mean'] = previous_concentration
+             
+    return df
+
 # This generate the time series chart.
 def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentration [ppv]'):
     """Create and update the chart for visualizing gas concentration based on varying x and y-axis selection.
@@ -1732,8 +1793,10 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     #print('\nDEBUG: entering make_viz_chart()')
     #start_time1 = time.time()
 
-    concentration =df.groupby('date')['Alt_Mean'].mean()
-    concentration =  concentration.groupby(concentration.index.floor('D')).mean()
+    concentration = df.groupby('date')['Alt_Mean'].mean()
+    concentration = concentration.groupby(concentration.index.floor('D')).mean()
+    concentration = concentration.dropna()
+
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()
 
@@ -1825,6 +1888,7 @@ def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_
     if (lat_alert or lon_alert or date_alert):
         #print('\nReading data from controller()')
         df = data_reader(act_gaz_list, path_data, start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
+        df = remove_nagative_concentrations(df)
         [fig1, columns1, data1] = generate_geo_map(df)
         [fig2, columns2, data2] = make_viz_chart(df)
         [fig3, columns3, data3] = make_count_figure(df, alt_range)

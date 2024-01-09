@@ -534,7 +534,7 @@ app_footer_en = '''
         </div>
         <dl id="wb-dtmd">
         <dt>Date modified:&#32;</dt>
-        <dd><time property="dateModified">2023-03-14</time></dd>
+        <dd><time property="dateModified">2024-01-09</time></dd>
         </dl>
         </div>
         </div>
@@ -1100,7 +1100,7 @@ app_footer_fr = '''
         </div>
         <dl id="wb-dtmd">
         <dt>Date de modification:&#32;</dt>
-        <dd><time property="dateModified">2023-03-14</time></dd>
+        <dd><time property="dateModified">2024-01-09</time></dd>
         </dl>
         </div>
         </div>

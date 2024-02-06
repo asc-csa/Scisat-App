@@ -3,9 +3,9 @@ import dash
 import cartopy.feature as cf
 import configparser
 import dash_core_components as dcc
-#import dash_bootstrap_components as dbc
 import dash_html_components as html
 import plotly.graph_objs as go
+import plotly.express as px
 import pandas as pd
 import datetime as dt
 from dash.dependencies import Input, Output, State
@@ -17,13 +17,9 @@ import urllib.parse
 import dash_table as dst
 from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
-#from scipy.stats import sem, t
-#from scipy import mean
 import numpy as np
-import datetime
 from os import path
 import os.path
-#import time
 
 
 class CustomDash(dash.Dash):
@@ -1412,6 +1408,80 @@ def gas_validation(gaz_list):
         return False
     return True
 
+# Computes the mean value into a dataframe
+def compute_mean_concentration(df: pd.DataFrame, startindex, buffer_size):
+    """Computes the mean value into a dataframe.
+
+    Parameters
+    ----------
+
+    df : DateFrame
+        Input dataframe. It shall contain the 'Alt_Mean' column.
+
+    startindex : integer
+        Computation goes from the star index for n values where n is the buffer size.
+
+    buffer_size : integer
+        Size of the buffer to use for mean computation. e.g. 200
+
+    Returns
+    -------
+    float
+        The concentration mean (ppv).
+    """
+    
+    average = 0.0
+    nb_nan = 0
+    for index, row in df.iloc[startindex:].iterrows():
+        
+        if(index < (startindex + buffer_size)):
+            try:
+                # Regular case
+                average = average + row['Alt_Mean']
+            except:
+                # NaN
+                nb_nan = nb_nan + 1
+        else:
+            break
+    
+    # Compute the average
+    if (buffer_size - nb_nan) <= 0:
+        return 0
+    return float(average) / float(buffer_size - nb_nan)
+
+# Extracts the first & last concentration from the dataframe
+def create_mean_time_series(df: pd.DataFrame):
+    
+    """Creates the dataframe for the mean concentration time series
+
+    Parameters
+    ----------
+
+    df : DateFrame
+        Input dataframe. It shall contain the 'Alt_Mean' column.
+
+    Returns
+    -------
+    Dataframe
+        Dataframe that contains the concentration means (ppv) according to the time slot.
+    """
+    nb_data = len(df.index)
+    if nb_data < 5:
+        # Less than 5 data -> use the first & last value
+        return {"date": [df.iloc[1]['date'], df.iloc[nb_data-1]['date']],
+                "Alt_Mean": [df.iloc[1]['Alt_Mean'], df.iloc[nb_data-1]['Alt_Mean']]}
+    else:
+        # Compute the buffer size 4 the mean computation
+        buffer_size = int(nb_data / 2.4)
+        if buffer_size > 400:
+            #max buffer size
+            buffer_size = 400
+            
+        first_value = compute_mean_concentration(df, 0, buffer_size)
+        last_value = compute_mean_concentration(df, nb_data-buffer_size-1, buffer_size)
+        return {"date": [df.iloc[1]['date'], df.iloc[nb_data-1]['date']],
+                "Alt_Mean": [first_value, last_value]}
+
 #=======================================================================================================================
 # This section is for graph generation. The 3 graphs are generated here.
 
@@ -1466,7 +1536,7 @@ def make_count_figure(df, alt_range):
             type="scatter",
             x=xx,
             y=concentration.columns[0:alt_range[1]-alt_range[0]],
-            error_x=dict(type='data', array=err_xx,thickness=0.5),#!!!!!!!!!! Ne semble pas marcher
+            error_x=dict(type='data', array=err_xx,thickness=0.5),
             name=_("Altitude"),
             #orientation='h',
             # color=xx,
@@ -1796,52 +1866,60 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     concentration = df.groupby('date')['Alt_Mean'].mean()
     concentration = concentration.groupby(concentration.index.floor('D')).mean()
     concentration = concentration.dropna()
+    df_tmp = df.groupby(['date'])['Alt_Mean'].mean().reset_index()
+    concentration_mean = pd.DataFrame(create_mean_time_series(df_tmp))
+    mean_dates = concentration_mean["date"]
+    mean_concentrations = concentration_mean['Alt_Mean']
 
     bins=concentration
     date=df["date"].map(pd.Timestamp.date).unique()
 
-    data = [
-        dict(
-            #mode="lines",
+    # Plot data
+    figure = go.Figure(
+            go.Scatter(
             name="",
             type="scatter",
             x=date,
             y=bins,
-            #line_color="rgba(255,255,255,0)",
             fillcolor="rgba(255,255,255,0)",
             line={'color': 'rgb(18,99,168)'},
             connectgaps=True,
-            showlegend=False,
-        ),
-    ]
+            showlegend=False))
 
-    layout = dict(
+    figure.update_layout(
         autosize=True,
-        automargin=True,
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
-        # legend=dict(font=dict(size=10), orientation="h"),
-        title=_("Time series"),
-
-        xaxis={"title": _('Date'), "automargin": True} ,
-
+        #title=_("Time series"),
+        xaxis={"title": _('Date'), "gridcolor":"#D6D6D6"} ,
         yaxis =  dict(
            title = _("Concentration [ppv]"),
-           automargin=True,
            showexponent = 'all',
-           exponentformat = 'e'
+           exponentformat = 'e',
+           gridcolor="#D6D6D6"
            ),
-
         height=500,
         transition={'duration': 500},
     )
+    
+    # Add the mean line
+    figure.add_trace(
+        go.Scatter(
+            x = mean_dates,
+            y = mean_concentrations,
+            name="",
+            showlegend=False,
+            line = dict(color='red')))
+    
+    figure.update_xaxes(showgrid=True)
+    figure.update_yaxes(showgrid=True)
 
+    # Create the table
     table_data = []
     for index, value in bins.items():
         template = {"date":index.strftime("%Y-%m-%d"), 'conc':value}
         table_data.append(template)
     columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)}]
-    figure = dict(data=data, layout=layout)
     
     #print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [figure, columns, table_data]

@@ -582,7 +582,8 @@ msgid ""
 msgstr ""
 "Série temporelle montrant la concentration du gaz en parties par volume "
 "(ppv) sur les dates sélectionnées. Chaque point est une moyenne "
-"quotidienne sur l'altitude ainsi que la position."
+"quotidienne sur l'altitude ainsi que la position. La ligne rouge "
+"présente la tendance globale pour la période de temps sélectionnée."
 
 #: scisat.py:2035
 msgid "Select gas:"

@@ -1891,12 +1891,12 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         plot_bgcolor="#F9F9F9",
         paper_bgcolor="#F9F9F9",
         #title=_("Time series"),
-        xaxis={"title": _('Date'), "gridcolor":"#D6D6D6"} ,
+        xaxis={"title": _('Date'), "gridcolor":"#D8D8D8"} ,
         yaxis =  dict(
            title = _("Concentration [ppv]"),
            showexponent = 'all',
            exponentformat = 'e',
-           gridcolor="#D6D6D6"
+           gridcolor="#D8D8D8"
            ),
         height=500,
         transition={'duration': 500},
@@ -1909,7 +1909,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
             y = mean_concentrations,
             name="",
             showlegend=False,
-            line = dict(color='red')))
+            line = dict(color='firebrick')))
     
     figure.update_xaxes(showgrid=True)
     figure.update_yaxes(showgrid=True)
@@ -2233,7 +2233,7 @@ def translate_static(x):
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the selected latitudes, longitudes and dates. Error bars are 95% confidence intervals around the mean."),
-                _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration."),
+                _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration. The red line shows the overall trend for the selected time period."),
                 _("Select gas:"),
                 _("Selection of the range of latitude "),
                 _("Selection of the range of longitude"),

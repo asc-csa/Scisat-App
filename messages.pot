@@ -515,14 +515,15 @@ msgid ""
 "Graph showing the gas concentration in parts per volume (ppv) over the "
 "selected altitude interval. The value represents the mean concentration "
 "over the latitudes and longitudes selected, as well as the selected "
-"dates."
+"dates. Error bars are 95% confidence intervals around the mean."
 msgstr ""
 
 #: scisat.py:1914
 msgid ""
 "Time series showing the evolution of the gas concentration in parts per "
 "volume (ppv). Each data point represents the daily overall mean "
-"concentration."
+"concentration. The red line shows the overall trend for the selected "
+"time period."
 msgstr ""
 
 #: scisat.py:1915

@@ -674,26 +674,17 @@ msgstr "Chlorofluorure de carbonyle"
 #~ msgid "Concentration"
 #~ msgstr "Concentration"
 
-#~ msgid "Concentration [ppv]"
-#~ msgstr "Concentration [ppv]"
-
 #~ msgid "Maximum Depth"
 #~ msgstr "Profondeur maximale"
 
 #~ msgid "Data Visualization "
 #~ msgstr "Visualisation des données"
 
-#~ msgid "Gas Concentration [ppv] (mean on altitude and position) "
-#~ msgstr "Concentration du gaz [ppv] (moyenne sur l'altitude et la position)"
-
 #~ msgid "Scisat data visualisation"
 #~ msgstr "Visualisation des données de SCISAT"
 
 #~ msgid "Learn More About SciSat"
 #~ msgstr "En apprendre plus sur SCISAT"
-
-#~ msgid "Data selected"
-#~ msgstr "Données sélectionnées"
 
 #~ msgid ""
 #~ "This application provides users the "
@@ -764,12 +755,6 @@ msgstr "Chlorofluorure de carbonyle"
 
 #~ msgid "data selected"
 #~ msgstr "Données sélectionnées"
-
-#~ msgid "Filter by latitude:"
-#~ msgstr "Filtrer par latitude :"
-
-#~ msgid "Filter by longitude:"
-#~ msgstr "Filtrer par longitude :"
 
 #~ msgid "select date:"
 #~ msgstr "Sélectionner la date :"

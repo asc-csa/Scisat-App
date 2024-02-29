@@ -443,6 +443,10 @@ msgstr ""
 msgid "Max. confidence interval concentration (ppv)"
 msgstr ""
 
+#: scisat.py:1440
+msgid "Overall trend"
+msgstr ""
+
 #: scisat.py:1519
 msgid "Gas concentration [ppv] (mean on altitude and position) "
 msgstr ""
@@ -540,8 +544,9 @@ msgstr ""
 msgid ""
 "Time series showing the evolution of the gas concentration in parts per "
 "volume (ppv). Each data point represents the daily overall mean "
-"concentration. The red line shows the overall trend for the selected "
-"time period."
+"concentration. The red line shows the overall trend, which indicates if "
+"the gas concentration is increasing or decreasing during the selected "
+"time period (↗ or ↘)."
 msgstr ""
 
 #: scisat.py:2035
@@ -610,6 +615,14 @@ msgstr ""
 
 #: scisat.py:2059
 msgid "Text version - Mean gas concentration over time"
+msgstr ""
+
+#: scisat.py:2060
+msgid "Gas concentration is decreasing."
+msgstr ""
+
+#: scisat.py:2061
+msgid "Gas concentration is increasing."
 msgstr ""
 
 #: scisat.py:2069

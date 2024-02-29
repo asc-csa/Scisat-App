@@ -1178,7 +1178,6 @@ def build_stats():
                             html.P(id = "Altitude_description", style={"margin-top":"2em"})
                             ]),
                     detail_table('altitude-table', 'altitude-table-text'),
-                    ##HERE
                     html.Div([
                         dcc.Graph(id="viz_chart",
                                   config={
@@ -1902,7 +1901,20 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         transition={'duration': 500},
     )
     
-    # Add the mean line
+    # Add the mean line (the red line)
+    first_mean_concentration = concentration_mean.iloc[0]['Alt_Mean']
+    last_mean_concentration = concentration_mean.iloc[1]['Alt_Mean']
+    overall_trend = " ↗↘ "
+    if first_mean_concentration > last_mean_concentration:
+        print('going down')
+        overall_trend = " ↘ "
+    elif first_mean_concentration < last_mean_concentration:
+        print('going up')
+        overall_trend = " ↗ "
+    else:
+        print('going straight')
+        overall_trend = ' -- '
+
     figure.add_trace(
         go.Scatter(
             x = mean_dates,
@@ -1917,9 +1929,9 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     # Create the table
     table_data = []
     for index, value in bins.items():
-        template = {"date":index.strftime("%Y-%m-%d"), 'conc':value}
+        template = {"date":index.strftime("%Y-%m-%d"), 'conc':value, 'trend':overall_trend}
         table_data.append(template)
-    columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)}]
+    columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)},{'name':_("Overall trend"),'id':'trend','type':'string'}]
     
     #print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [figure, columns, table_data]
@@ -2233,7 +2245,7 @@ def translate_static(x):
                 _("Update with selected data"),
                 _("Graph of the gas concentration in parts per volume (ppv) visualized on a world map. Each dot represents the mean concentration on the selected dates, the altitude column as well as the position. The color indicates the mean gas concentration value."),
                 _("Graph showing the gas concentration in parts per volume (ppv) over the selected altitude interval. The value represents the mean concentration over the selected latitudes, longitudes and dates. Error bars are 95% confidence intervals around the mean."),
-                _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration. The red line shows the overall trend for the selected time period."),
+                _("Time series showing the evolution of the gas concentration in parts per volume (ppv). Each data point represents the daily overall mean concentration. The red line shows the overall trend, which indicates if the gas concentration is increasing or decreasing during the selected time period (↗ or ↘)."),
                 _("Select gas:"),
                 _("Selection of the range of latitude "),
                 _("Selection of the range of longitude"),

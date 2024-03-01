@@ -591,7 +591,7 @@ msgstr ""
 "quotidienne sur l'altitude ainsi que la position. La ligne rouge "
 "présente la tendance globale pour la période de temps sélectionnée. "
 "Cela indique si la concentration du gaz est à la hausse ou à la basse "
-"(↗ or ↘)."
+"(↗ ou ↘)."
 
 #: scisat.py:2035
 msgid "Select gas:"
@@ -842,7 +842,7 @@ msgstr "Chlorofluorure de carbonyle"
 #~ "tendance globale pour la période de temps "
 #~ "sélectionnée. Cela indique si la "
 #~ "concentration du gaz est à la hausse ou à "
-#~ "la basse (↗ or ↘)."
+#~ "la basse (↗ ou ↘)."
 
 #~ msgid ""
 #~ "Graph of the gas concentration "

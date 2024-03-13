@@ -128,15 +128,15 @@ external_scripts = [
     'assets/scripts.js'
 ]
 
-DATA_VERSION = ''
+DATA_VERSION = 'L2_v4p1'
 
 # Loads the config file
 def get_config_dict():
     config = configparser.RawConfigParser()
     #config.read('config.cfg')
     config.read('/home/ckanportal/App-Launcher/config.cfg')
-    #print("SCISAT Data version: " + config['SCISAT']['DATA_VERSION'])
     DATA_VERSION = config['SCISAT']['DATA_VERSION']
+    print("SCISAT Data version: " + DATA_VERSION)
     if not hasattr(get_config_dict, 'config_dict'):
         get_config_dict.config_dict = dict(config.items('TOKENS'))
     return get_config_dict.config_dict
@@ -291,7 +291,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #print('\nDEBUG: entering data_reader()')
     #start_time1 = time.time()
     
-    #print('data_reader() -> file: ' + file)
+    print("SCISAT Data version: " + DATA_VERSION)
+    print('data_reader() -> file: ' + file)
     #print('data_reader() -> datareader path: ' + path_to_files)
     
     if type(file)==list:

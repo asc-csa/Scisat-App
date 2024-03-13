@@ -128,7 +128,7 @@ external_scripts = [
     'assets/scripts.js'
 ]
 
-DATA_VERSION = 'L2_v4p1'
+DATA_VERSION = 'ACEFTS_L2_v4p1'
 
 # Loads the config file
 def get_config_dict():

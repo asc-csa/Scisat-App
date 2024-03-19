@@ -10,10 +10,7 @@ Le satellite SCISAT, en orbite depuis le 12 août 2003, aide des équipes de sci
 
 Vous pouvez accéder à cette micro application en direct au https://donnees-data.asc-csa.gc.ca/scisat-fr. 
 
-## Dépendances
-L'application repose sur l'architecture [App-Launcher](https://github.com/asc-csa/App-Launcher). Cette application doit être installée en premier lieu.
-
-## Démarrage rapide
+## Exécution
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
 
 Pour démarrer l'application :
@@ -63,10 +60,7 @@ This project has been developped from the Alouette app, a case study for the dev
 
 The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
 
-## Dependancies
-This application is based on [App-Launcher](https://github.com/asc-csa/App-Launcher). Make sure to install App-Launcher before moving on with Alouette.
-
-## Quick start
+## Execution
 
 The following commands can be done more easily if in a virtual environment (like conda) so it may be a good idea to install [Anaconda](https://www.anaconda.com/distribution/) beforehand. 
 

@@ -22,28 +22,15 @@ Les données originales du satellite SCISAT sont dans le format NetCDF (NC). Ce 
 Ce script doit être lancé chaque fois qu’une nouvelle version des données du satellite SCISAT est publiée.
 
 ## Exécution
-Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
+Veuillez suivre ces étapes pour lancer le script :
+- Dans un premier temps, assurez-vous de disposer de tous les fichiers de la nouvelle version des données dans le format NC. Sinon, transférez les fichiers sur votre ordnateur dans un répertoire spécifique. (ex: C:\Temp\SCISAT_DATA)
+- Démarrez VS Code sur votre ordinateur.
+- Ouvrez le fichier [DataConverter.py](DataConverter.py) dans VS Code.
+- Dans le haut du fichier, éditer la valeur de la constante INPUT_FOLDER afin qu'elle représente le répertoire où se trouvent les fichiers dans le format NetCDF.
+- De même, éditer la valeur de la constante OUTPUT_FOLDER afin qu'elle représente le répertoire où vous souhaitez que les fichiers convertis dans le format CSV s'y trouvent après l'exécution.
+- Lancez l'exécution du script dans VS Code. Patientez le traitement.
 
-Pour démarrer l'application :
-- Créer un dossier nommé "data" et y mettre les fichiers .nc des données de SCISAT
->- Ces fichiers sont accessibles en suivant ce [lien](https://databace.scisat.ca/) vers l'accès aux données de niveau 2 de la mission ACE/SCISAT. Vous devrez remplir un formulaire décrivant votre demande de données, après quoi un courriel vous sera envoyé avec le lien vers les fichiers. Les fichiers à télécharger et à placer dans le dossier /data doivent avoir la convention de nommage suivante : 
-
->>>>>>ACEFTS_L2_v4p1\__FormuleChimiqueDuGaz_.nc
-
-- Ajouter le fichier "config.cfg" que vous retrouverez sur [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1) dans le même dossier que scisat.py
-- D'abord, vous devrez créer un environment virtuel avec conda:
-```
-        pip install conda
-        conda create -name venv
-        conda activate venv
-```
-- Puis, dans l'[application dash](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
-        
-        pip install -r requirements.txt
-        conda install -v venv -c conda-forge --file requirements.txt
-        python scisat.py
-
-Lors de l'exécution, l'[application](http://127.0.0.1:8888/scisat/) se trouve à cet endroit.
+Lors de l'exécution, le fenêtre de sortie affiche l'évolution et l'endroit où se trouvent les fichiers convertis dans le format CSV.
 
 ## Auteurs
  - Emiline Filion
@@ -76,28 +63,15 @@ This script shall be run each time a new version of SCISAT data is released.
 
 ## Execution
 
-The following commands can be done more easily if in a virtual environment (like conda) so it may be a good idea to install [Anaconda](https://www.anaconda.com/distribution/) beforehand. 
+Please follow these steps to run the script:
+- First of all, make sure to have all the files of the new version of the data in NC format. Otherwise, transfer the files to your computer in a specific directory. (e.g: C:\Temp\SCISAT_DATA)
+- Start VS Code on your computer.
+- Open [DataConverter.py](DataConverter.py) in VS Code.
+- At the top of the file, edit the value of INPUT_FOLDER so that it represents the directory where the files in the NetCDF format are located.
+- Likewise, edit the value of OUTPUT_FOLDER so that it represents the directory where you want the files converted to CSV format to be located after execution.
+- Run the script in VS Code. Wait for the processing to complete.
 
-For starting the application:
-- Create a folder named "data" and put the .nc files containing the SCISAT data
->- These files can be accessed by following this [link](https://databace.scisat.ca/) to the Level 2 data access of the ACE/SCISAT mission. You will need to complete a form describing your data request after which an email will be sent to you with the link to the files. The files to download and place in the /data folder should have the following naming convention: 
-
->>>>>>ACEFTS_L2_v4p1\__ChemicalFormulaOfGas_.nc
-
-- Add the "config.cfg" file (found on [Livelink](http://livelink/livelink/llisapi.dll?func=ll&objId=36908608&objAction=browse&viewType=1)) in the folder where "scisat.py" is.
-- First, you will have to create a conda virtual environment:
-```
-        pip install conda
-        conda create -name venv
-        conda activate venv
-```
-- Then, go to the [Dash application](https://github.com/Camille-Jonathan-asc-csa/Scisat-App)
-        
-        pip install -r requirements.txt
-        conda -v venv -c conda-forge --file requirements.txt
-        python scisat.py
-
-The URL is [http://127.0.0.1:8888/scisat/)](http://127.0.0.1:8888/scisat/). Separate installation instructions for the production version of the app are provided in "SCISAT Production Installation Guide.docx".
+While running, the terminal shows the progress and location of the converted files in CSV format.
 
 ## Authors
  - Emiline Filion

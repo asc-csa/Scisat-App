@@ -6,16 +6,10 @@
 import datetime as dt
 import numpy as np
 import pandas as pd
-from scipy.io import netcdf #### <--- This is the library to import.
-import matplotlib.pyplot as plt
-import os
-import matplotlib.dates as mdates
+from scipy.io import netcdf
 import warnings
 
-
-# Constants
-path = r'C:\Users\Siavash\Documents\sci-sat' #PATH TO MY DATA FOLDER
-path_to_folder = r'C:\Users\Siavash\Documents\sci-sat'
+warnings.filterwarnings("ignore")
 
 
 # Gets the filename from the whole path (and remove the file extension)
@@ -87,51 +81,46 @@ class netCdfFile:
         """
         
         # Open the NC file
-        print("DEBUG: Entering convert2CSV()")
         print("Getting data from NC file... This step takes several minutes")
         nc = netcdf.netcdf_file(self.full_filename,'r')
-        warnings.filterwarnings("ignore")
         
-        #Trier / définir rapido les données et les variables
+        # Filter data
         fillvalue1 = -999.
-        months=np.copy(nc.variables['month'][:])
+        months = np.copy(nc.variables['month'][:])
         years = np.copy(nc.variables['year'][:])
         days = np.copy(nc.variables['day'][:])
 
         lat = np.copy(nc.variables['latitude'][:])
-        long =np.copy( nc.variables['longitude'][:])
+        long = np.copy( nc.variables['longitude'][:])
         alt = np.copy(nc.variables['altitude'][:])
 
-        #valeurs de concentration [ppv]
+        # Get the concentration data
         data = np.copy(nc.variables[self.gaz][:])
         
-        #Remplacer les données vides
+        # Fill NAN values
         data[data == fillvalue1] = np.nan
 
-        #Choisir les données dans l'intervalle de l'altitude
+        # Pick up data according to altitude
         data = data[:,alt_range[0]:alt_range[1]]
         df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
 
-        #Trie données abérrantes
-        # TODO: This part takes a long time. We should optmize it. numpy.nan is too slow
-        #slow
+        # Set the mean and standard deviation
         df[df>1e-5]=np.nan
-        #slow
         std=df.std()
         mn=df.mean()
         maxV = mn+3*std
         minV = mn-3*std
-        # slow
+
         df[df>maxV]=np.nan
-        #slow
         df[df<minV]=np.nan
 
-        #Colonne de dates
+        # Add the date column to the dataframe
         date=[]
         nbDays = len(days)
         print('DEBUG: Number of days to loop: ' + str(nbDays))
         date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
 
+        # Add extra columns to the dataframe
         data_meanAlt = np.nanmean(df,1)
         data_std = np.nanstd(df,1)
         df['Alt_Mean'] = data_meanAlt
@@ -150,7 +139,6 @@ class netCdfFile:
         df=df[np.where(df['long']>lon_min,True,False)]
         df=df[np.where(df['long']<lon_max,True,False)]
 
-        print("DEBUG: end of convert2CSV()")
         return df
         
     
@@ -161,4 +149,3 @@ class netCdfFile:
         print("Path to file: " + self.path)
         print("Full NC file: " + self.full_filename)
         print("Full CSV file: " + self.csv_filename)
-        print('\n')

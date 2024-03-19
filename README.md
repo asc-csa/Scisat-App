@@ -88,6 +88,7 @@ Il faudra apporter des modifications à app.py pour changer les couleurs et les 
  - Jonathan Beaulieu-Emond
  
 ## Remerciements
+ - Natasha Fee
  - Etienne Low-Decarie
  - Hansen Liu & Wasiq Mohammad 
 
@@ -186,5 +187,6 @@ There will need to be changes in app.py to change colours and styles of the inte
  - Jonathan Beaulieu-Emond
  
 ## Acknowledgments
+ - Natasha Fee
  - Etienne Low-Decarie
  - Hansen Liu & Wasiq Mohammad 

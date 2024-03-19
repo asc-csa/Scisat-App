@@ -46,7 +46,7 @@ Lors de l'exécution, le fenêtre de sortie affiche l'évolution et l'endroit o�
 
 ## Background
 
-The original SCISAT data is in NetCDF (NC) format. The SCISAT micro-application use this binary format directly. The Canadian Space Agency (CSA) Open Data Portal also contains SCISAT data. However, this one is in CSV format. Therefore, SCISAT data shall be converted from NC to CSV format before publishing to the Open Data Portal.
+The original SCISAT data is in NetCDF (NC) format. The SCISAT micro-application uses this binary format directly. The Canadian Space Agency (CSA) Open Data Portal also contains SCISAT data in CSV format. Therefore, SCISAT data shall be converted from NC to CSV format before publishing to the Open Data Portal.
 
 - The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
 - The Open Data Portal is available at https://donnees-data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24. 
@@ -64,7 +64,7 @@ This script shall be run each time a new version of SCISAT data is released.
 ## Execution
 
 Please follow these steps to run the script:
-- First of all, make sure to have all the files of the new version of the data in NC format. Otherwise, transfer the files to your computer in a specific directory. (e.g: C:\Temp\SCISAT_DATA)
+- Make sure to have all the files of the latest version of the data in NC format. Otherwise, transfer the files to your computer in a specific directory. (e.g: C:\Temp\SCISAT_DATA)
 - Start VS Code on your computer.
 - Open [DataConverter.py](DataConverter.py) in VS Code.
 - At the top of the file, edit the value of INPUT_FOLDER so that it represents the directory where the files in the NetCDF format are located.

@@ -11,6 +11,12 @@ Les données originales du satellite SCISAT sont dans le format NetCDF (NC). Ce 
 - Vous pouvez accéder à cette micro application en direct au https://donnees-data.asc-csa.gc.ca/scisat-fr. 
 - Vous pouvez accéder au portail des données ouvertes au https://donnees-data.asc-csa.gc.ca/fr/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24. 
 
+## Navigation et fichiers
+
+ - [DataConverter.py](DataConverter.py) est le script principal. Il s'agit du point de départ.
+ 
+ - [NetCdfFile.py](NetCdfFile.py) est une classe qui représente un fichier dans le format NetCDF. La classe possède une fonction pour convertir son contenu dans le format CSV.
+
 ## Quand exécuter ce script?
 
 Ce script doit être lancé chaque fois qu’une nouvelle version des données du satellite SCISAT est publiée.
@@ -61,6 +67,12 @@ The original SCISAT data is in NetCDF (NC) format. The SCISAT micro-application 
 ## When to run this script?
 
 This script shall be run each time a new version of SCISAT data is released.
+
+## Navigation and files
+
+ - [DataConverter.py](DataConverter.py) is the main script. Everything starts here.
+ 
+ - [NetCdfFile.py](NetCdfFile.py) is a class that represents a file in NetCDF format. The class has a method to convert its contents to CSV format.
 
 ## Execution
 

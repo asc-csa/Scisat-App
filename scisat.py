@@ -1306,7 +1306,7 @@ def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
             errors.append(
                 html.Li(
                     html.A(
-                        _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                        _("Invalid dates provided. Try dates between 04/02/2004 (Feb. 4th 2004) and 02/02/2024 (Feb. 2nd 2024)."),
                         href="#date_alert"
                     )
                 )

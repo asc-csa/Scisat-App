@@ -19,9 +19,8 @@ import sys
 
 
 # Constants
-INPUT_FOLDER = 'U:/Projects\Space Data\SCISAT\data/test'
-OUTPUT_FOLDER = 'U:/Projects\Space Data\SCISAT\data/test'
-os.environ['PROJ_LIB'] = INPUT_FOLDER
+INPUT_FOLDER = 'C:\Temp\DeleteMe'
+OUTPUT_FOLDER = 'C:\Temp\DeleteMe'
 
 
 # Debut
@@ -57,7 +56,7 @@ for nc_file in nc_files:
     
 
 # The End
-print("*************************************")
+print("\n*************************************")
 print("The program ended successfully")
 print(str(len(nc_files)) + " files converted to CSV")
 print("Converted files are in the output file: " + OUTPUT_FOLDER)

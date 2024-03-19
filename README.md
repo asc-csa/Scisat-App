@@ -83,6 +83,7 @@ Il faudra apporter des modifications à app.py pour changer les couleurs et les 
  - Chaque élément de texte à traduire dans Dash doit recevoir un identifiant de composant (voir la documentation sur Dash pour plus de détails à ce sujet). Le composant est ensuite rendu à nouveau lors du changement de langue. 
 
 ## Auteurs
+ - Emiline Filion
  - Camille Roy
  - Jonathan Beaulieu-Emond
  
@@ -180,6 +181,7 @@ There will need to be changes in app.py to change colours and styles of the inte
  - Each text element to be translated in dash has to be given a component ID (see Dash documentation for more details on this). The component is subsequently re-rendered on language switch. 
 
 ## Authors
+ - Emiline Filion
  - Camille Roy
  - Jonathan Beaulieu-Emond
  

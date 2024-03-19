@@ -6,9 +6,14 @@
 
 ## Contexte
 
-Le satellite SCISAT, en orbite depuis le 12 août 2003, aide des équipes de scientifiques canadiens et internationaux à améliorer leur compréhension de la déplétion de la couche d'ozone, en se concentrant particulièrement sur les changements au Canada et en Arctique. 
+Les données originales du satellite SCISAT sont dans le format NetCDF (NC). Ce format binaire est employé par la micro-application SCISAT. Le Portail des données ouvertes de l’Agence spatiale canadienne (ASC) contient aussi les jeux de données. Toutefois, ceux-ci sont dans le format CSV. Par conséquent, les données SCISAT doivent être converties du format NC au format CSV avant d’être publiées dans le portail des données ouvertes à l’aide de ce script. 
 
-Vous pouvez accéder à cette micro application en direct au https://donnees-data.asc-csa.gc.ca/scisat-fr. 
+- Vous pouvez accéder à cette micro application en direct au https://donnees-data.asc-csa.gc.ca/scisat-fr. 
+- Vous pouvez accéder au portail des données ouvertes au https://donnees-data.asc-csa.gc.ca/fr/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24. 
+
+## Quand exécuter ce script?
+
+Ce script doit être lancé chaque fois qu’une nouvelle version des données du satellite SCISAT est publiée.
 
 ## Exécution
 Les commandes suivantes peuvent être exécutées plus facilement dans un environnement virtuel (comme conda). Il peut donc être judicieux d'installer [Anaconda](https://www.anaconda.com/distribution/) au préalable.
@@ -48,17 +53,14 @@ Lors de l'exécution, l'[application](http://127.0.0.1:8888/scisat/) se trouve �
 
 ## Background
 
-Launched on August 12, 2003, SCISAT helps a team of Canadian and international scientists improve their understanding of the depletion of the ozone layer, 
- with a special emphasis on the changes occurring over Canada and in the Arctic.
+The original SCISAT data is in NetCDF (NC) format. The SCISAT micro-application use this binary format directly. The Canadian Space Agency (CSA) Open Data Portal also contains SCISAT data. However, this one is in CSV format. Therefore, SCISAT data shall be converted from NC to CSV format before publishing to the Open Data Portal.
 
-This project is an application that allows users to filter through the SCISAT data on
- multiple parameters and allows users to visualize a summary of the data from their selected parameters on a
- world map, a graph on the altitude, a time series, forgoing the need for downloading the data for simple insights. 
+- The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
+- The Open Data Portal is available at https://donnees-data.asc-csa.gc.ca/dataset/02969436-8c0b-4e6e-ad40-781cdb43cf24. 
 
-This project has been developped from the Alouette app, a case study for the development of future satellite data applications so that the data from
- from these satellites are able to be obtained and analyzed at a larger scale and in a more user-friendly way.
+## When to run this script?
 
-The live version of this micro application is available at https://donnees-data.asc-csa.gc.ca/scisat.
+This script shall be run each time a new version of SCISAT data is released.
 
 ## Execution
 

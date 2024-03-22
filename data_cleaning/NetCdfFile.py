@@ -89,6 +89,7 @@ class netCdfFile:
         months = np.copy(nc.variables['month'][:])
         years = np.copy(nc.variables['year'][:])
         days = np.copy(nc.variables['day'][:])
+        hours = np.copy(nc.variables['hour'][:])
 
         lat = np.copy(nc.variables['latitude'][:])
         long = np.copy( nc.variables['longitude'][:])
@@ -117,27 +118,33 @@ class netCdfFile:
         # Add the date column to the dataframe
         date=[]
         nbDays = len(days)
+        nbTimestamps = len(hours)
         print('DEBUG: Number of days to loop: ' + str(nbDays))
-        date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
+        print('DEBUG: Number of timestamps to loop: ' + str(nbTimestamps))
+        date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i]), int(hours[i])) for i in range (nbDays)])
 
         # Add extra columns to the dataframe
-        data_meanAlt = np.nanmean(df,1)
-        data_std = np.nanstd(df,1)
-        df['Alt_Mean'] = data_meanAlt
-        df['std_'+self.gaz] = data_std
-        df['date'] = date
-        df['lat'] = lat
-        df['long'] = long
+        #data_meanAlt = np.nanmean(df,1)
+        #data_std = np.nanstd(df,1)
+        data_min = np.nanmin(df,1)
+        data_max = np.nanmax(df,1)
+        df['Minimum Concentration (parts per volume)'] = data_min
+        df['Maximum Concentration (parts per volume)'] = data_max
+        #df['Mean Altitude (Km)'] = data_meanAlt
+        #df['Standard Deviation'+self.gaz] = data_std
+        df['Date (UTC)'] = date
+        df['Latitude (degrees)'] = lat
+        df['Longitude (degrees)'] = long
 
         if start_date!=0 and end_date!=0 :
-            df=df[np.where(df['date']>start_date,True,False)]
-            df=df[np.where(df['date']<end_date,True,False)]
+            df=df[np.where(df['Date (UTC)']>start_date,True,False)]
+            df=df[np.where(df['Date (UTC)']<end_date,True,False)]
 
         # Filters the data based on min/max longitude/latitude
-        df=df[np.where(df['lat']>lat_min,True,False)]
-        df=df[np.where(df['lat']<lat_max,True,False)]
-        df=df[np.where(df['long']>lon_min,True,False)]
-        df=df[np.where(df['long']<lon_max,True,False)]
+        df=df[np.where(df['Latitude (degrees)']>lat_min,True,False)]
+        df=df[np.where(df['Latitude (degrees)']<lat_max,True,False)]
+        df=df[np.where(df['Longitude (degrees)']>lon_min,True,False)]
+        df=df[np.where(df['Longitude (degrees)']<lon_max,True,False)]
 
         return df
         

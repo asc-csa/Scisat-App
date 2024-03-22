@@ -13,8 +13,8 @@ from NetCdfFile import netCdfFile
 
 
 # Constants
-INPUT_FOLDER = 'C:\Temp/NETCDF_mol_v5p2'
-OUTPUT_FOLDER = 'C:\Temp/NETCDF_mol_v5p2'
+INPUT_FOLDER = 'C:\Temp/NETCDF_mol_v5p2_val'
+OUTPUT_FOLDER = 'C:\Temp/NETCDF_mol_v5p2_val'
 
 
 # Debut

@@ -1302,15 +1302,15 @@ def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
                     )
                 )
             )
-        if not date_alert:
-            errors.append(
-                html.Li(
-                    html.A(
-                        _("Invalid dates provided. Try dates between 04/02/2004 (Feb. 4th 2004) and 02/02/2024 (Feb. 2nd 2024)."),
-                        href="#date_alert"
-                    )
-                )
-            )
+        #if not date_alert:
+            #errors.append(
+                #html.Li(
+                    #html.A(
+                        #_("Invalid dates provided. Try dates between 04/02/2004 (February 4th 2004) and 02/02/2024 (February 2nd 2024)."),
+                        #href="#date_alert"
+                    #)
+                #)
+            #)
     else:
         s = True
     return [
@@ -2258,7 +2258,7 @@ def translate_static(x):
                 _("Download the selected dataset"),
                 _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
-                _("Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and 05/05/2020 (May 5th 2020)."),
+                _("Invalid dates provided. Try dates between 04/02/2004 (February 4th 2004) and 02/02/2024 (February 2nd 2024)."),
                 _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
                 _("Filter by latitude:"),
                 _("Minimum latitude"),

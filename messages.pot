@@ -556,8 +556,8 @@ msgstr ""
 
 #: scisat.py:1921
 msgid ""
-"Invalid dates provided. Try dates between 01/02/2004 (Feb. 1st 2004) and "
-"05/05/2020 (May 5th 2020)."
+"Invalid dates provided. Try dates between 04/02/2004 (February 4th 2004) and "
+"02/02/2024 (February 2nd 2024)."
 msgstr ""
 
 #: scisat.py:1922

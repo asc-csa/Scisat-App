@@ -1981,7 +1981,8 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 )
 
 def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
-    if (lat_alert or lon_alert or date_alert):
+    #if (lat_alert or lon_alert or date_alert):
+    if (lat_alert or lon_alert):
         #print('\nReading data from controller()')
         df = data_reader(act_gaz_list, path_data, start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
         df = remove_nagative_concentrations(df)

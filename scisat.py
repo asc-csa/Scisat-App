@@ -1331,8 +1331,8 @@ def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
 
 def update_dates(start_date, end_date, gaz_list):
     s = True
-    if not date_validation(start_date,end_date,gaz_list):
-        s = False
+    #if not date_validation(start_date,end_date,gaz_list):
+        #s = False
     return s
 
 # Update gas value using validation

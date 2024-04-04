@@ -380,11 +380,11 @@ msgstr "navigation"
 
 #: scisat.py:1233 scisat.py:2043
 msgid ""
-"Missing data. The gas selected has no associated data. Please contact asc"
-".donnees-data.csa@canada.ca."
+"Missing data. The gas selected has no associated data. Please contact "
+"donnees-data@asc-csa.gc.ca."
 msgstr ""
 "Données manquantes. Le gaz séléctionné ne possède pas de données "
-"associées. Veuillez contacter asc.donnees-data.csa@canada.ca."
+"associées. Veuillez contacter donnees-data@asc-csa.gc.ca."
 
 #: scisat.py:1235 scisat.py:2040
 msgid ""

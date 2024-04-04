@@ -1274,12 +1274,13 @@ def update_lon_alert(lon_min,lon_max):
 def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
     s = False
     errors = []
-    if not lat_alert or not lon_alert or not gas_alert or not date_alert:
+    #if not lat_alert or not lon_alert or not gas_alert or not date_alert:
+    if not lat_alert or not lon_alert or not gas_alert:
         if not gas_alert:
             errors.append(
                 html.Li(
                     html.A(
-                        _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
+                        _("Missing data. The gas selected has no associated data. Please contact donnees-data@asc-csa.gc.ca."),
                         href="#gas_alert",
                     )
                 )
@@ -2259,7 +2260,7 @@ def translate_static(x):
                 _("Invalid values provided. Latitude values must be between -90 and 90. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid values provided. Longitude values must be between -180 and 180. Minimum values must be smaller than maximum values. All values must be round numbers that are multiples of 5."),
                 _("Invalid dates provided. Try dates between 04/02/2004 (February 4th 2004) and 02/02/2024 (February 2nd 2024)."),
-                _("Missing data. The gas selected has no associated data. Please contact asc.donnees-data.csa@canada.ca."),
+                _("Missing data. The gas selected has no associated data. Please contact donnees-data@asc-csa.gc.ca."),
                 _("Filter by latitude:"),
                 _("Minimum latitude"),
                 _("Maximum latitude"),

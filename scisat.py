@@ -437,99 +437,97 @@ def databin(df, step):
 #======================================================================================
 # Controls for webapp
 gaz_name_options = [
-    {'label': _('Acetone'), 'value': DATA_VERSION + '_acetone.nc'},
-    {'label': _('Acetylene'), 'value': DATA_VERSION + '_C2H2.nc'},
-    {'label': _('Ethane'), 'value':  DATA_VERSION + '_C2H6.nc'},
-    {'label': _('Trichlorofluoromethane'), 'value': DATA_VERSION + '_CCl3F.nc'},
-    {'label': _('Carbon tetrachloride'), 'value':  DATA_VERSION + '_CCl4.nc'},
-
-    {'label': _('Carbon tetrafluoride'), 'value':  DATA_VERSION + '_CF4.nc'},
-    {'label': _('Trichlorotrifluoroethane'), 'value':  DATA_VERSION + '_CFC113.nc'},
-    {'label': _('Chloromethane'), 'value':  DATA_VERSION + '_CH3Cl.nc'},
+    {'label': _('Acetone'), 'value': DATA_VERSION + '_C3H6O.nc'},
     {'label': _('Acetonitrite'), 'value':  DATA_VERSION + '_CH3CN.nc'},
-    {'label': _('Methanol'), 'value':  DATA_VERSION + '_CH3OH.nc'},
-    {'label': _('Methane'), 'value':  DATA_VERSION + '_CH4.nc'},
+    {'label': _('Acetylene'), 'value': DATA_VERSION + '_C2H2.nc'},
 
-    {'label': _('Methane 212'), 'value':  DATA_VERSION + '_CH4_212.nc'},
-    {'label': _('Methane 311'), 'value':  DATA_VERSION + '_CH4_311.nc'},
-    {'label': _('Difluorochloromethane'), 'value':   DATA_VERSION + '_CHF2Cl.nc'},
-    {'label': _('Trifluoromethane'), 'value':  DATA_VERSION + '_CHF3.nc'},
-    {'label': _('Chlorine monoxide'), 'value':  DATA_VERSION + '_ClO.nc'},
-    {'label': _('Chlorine nitrate'), 'value':  DATA_VERSION + '_ClONO2.nc'},
-
-    {'label': _('Carbon monoxide'), 'value':  DATA_VERSION + '_CO.nc'},
     {'label': _('Carbon dioxide'), 'value':  DATA_VERSION + '_CO2.nc'},
     {'label': _('Carbon dioxide 627'), 'value':   DATA_VERSION + '_CO2_627.nc'},
     {'label': _('Carbon dioxide 628'), 'value':  DATA_VERSION + '_CO2_628.nc'},
     {'label': _('Carbon dioxide 636'), 'value':  DATA_VERSION + '_CO2_636.nc'},
     {'label': _('Carbon dioxide 637'), 'value':  DATA_VERSION + '_CO2_637.nc'},
-
-
-    {'label': _('Carbon dioxide 638'), 'value':   DATA_VERSION + '_CO2_638.nc'},
-    {'label': _('Phosgene'), 'value':  DATA_VERSION + '_COCl2.nc'},
-    {'label': _('Carbonyl chlorine fluoride'), 'value':  DATA_VERSION + '_COClF.nc'},
-    {'label': _('Carbonyl fluoride'), 'value':   DATA_VERSION + '_COF2.nc'},
+    {'label': _('Carbon dioxide 638'), 'value':   DATA_VERSION + '_CO2_638.nc'}, #9
+    
+    {'label': _('Carbon monoxide'), 'value':  DATA_VERSION + '_CO.nc'},
     {'label': _('Carbon monoxide 27'), 'value':  DATA_VERSION + '_CO_27.nc'},
     {'label': _('Carbon monoxide 28'), 'value':   DATA_VERSION + '_CO_28.nc'},
-
-     {'label': _('Carbon monoxide 36'), 'value':   DATA_VERSION + '_CO_36.nc'},
-    {'label': _('Carbon monoxide 38'), 'value':   DATA_VERSION + '_CO_38.nc'},
-    {'label': _('GLC'), 'value':    DATA_VERSION + '_GLC.nc'},
+    {'label': _('Carbon monoxide 36'), 'value':   DATA_VERSION + '_CO_36.nc'},
+    {'label': _('Carbon monoxide 38'), 'value':   DATA_VERSION + '_CO_38.nc'}, #14
+    
+    {'label': _('Carbon tetrachloride'), 'value':  DATA_VERSION + '_CCl4.nc'},
+    {'label': _('Carbon tetrafluoride'), 'value':  DATA_VERSION + '_CF4.nc'},
+    
+    {'label': _('Carbonyl chlorofluoride'), 'value':  DATA_VERSION + '_COClF.nc'},
+    {'label': _('Carbonyl fluoride'), 'value':   DATA_VERSION + '_COF2.nc'},
+    {'label': _('Carbonyl sulfide'), 'value':     DATA_VERSION + '_OCS.nc'},
+    {'label': _('Carbonyl sulfide 623'), 'value':      DATA_VERSION + '_OCS_623.nc'},
+    {'label': _('Carbonyl sulfide 624'), 'value':      DATA_VERSION + '_OCS_624.nc'},
+    {'label': _('Carbonyl sulfide 632'), 'value':      DATA_VERSION + '_OCS_632.nc'},
+    {'label': _('Chlorine monoxide'), 'value':  DATA_VERSION + '_ClO.nc'},
+    {'label': _('Chlorine nitrate'), 'value':  DATA_VERSION + '_ClONO2.nc'},
+    {'label': _('Chloromethane'), 'value':  DATA_VERSION + '_CH3Cl.nc'}, #25
+    
+    {'label': _('Dichlorodifluoromethane'), 'value': DATA_VERSION + '_CCl2F2.nc'},
+    {'label': _('Difluorochloromethane'), 'value':   DATA_VERSION + '_CHF2Cl.nc'},
+    {'label': _('Dinitrogen pentaoxide'), 'value':    DATA_VERSION + '_N2O5.nc'}, #28
+    
+    {'label': _('Ethane'), 'value':  DATA_VERSION + '_C2H6.nc'},
+    
     {'label': _('Formaldehyde'), 'value':   DATA_VERSION + '_H2CO.nc'},
-    {'label': _('Water'), 'value':   DATA_VERSION + '_H2O.nc'},
-    {'label': _('Hydrogen peroxide'), 'value':   DATA_VERSION + '_H2O2.nc'},
+    {'label': _('Formic acid'), 'value':   DATA_VERSION + '_HCOOH.nc'}, #31
+    
+    {'label': _('GLC'), 'value':    DATA_VERSION + '_GLC.nc'},
 
-
-     {'label': _('Water 162'), 'value':    DATA_VERSION + '_H2O_162.nc'},
-    {'label': _('Water 171'), 'value':    DATA_VERSION + '_H2O_171.nc'},
-    {'label': _('Water 181'), 'value':     DATA_VERSION + '_H2O_181.nc'},
-    {'label': _('Water 182'), 'value':   DATA_VERSION + '_H2O_182.nc'},
     {'label': _('Hydrochlorofluorocarbon 141b'), 'value':    DATA_VERSION + '_HCFC141b.nc'},
     {'label': _('Hydrochlorofluorocarbon 142b'), 'value':    DATA_VERSION + '_HCFC142b.nc'},
     {'label': _('Hydrochloric acid'), 'value':     DATA_VERSION + '_HCl.nc'},
-
-
-
-    {'label': _('Hydrogen cyanide'), 'value':   DATA_VERSION + '_HCN.nc'},
-    {'label': _('Formic acid'), 'value':   DATA_VERSION + '_HCOOH.nc'},
-    {'label': _('Hydrogen fluoride'), 'value':    DATA_VERSION + '_HF.nc'},
     {'label': _('Hydrofluorocarbon 134a'), 'value':   DATA_VERSION + '_HFC134a.nc'},
+    {'label': _('Hydrogen cyanide'), 'value':   DATA_VERSION + '_HCN.nc'},
+    {'label': _('Hydrogen fluoride'), 'value':    DATA_VERSION + '_HF.nc'},
+    {'label': _('Hydrogen peroxide'), 'value':   DATA_VERSION + '_H2O2.nc'}, #39
+    
+    {'label': _('Methane'), 'value':  DATA_VERSION + '_CH4.nc'},
+    {'label': _('Methane 212'), 'value':  DATA_VERSION + '_CH4_212.nc'},
+    {'label': _('Methane 311'), 'value':  DATA_VERSION + '_CH4_311.nc'},
+    {'label': _('Methanol'), 'value':  DATA_VERSION + '_CH3OH.nc'}, #43
+    
     {'label': _('Nitric acid'), 'value':  DATA_VERSION + '_HNO3.nc'},
     {'label': _('Nitric acid 156'), 'value':  DATA_VERSION + '_HNO3_156.nc'},
-
-
-    {'label': _('Peroxynitric acid'), 'value':   DATA_VERSION + '_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  DATA_VERSION + '_N2.nc'},
-    {'label': _('Nitrous oxide'), 'value':  DATA_VERSION + '_N2O.nc'},
-    {'label': _('Dinitrogen pentaoxide'), 'value':    DATA_VERSION + '_N2O5.nc'},
-    {'label': _('Nitrous oxide 447'), 'value':   DATA_VERSION + '_N2O_447.nc'},
-    {'label': _('Nitrous oxide 448'), 'value':    DATA_VERSION + '_N2O_448.nc'},
-
-     {'label': _('Nitrous oxide 456'), 'value':    DATA_VERSION + '_N2O_456.nc'},
-    {'label': _('Nitrous oxide 546'), 'value':   DATA_VERSION + '_N2O_546.nc'},
-    {'label': _('Nitrous monoxide 447'), 'value':     DATA_VERSION + '_NO.nc'},
     {'label': _('Nitrogen dioxide'), 'value':    DATA_VERSION + '_NO2.nc'},
     {'label': _('Nitrogen dioxide 656'), 'value':    DATA_VERSION + '_NO2_656.nc'},
+    {'label': _('Nitrous monoxide 447'), 'value':     DATA_VERSION + '_NO.nc'},
+    {'label': _('Nitrous oxide'), 'value':  DATA_VERSION + '_N2O.nc'},
+    {'label': _('Nitrous oxide 447'), 'value':   DATA_VERSION + '_N2O_447.nc'},
+    {'label': _('Nitrous oxide 448'), 'value':    DATA_VERSION + '_N2O_448.nc'},
+    {'label': _('Nitrous oxide 456'), 'value':    DATA_VERSION + '_N2O_456.nc'},
+    {'label': _('Nitrous oxide 546'), 'value':   DATA_VERSION + '_N2O_546.nc'}, #54
+    
     {'label': _('Oxygen'), 'value':    DATA_VERSION + '_O2.nc'},
-
-
-     {'label': _('Ozone'), 'value':     DATA_VERSION + '_O3.nc'},
+    {'label': _('Ozone'), 'value':     DATA_VERSION + '_O3.nc'},
     {'label': _('Ozone 667'), 'value':     DATA_VERSION + '_O3_667.nc'},
     {'label': _('Ozone 668'), 'value':     DATA_VERSION + '_O3_668.nc'},
     {'label': _('Ozone 676'), 'value':   DATA_VERSION + '_O3_676.nc'},
-    {'label': _('Ozone 686'), 'value':     DATA_VERSION + '_O3_686.nc'},
-    {'label': _('Carbonyl sulfide'), 'value':     DATA_VERSION + '_OCS.nc'},
-     {'label': _('Carbonyl sulfide 623'), 'value':      DATA_VERSION + '_OCS_623.nc'},
-
-
-     {'label': _('Carbonyl sulfide 624'), 'value':      DATA_VERSION + '_OCS_624.nc'},
-    {'label': _('Carbonyl sulfide 632'), 'value':      DATA_VERSION + '_OCS_632.nc'},
+    {'label': _('Ozone 686'), 'value':     DATA_VERSION + '_O3_686.nc'}, #60
+    
+    {'label': _('Peroxynitric acid'), 'value':   DATA_VERSION + '_HO2NO2.nc'},
+    {'label': _('Phosgene'), 'value':  DATA_VERSION + '_COCl2.nc'},
     {'label': _('Phosphorus'), 'value':      DATA_VERSION + '_P.nc'},
-    {'label': _('Polyacrylonitrile'), 'value':    DATA_VERSION + '_PAN.nc'},
-    {'label': _('Sulfur hexafluoride'), 'value':      DATA_VERSION + '_SF6.nc'},
+    {'label': _('Polyacrylonitrile'), 'value':    DATA_VERSION + '_PAN.nc'}, #64
+    
     {'label': _('Sulfur dioxide'), 'value':      DATA_VERSION + '_SO2.nc'},
+    {'label': _('Sulfur hexafluoride'), 'value':      DATA_VERSION + '_SF6.nc'}, #66
+    
+    {'label': _('Trichlorofluoromethane'), 'value': DATA_VERSION + '_CCl3F.nc'},
+    {'label': _('Trichlorotrifluoroethane'), 'value':  DATA_VERSION + '_CFC113.nc'},
+    {'label': _('Trifluoromethane'), 'value':  DATA_VERSION + '_CHF3.nc'}, #69
+    
+    {'label': _('Water'), 'value':   DATA_VERSION + '_H2O.nc'},
+    {'label': _('Water 162'), 'value':    DATA_VERSION + '_H2O_162.nc'},
+    {'label': _('Water 171'), 'value':    DATA_VERSION + '_H2O_171.nc'},
+    {'label': _('Water 181'), 'value':     DATA_VERSION + '_H2O_181.nc'},
+    {'label': _('Water 182'), 'value':   DATA_VERSION + '_H2O_182.nc'}, #74
  #    {'label': _('Temperature'), 'value':    'ACEFTS_L2_v5p0_T.nc'} #!!! Est ce qu'on la met?
-
    ]
 #======================================================================================
 
@@ -2285,99 +2283,97 @@ def translate_static(x):
                 #_("Select plotted value:"),
     [  # Gas_options
     {'label': _('Acetone'), 'value': DATA_VERSION + '_C3H6O.nc'},
-    {'label': _('Acetylene'), 'value': DATA_VERSION + '_C2H2.nc'},
-    {'label': _('Ethane'), 'value':  DATA_VERSION + '_C2H6.nc'},
-    {'label': _('Dichlorodifluoromethane'), 'value': DATA_VERSION + '_CCl2F2.nc'},
-    {'label': _('Trichlorofluoromethane'), 'value': DATA_VERSION + '_CCl3F.nc'},
-    {'label': _('Carbon tetrachloride'), 'value':  DATA_VERSION + '_CCl4.nc'},
-
-
-    {'label': _('Carbon tetrafluoride'), 'value':  DATA_VERSION + '_CF4.nc'},
-    {'label': _('Trichlorotrifluoroethane'), 'value':  DATA_VERSION + '_CFC113.nc'},
-    {'label': _('Chloromethane'), 'value':  DATA_VERSION + '_CH3Cl.nc'},
     {'label': _('Acetonitrite'), 'value':  DATA_VERSION + '_CH3CN.nc'},
-    {'label': _('Methanol'), 'value':  DATA_VERSION + '_CH3OH.nc'},
-    {'label': _('Methane'), 'value':  DATA_VERSION + '_CH4.nc'},
+    {'label': _('Acetylene'), 'value': DATA_VERSION + '_C2H2.nc'},
 
-    {'label': _('Methane 212'), 'value':  DATA_VERSION + '_CH4_212.nc'},
-    {'label': _('Methane 311'), 'value':  DATA_VERSION + '_CH4_311.nc'},
-    {'label': _('Difluorochloromethane'), 'value':   DATA_VERSION + '_CHF2Cl.nc'},
-    {'label': _('Trifluoromethane'), 'value':  DATA_VERSION + '_CHF3.nc'},
-    {'label': _('Chlorine monoxide'), 'value':  DATA_VERSION + '_ClO.nc'},
-    {'label': _('Chlorine nitrate'), 'value':  DATA_VERSION + '_ClONO2.nc'},
-
-    {'label': _('Carbon monoxide'), 'value':  DATA_VERSION + '_CO.nc'},
     {'label': _('Carbon dioxide'), 'value':  DATA_VERSION + '_CO2.nc'},
     {'label': _('Carbon dioxide 627'), 'value':   DATA_VERSION + '_CO2_627.nc'},
     {'label': _('Carbon dioxide 628'), 'value':  DATA_VERSION + '_CO2_628.nc'},
     {'label': _('Carbon dioxide 636'), 'value':  DATA_VERSION + '_CO2_636.nc'},
     {'label': _('Carbon dioxide 637'), 'value':  DATA_VERSION + '_CO2_637.nc'},
-
-
     {'label': _('Carbon dioxide 638'), 'value':   DATA_VERSION + '_CO2_638.nc'},
-    {'label': _('Phosgene'), 'value':  DATA_VERSION + '_COCl2.nc'},
+    
+    {'label': _('Carbon monoxide'), 'value':  DATA_VERSION + '_CO.nc'},
+    {'label': _('Carbon monoxide 27'), 'value':  DATA_VERSION + '_CO_27.nc'},
+    {'label': _('Carbon monoxide 28'), 'value':   DATA_VERSION + '_CO_28.nc'},
+    {'label': _('Carbon monoxide 36'), 'value':   DATA_VERSION + '_CO_36.nc'},
+    {'label': _('Carbon monoxide 38'), 'value':   DATA_VERSION + '_CO_38.nc'},
+    
+    {'label': _('Carbon tetrachloride'), 'value':  DATA_VERSION + '_CCl4.nc'},
+    {'label': _('Carbon tetrafluoride'), 'value':  DATA_VERSION + '_CF4.nc'},
+    
     {'label': _('Carbonyl chlorofluoride'), 'value':  DATA_VERSION + '_COClF.nc'},
     {'label': _('Carbonyl fluoride'), 'value':   DATA_VERSION + '_COF2.nc'},
-    {'label': _('Carbon monoxide 27'), 'value':  DATA_VERSION + '_CO_27.nc'},
-    {'label': _('Carbon monoxide 28'), 'value':   'ACEFTS_L2_v5p_CO_28.nc'},
-
-     {'label': _('Carbon monoxide 36'), 'value':   DATA_VERSION + '_CO_36.nc'},
-    {'label': _('Carbon monoxide 38'), 'value':   DATA_VERSION + '_CO_38.nc'},
-    {'label': _('GLC'), 'value':    DATA_VERSION + '_GLC.nc'},
+    {'label': _('Carbonyl sulfide'), 'value':     DATA_VERSION + '_OCS.nc'},
+    {'label': _('Carbonyl sulfide 623'), 'value':      DATA_VERSION + '_OCS_623.nc'},
+    {'label': _('Carbonyl sulfide 624'), 'value':      DATA_VERSION + '_OCS_624.nc'},
+    {'label': _('Carbonyl sulfide 632'), 'value':      DATA_VERSION + '_OCS_632.nc'},
+    {'label': _('Chlorine monoxide'), 'value':  DATA_VERSION + '_ClO.nc'},
+    {'label': _('Chlorine nitrate'), 'value':  DATA_VERSION + '_ClONO2.nc'},
+    {'label': _('Chloromethane'), 'value':  DATA_VERSION + '_CH3Cl.nc'},
+    
+    {'label': _('Dichlorodifluoromethane'), 'value': DATA_VERSION + '_CCl2F2.nc'},
+    {'label': _('Difluorochloromethane'), 'value':   DATA_VERSION + '_CHF2Cl.nc'},
+    {'label': _('Dinitrogen pentaoxide'), 'value':    DATA_VERSION + '_N2O5.nc'},
+    
+    {'label': _('Ethane'), 'value':  DATA_VERSION + '_C2H6.nc'},
+    
     {'label': _('Formaldehyde'), 'value':   DATA_VERSION + '_H2CO.nc'},
-    {'label': _('Water'), 'value':   DATA_VERSION + '_H2O.nc'},
-    {'label': _('Hydrogen peroxide'), 'value':   DATA_VERSION + '_H2O2.nc'},
+    {'label': _('Formic acid'), 'value':   DATA_VERSION + '_HCOOH.nc'},
+    
+    {'label': _('GLC'), 'value':    DATA_VERSION + '_GLC.nc'},
 
-
-     {'label': _('Water 162'), 'value':    DATA_VERSION + '_H2O_162.nc'},
-    {'label': _('Water 171'), 'value':    DATA_VERSION + '_H2O_171.nc'},
-    {'label': _('Water 181'), 'value':     DATA_VERSION + '_H2O_181.nc'},
-    {'label': _('Water 182'), 'value':   DATA_VERSION + '_H2O_182.nc'},
     {'label': _('Hydrochlorofluorocarbon 141b'), 'value':    DATA_VERSION + '_HCFC141b.nc'},
     {'label': _('Hydrochlorofluorocarbon 142b'), 'value':    DATA_VERSION + '_HCFC142b.nc'},
     {'label': _('Hydrochloric acid'), 'value':     DATA_VERSION + '_HCl.nc'},
-
-    {'label': _('Hydrogen cyanide'), 'value':   DATA_VERSION + '_HCN.nc'},
-    {'label': _('Formic acid'), 'value':   DATA_VERSION + '_HCOOH.nc'},
-    {'label': _('Hydrogen fluoride'), 'value':    DATA_VERSION + '_HF.nc'},
     {'label': _('Hydrofluorocarbon 134a'), 'value':   DATA_VERSION + '_HFC134a.nc'},
+    {'label': _('Hydrogen cyanide'), 'value':   DATA_VERSION + '_HCN.nc'},
+    {'label': _('Hydrogen fluoride'), 'value':    DATA_VERSION + '_HF.nc'},
+    {'label': _('Hydrogen peroxide'), 'value':   DATA_VERSION + '_H2O2.nc'},
+    
+    {'label': _('Methane'), 'value':  DATA_VERSION + '_CH4.nc'},
+    {'label': _('Methane 212'), 'value':  DATA_VERSION + '_CH4_212.nc'},
+    {'label': _('Methane 311'), 'value':  DATA_VERSION + '_CH4_311.nc'},
+    {'label': _('Methanol'), 'value':  DATA_VERSION + '_CH3OH.nc'},
+    
     {'label': _('Nitric acid'), 'value':  DATA_VERSION + '_HNO3.nc'},
     {'label': _('Nitric acid 156'), 'value':  DATA_VERSION + '_HNO3_156.nc'},
-
-
-    {'label': _('Peroxynitric acid'), 'value':   DATA_VERSION + '_HO2NO2.nc'},
     {'label': _('Nitrogen'), 'value':  DATA_VERSION + '_N2.nc'},
-    {'label': _('Nitrous oxide'), 'value':  DATA_VERSION + '_N2O.nc'},
-    {'label': _('Dinitrogen pentaoxide'), 'value':    DATA_VERSION + '_N2O5.nc'},
-    {'label': _('Nitrous oxide 447'), 'value':   DATA_VERSION + '_N2O_447.nc'},
-    {'label': _('Nitrous oxide 448'), 'value':    DATA_VERSION + '_N2O_448.nc'},
-
-     {'label': _('Nitrous oxide 456'), 'value':    DATA_VERSION + '_N2O_456.nc'},
-    {'label': _('Nitrous oxide 546'), 'value':   DATA_VERSION + '_N2O_546.nc'},
-    {'label': _('Nitrous monoxide 447'), 'value':     DATA_VERSION + '_NO.nc'},
     {'label': _('Nitrogen dioxide'), 'value':    DATA_VERSION + '_NO2.nc'},
     {'label': _('Nitrogen dioxide 656'), 'value':    DATA_VERSION + '_NO2_656.nc'},
+    {'label': _('Nitrous monoxide 447'), 'value':     DATA_VERSION + '_NO.nc'},
+    {'label': _('Nitrous oxide'), 'value':  DATA_VERSION + '_N2O.nc'},
+    {'label': _('Nitrous oxide 447'), 'value':   DATA_VERSION + '_N2O_447.nc'},
+    {'label': _('Nitrous oxide 448'), 'value':    DATA_VERSION + '_N2O_448.nc'},
+    {'label': _('Nitrous oxide 456'), 'value':    DATA_VERSION + '_N2O_456.nc'},
+    {'label': _('Nitrous oxide 546'), 'value':   DATA_VERSION + '_N2O_546.nc'},
+    
     {'label': _('Oxygen'), 'value':    DATA_VERSION + '_O2.nc'},
-
-
-     {'label': _('Ozone'), 'value':     DATA_VERSION + '_O3.nc'},
+    {'label': _('Ozone'), 'value':     DATA_VERSION + '_O3.nc'},
     {'label': _('Ozone 667'), 'value':     DATA_VERSION + '_O3_667.nc'},
     {'label': _('Ozone 668'), 'value':     DATA_VERSION + '_O3_668.nc'},
     {'label': _('Ozone 676'), 'value':   DATA_VERSION + '_O3_676.nc'},
     {'label': _('Ozone 686'), 'value':     DATA_VERSION + '_O3_686.nc'},
-    {'label': _('Carbonyl sulfide'), 'value':     DATA_VERSION + '_OCS.nc'},
-     {'label': _('Carbonyl sulfide 623'), 'value':      DATA_VERSION + '_OCS_623.nc'},
-
-
-     {'label': _('Carbonyl sulfide 624'), 'value':      DATA_VERSION + '_OCS_624.nc'},
-    {'label': _('Carbonyl sulfide 632'), 'value':      DATA_VERSION + '_OCS_632.nc'},
+    
+    {'label': _('Peroxynitric acid'), 'value':   DATA_VERSION + '_HO2NO2.nc'},
+    {'label': _('Phosgene'), 'value':  DATA_VERSION + '_COCl2.nc'},
     {'label': _('Phosphorus'), 'value':      DATA_VERSION + '_P.nc'},
     {'label': _('Polyacrylonitrile'), 'value':    DATA_VERSION + '_PAN.nc'},
-    {'label': _('Sulfur hexafluoride'), 'value':      DATA_VERSION + '_SF6.nc'},
+    
     {'label': _('Sulfur dioxide'), 'value':      DATA_VERSION + '_SO2.nc'},
+    {'label': _('Sulfur hexafluoride'), 'value':      DATA_VERSION + '_SF6.nc'},
+    
+    {'label': _('Trichlorofluoromethane'), 'value': DATA_VERSION + '_CCl3F.nc'},
+    {'label': _('Trichlorotrifluoroethane'), 'value':  DATA_VERSION + '_CFC113.nc'},
+    {'label': _('Trifluoromethane'), 'value':  DATA_VERSION + '_CHF3.nc'},
+    
+    {'label': _('Water'), 'value':   DATA_VERSION + '_H2O.nc'},
+    {'label': _('Water 162'), 'value':    DATA_VERSION + '_H2O_162.nc'},
+    {'label': _('Water 171'), 'value':    DATA_VERSION + '_H2O_171.nc'},
+    {'label': _('Water 181'), 'value':     DATA_VERSION + '_H2O_181.nc'},
+    {'label': _('Water 182'), 'value':   DATA_VERSION + '_H2O_182.nc'},
     #{'label': _('T'), 'value':       'ACEFTS_L2_v5p0_T.nc'}#!!!!!
             ],  #End gas_options
-
     ]
 
 

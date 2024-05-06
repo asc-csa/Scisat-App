@@ -1,4 +1,18 @@
-# -*- coding: utf-8 -*-
+#
+# Micro-application to visualize SCISAT data.
+#
+# Three main charts:
+# 1. Gas concentration in parts per volume (ppv) visualized on a world map
+# 2. Gas concentration in parts per volume (ppv) over the selected altitude
+# 3. Evolution of the gas concentration in parts per volume (ppv) over the years
+#
+# @source https://github.com/asc-csa/Scisat-App
+# @author Emiline Filion - Canadian Space Agency
+#
+# Modification History:
+#
+#
+
 import dash
 import cartopy.feature as cf
 import configparser

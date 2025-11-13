@@ -16,8 +16,8 @@
 import dash
 import cartopy.feature as cf
 import configparser
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import plotly.graph_objs as go
 import plotly.express as px
 import pandas as pd
@@ -28,12 +28,15 @@ from io import StringIO
 from flask_babel import _ ,Babel
 from flask import session, redirect, url_for, make_response
 import urllib.parse
-import dash_table as dst
+from dash import dash_table as dst
+from dash.dash_table.Format import Group
+from dash import dash_table
 from dash_table.Format import Format, Scheme
 from scipy.io import netcdf #### <--- This is the library to import data
 import numpy as np
 from os import path
 import os.path
+import sys
 
 
 class CustomDash(dash.Dash):
@@ -307,7 +310,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     
     print("SCISAT Data version: " + DATA_VERSION)
     print('data_reader() -> file: ' + file)
-    #print('data_reader() -> datareader path: ' + path_to_files)
+    print('data_reader() -> datareader path: ' + path_to_files)
     
     if type(file)==list:
         file=file[0]
@@ -330,11 +333,15 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     days = np.copy(nc.variables['day'][:])
 
     lat = np.copy(nc.variables['latitude'][:])
-    long =np.copy( nc.variables['longitude'][:])
+    lat  = lat.astype(lat.dtype.newbyteorder('<'))
+    long = np.copy( nc.variables['longitude'][:])
+    long = long.astype(long.dtype.newbyteorder('<'))
     alt = np.copy(nc.variables['altitude'][:])
+    alt = alt.astype(alt.dtype.newbyteorder('<'))
 
     #valeurs de concentration [ppv]
     data = np.copy(nc.variables[gaz][:])
+    data = data.astype(data.dtype.newbyteorder('<'))
     
     #Remplacer les données vides
     data[data == fillvalue1] = np.nan
@@ -343,7 +350,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     data = data[:,alt_range[0]:alt_range[1]]
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
-    #print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
+    print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
     #print('DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     #Trie données abérrantes
@@ -365,15 +372,14 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #Colonne de dates
     date=[]
     nbDays = len(days)
-    #print('DEBUG: Number of days to loop: ' + str(nbDays))
+    print('DEBUG: Number of days to loop: ' + str(nbDays))
+    print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
     date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
     #print('DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
-
-    data_meanAlt = np.nanmean(df,1)
-    df['Alt_Mean'] = data_meanAlt
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
+    df['Alt_Mean'] = np.nanmean(df.select_dtypes(include='number'), axis=1)
 
     if start_date!=0 and end_date!=0 :
         df=df[np.where(df['date']>start_date,True,False)]
@@ -715,8 +721,7 @@ def build_filtering():
                                     placeholder=_('Select a gas'),
                                     multi=False,
                                     value=DATA_VERSION + '_O3.nc',
-                                    className="dcc_control",
-                                    label = 'Label test'
+                                    className="dcc_control"
 
                                 ),
 
@@ -863,8 +868,6 @@ def build_filtering():
                                         start_date_placeholder_text=_('Select start date'),
                                         end_date_placeholder_text=_('Select end date'),
                                         display_format="Y-MM-DD",
-                                        start_date_aria_label = _('Start Date'),
-                                        end_date_aria_label = _('End Date'),
                                         ),
                                     html.Div(id='output-container-date-picker-range'),
                                     html.Div(children=html.P(id="date_selection"),className="wb-inv")
@@ -1692,8 +1695,8 @@ def generate_geo_map(df):
                             colorbar=dict(
                                 title=dict(
                                     text=_("Gas concentration [ppv] (mean on altitude and position) "),
+                                    side="right"
                                 ),
-                                titleside="right",
                                 showexponent = 'all',
                                 exponentformat = 'e'
                             ),
@@ -1725,8 +1728,8 @@ def generate_geo_map(df):
                     colorbar=dict(
                         title=dict(
                             text=_("Gas Concentration [ppv] (mean on altitude and position) "),
+                            side="right"
                         ),
-                        titleside="right",
                         showexponent = 'all',
                         exponentformat = 'e'
                     ),
@@ -2391,7 +2394,7 @@ def translate_static(x):
     ]
 
 
-@babel.localeselector
+#@babel.localeselector
 def get_locale():
     # if the user has set up the language manually it will be stored in the session,
     # so we use the locale from the user settings

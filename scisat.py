@@ -145,6 +145,15 @@ external_scripts = [
     'assets/scripts.js'
 ]
 
+#======================================================================================
+# Languages
+#@babel.localeselector
+def get_app_locale():
+    # if the user has set up the language manually it will be stored in the session,
+    # so we use the locale from the user settings
+    return 'en'
+
+
 DATA_VERSION = 'ACEFTS_L2_v5p2'
 
 # Loads the config file
@@ -213,6 +222,7 @@ else :
         )
 
 meta_html = ''
+print('DEBUG: SCISAT: Language: ' + str(app_config.DEFAULT_LANGUAGE))
 if app_config.DEFAULT_LANGUAGE == 'en':
     app.set_header(gc_header_en)
     app.set_footer(gc_footer_en)
@@ -256,6 +266,8 @@ app.set_analytics_footer(analytics_footer)
 app.set_lang(app_config.DEFAULT_LANGUAGE)
 server = app.server
 server.config['SECRET_KEY'] = tokens['secret_key']  # Setting up secret key to access flask session
+server.config["BABEL_DEFAULT_LOCALE"] = app_config.DEFAULT_LANGUAGE
+server.config["BABEL_TRANSLATION_DIRECTORIES"] = "translations"
 babel = Babel(server)  # Hook flask-babel to the app
 
 
@@ -2392,22 +2404,6 @@ def translate_static(x):
     #{'label': _('T'), 'value':       'ACEFTS_L2_v5p0_T.nc'}#!!!!!
             ],  #End gas_options
     ]
-
-
-#@babel.localeselector
-def get_locale():
-    # if the user has set up the language manually it will be stored in the session,
-    # so we use the locale from the user settings
-    # try:
-    #     language = session['language']
-    # except KeyError:
-    #     language = None
-    # if language is not None:
-    #     return language
-    # else:
-    #     return 'en'
-    return app_config.DEFAULT_LANGUAGE
-
 
 @app.server.route('/language/<language>')
 def set_language(language=None):

@@ -10,7 +10,8 @@
 # @author Emiline Filion - Canadian Space Agency
 #
 # Modification History:
-#
+# March 2024: Addition of latest SCISAT data.
+# November 2025: Migration to Python 3.12 and to the latest Python modules and dependencies.
 #
 
 import dash
@@ -177,7 +178,7 @@ def generate_meta_tag_with_title(name, content, title):
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from config import Config
-    #print ('DEBUG: SCISAT Main Block used')
+    #print ('SCISAT_DEBUG: SCISAT Main Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -200,7 +201,7 @@ if __name__ == '__main__':
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from .config import Config
-    #print ('DEBUG: SCISAT Alternate Block used')
+    #print ('SCISAT_DEBUG: SCISAT Alternate Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -222,7 +223,7 @@ else :
         )
 
 meta_html = ''
-print('DEBUG: SCISAT: Language: ' + str(app_config.DEFAULT_LANGUAGE))
+print('SCISAT_DEBUG: SCISAT: Language: ' + str(app_config.DEFAULT_LANGUAGE))
 if app_config.DEFAULT_LANGUAGE == 'en':
     app.set_header(gc_header_en)
     app.set_footer(gc_footer_en)
@@ -317,7 +318,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     if data_reader.page_df.size != 0:
         return data_reader.page_df
 
-    #print('\nDEBUG: entering data_reader()')
+    #print('\nSCISAT_DEBUG: entering data_reader()')
     #start_time1 = time.time()
     
     print("SCISAT Data version: " + DATA_VERSION)
@@ -336,7 +337,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     name=path_to_files+'/'+file
     nc = netcdf.netcdf_file(name,'r')
 
-    #print('DEBUG: data_reader() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: data_reader() - Time spent so far (#1): ' + str(time.time() - start_time1))
     
     #Trier / définir rapido les données et les variables
     fillvalue1 = -999.
@@ -362,8 +363,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     data = data[:,alt_range[0]:alt_range[1]]
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
-    print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
-    #print('DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
+    print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
+    #print('SCISAT_DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     #Trie données abérrantes
     # TODO: This part takes a long time. We should optmize it. numpy.nan is too slow
@@ -379,15 +380,15 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #slow
     df[df<minV]=np.nan
 
-    #print('DEBUG: data_reader() - Time spent so far (#3): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: data_reader() - Time spent so far (#3): ' + str(time.time() - start_time1))
 
     #Colonne de dates
     date=[]
     nbDays = len(days)
-    print('DEBUG: Number of days to loop: ' + str(nbDays))
-    print('DEBUG: Number of elements in the dataframe: ' + str(df.size))
+    print('SCISAT_DEBUG: Number of days to loop: ' + str(nbDays))
+    print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
     date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
-    #print('DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
@@ -403,7 +404,7 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['long']>lon_min,True,False)]
     df=df[np.where(df['long']<lon_max,True,False)]
 
-    #print('DEBUG: end of data_reader() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
+    #print('SCISAT_DEBUG: end of data_reader() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
     data_reader.page_df = df
     return df
 data_reader.page_df = pd.DataFrame()
@@ -450,10 +451,10 @@ def databin(df, step):
         A dataframe contained the binned data provided in steps of specified degrees.
     """
     # We create a binning map
-    #print('\n\nDEBUG: entering databin()')
+    #print('\n\nSCISAT_DEBUG: entering databin()')
     #start_time1 = time.time()
     to_bin = lambda x: np.round(x / step) * step
-    #print('DEBUG: databin() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: databin() - Time spent so far (#1): ' + str(time.time() - start_time1))
     
     # We map the current data into the bins
     # TODO: This part takes a long time, but it looks like we already use the optimized way
@@ -461,7 +462,7 @@ def databin(df, step):
     df["long"] = df['long'].map(to_bin)
     
     # We return a mean value of all overlapping data to ensure there are no overlaps
-    #print('DEBUG: end of databin() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
+    #print('SCISAT_DEBUG: end of databin() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
     return df.groupby(["lat", "long"]).mean().reset_index()
 
 
@@ -1554,7 +1555,7 @@ def make_count_figure(df, alt_range):
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the graphic's
         layout as as a Plotly layout graph object.
     """
-    #print('\nDEBUG: entering make_count_figure()')
+    #print('\nSCISAT_DEBUG: entering make_count_figure()')
     #start_time1 = time.time()
 
     concentration=df[alt_range[0]:alt_range[1]]
@@ -1621,7 +1622,7 @@ def make_count_figure(df, alt_range):
             {"name":_("Mean concentration (ppv)"),"id":"mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)},
             {"name":_("Max. confidence interval concentration (ppv)"), "id":"int_max","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     
-    #print('DEBUG: end of make_count_figure() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('SCISAT_DEBUG: end of make_count_figure() - Time spent: ' + str(time.time() - start_time1) + '\n')
 
     return [figure, columns, table_data]
 
@@ -1665,7 +1666,7 @@ def generate_geo_map(df):
         and the map's layout as a Plotly layout graph object.
     """
 
-    #print('\nDEBUG: entering generate_geo_map()')
+    #print('\nSCISAT_DEBUG: entering generate_geo_map()')
     #start_time1 = time.time()
 
     # We decide the binning that needs to be done, if any, based on lat/long range selected
@@ -1678,7 +1679,7 @@ def generate_geo_map(df):
     else:
         df = databin(df,3)
 
-    #print('DEBUG: generate_geo_map() - Time spent so far (#1): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: generate_geo_map() - Time spent so far (#1): ' + str(time.time() - start_time1))
 
     # We collect the coordinates of all coastlines geometries from cartopy
     x_coords = []
@@ -1687,7 +1688,7 @@ def generate_geo_map(df):
         x_coords.extend([k[0] for k in coord_seq.coords] + [np.nan])
         y_coords.extend([k[1] for k in coord_seq.coords] + [np.nan])
 
-    #print('DEBUG: generate_geo_map() - Time spent so far (#2): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: generate_geo_map() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     # We create a heatmap of the binned data
     if hm:
@@ -1750,7 +1751,7 @@ def generate_geo_map(df):
             )
         )
 
-    #print('DEBUG: generate_geo_map() - Time spent so far (#3): ' + str(time.time() - start_time1))
+    #print('SCISAT_DEBUG: generate_geo_map() - Time spent so far (#3): ' + str(time.time() - start_time1))
 
     # We set the layout for margins and paddings
     fig.update_layout(
@@ -1788,7 +1789,7 @@ def generate_geo_map(df):
     data = df[['lat','long','Alt_Mean']].to_dict('records')
     columns = [{"name":_("Latitude (°)"), "id":"lat"},{"name":_("Longitude (°)"),"id":"long"},{"name":_("Mean concentration (ppv)"),"id":"Alt_Mean","type":"numeric","format":Format(precision=3, scheme=Scheme.exponent)}]
     
-    #print('DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('SCISAT_DEBUG: end of generate_geo_map() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [fig, columns, data]
 
 # This removes the negative concentrations from the data frame
@@ -1891,7 +1892,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         A dictionary containing 2 key-value pairs: the selected data as an array of dictionaries and the chart's layout
         as a Plotly layout graph object.
     """
-    #print('\nDEBUG: entering make_viz_chart()')
+    #print('\nSCISAT_DEBUG: entering make_viz_chart()')
     #start_time1 = time.time()
 
     df.sort_values(by=['date'], inplace=True)
@@ -1966,7 +1967,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         table_data.append(template)
     columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)},{'name':_("Overall trend"),'id':'trend','type':'string'}]
     
-    #print('DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('SCISAT_DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return [figure, columns, table_data]
 
 #=======================================================================================================================
@@ -2112,7 +2113,7 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     link : str
         Link that redirects to the Flask route to download the CSV based on selected filters
     """
-    #print('\nDEBUG: entering update_csv_link()')
+    #print('\nSCISAT_DEBUG: entering update_csv_link()')
     #start_time1 = time.time()
 
     link = prefixe+'/dash/downloadCSV?start_date={}&end_date={}&lat_min={}&lat_max={}&lon_min={}&lon_max={}&gaz_list={}&alt_range={}' \
@@ -2129,7 +2130,7 @@ def update_csv_link(start_date, end_date, lat_min, lat_max, lon_min, lon_max, ga
     }
     link = prefixe + '/dash/downloadCSV?' + urllib.parse.urlencode(values)
     
-    #print('DEBUG: end of update_csv_link() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('SCISAT_DEBUG: end of update_csv_link() - Time spent: ' + str(time.time() - start_time1) + '\n')
     return link
 
 #=======================================================================================================================
@@ -2175,7 +2176,7 @@ def download_csv():
         CSV file based on the applied filters
     """
 
-    #print('\nDEBUG: entering download_csv()')
+    #print('\nSCISAT_DEBUG: entering download_csv()')
     #start_time1 = time.time()
 
     lat_min    = float(flask.request.args.get('lat_min'))
@@ -2212,7 +2213,7 @@ def download_csv():
         output.headers["Content-Disposition"] = "attachment; filename=summary_data.csv"
     output.headers["Content-type"] = "text/csv"
     
-    #print('DEBUG: end of download_csv() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    #print('SCISAT_DEBUG: end of download_csv() - Time spent: ' + str(time.time() - start_time1) + '\n')
 
     return output
 

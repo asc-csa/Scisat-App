@@ -33,7 +33,7 @@ from dash import dash_table as dst
 from dash.dash_table.Format import Group
 from dash import dash_table
 from dash_table.Format import Format, Scheme
-from scipy.io import netcdf #### <--- This is the library to import data
+from netCDF4 import Dataset #### <--- This is the library to import data
 import numpy as np
 from os import path
 import os.path
@@ -178,7 +178,7 @@ def generate_meta_tag_with_title(name, content, title):
 if __name__ == '__main__':
     from header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from config import Config
-    #print ('SCISAT_DEBUG: SCISAT Main Block used')
+    #print ('SCISAT_DEBUG: Main Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -201,7 +201,7 @@ if __name__ == '__main__':
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from .config import Config
-    #print ('SCISAT_DEBUG: SCISAT Alternate Block used')
+    #print ('SCISAT_DEBUG: Alternate Block used')
     if(path.exists(os.path.dirname(os.path.abspath(__file__)) + r"/analytics.py")):
         from .analytics import analytics_code, analytics_footer
     else:
@@ -223,7 +223,7 @@ else :
         )
 
 meta_html = ''
-print('SCISAT_DEBUG: SCISAT: Language: ' + str(app_config.DEFAULT_LANGUAGE))
+print('SCISAT_DEBUG: Language: ' + str(app_config.DEFAULT_LANGUAGE))
 if app_config.DEFAULT_LANGUAGE == 'en':
     app.set_header(gc_header_en)
     app.set_footer(gc_footer_en)
@@ -326,35 +326,32 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     print('data_reader() -> datareader path: ' + path_to_files)
     
     if type(file)==list:
-        file=file[0]
+        file = file[0]
 
     gaz = file.strip().split('.')[0].strip().split('_')[3:]
-    if len(gaz)>1:
-        gaz = gaz[0]+'_'+gaz[1]
+    if len(gaz) > 1:
+        gaz = gaz[0] + '_' + gaz[1]
     else:
-        gaz=gaz[0]
-
-    name=path_to_files+'/'+file
-    nc = netcdf.netcdf_file(name,'r')
+        gaz = gaz[0]
+    
+    # Load data from the file
+    name = path_to_files + '/' + file
+    nc = Dataset(name, 'r')
 
     #print('SCISAT_DEBUG: data_reader() - Time spent so far (#1): ' + str(time.time() - start_time1))
     
     #Trier / définir rapido les données et les variables
     fillvalue1 = -999.
-    months=np.copy(nc.variables['month'][:])
+    months = np.copy(nc.variables['month'][:])
     years = np.copy(nc.variables['year'][:])
     days = np.copy(nc.variables['day'][:])
 
     lat = np.copy(nc.variables['latitude'][:])
-    lat  = lat.astype(lat.dtype.newbyteorder('<'))
     long = np.copy( nc.variables['longitude'][:])
-    long = long.astype(long.dtype.newbyteorder('<'))
     alt = np.copy(nc.variables['altitude'][:])
-    alt = alt.astype(alt.dtype.newbyteorder('<'))
 
     #valeurs de concentration [ppv]
     data = np.copy(nc.variables[gaz][:])
-    data = data.astype(data.dtype.newbyteorder('<'))
     
     #Remplacer les données vides
     data[data == fillvalue1] = np.nan
@@ -363,7 +360,6 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     data = data[:,alt_range[0]:alt_range[1]]
 
     df = pd.DataFrame(data,columns=alt[alt_range[0]:alt_range[1]])
-    print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
     #print('SCISAT_DEBUG: data_reader() - Time spent so far (#2): ' + str(time.time() - start_time1))
 
     #Trie données abérrantes
@@ -389,10 +385,10 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
     date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
     #print('SCISAT_DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
+    df['Alt_Mean'] = np.nanmean(df.select_dtypes(include='number'), axis=1)
     df['date'] = date
     df['lat'] = lat
     df['long'] = long
-    df['Alt_Mean'] = np.nanmean(df.select_dtypes(include='number'), axis=1)
 
     if start_date!=0 and end_date!=0 :
         df=df[np.where(df['date']>start_date,True,False)]
@@ -1430,12 +1426,14 @@ def date_validation(start_date, end_date, gaz_list):
 # Gas validation
 def gas_validation(gaz_list):
     try:
+        print('SCISAT_DEBUG: gas_validation() - gaz_list: ')
+        print(gaz_list)
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
         #print('Path to data:')
         #print(path_data)
-        name=path_data+'/'+gaz_list
-        nc = netcdf.netcdf_file(name,'r')
+        name = path_data + '/' + gaz_list
+        nc = Dataset(name, 'r')
     except FileNotFoundError:
         return False
     return True
@@ -1940,13 +1938,13 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     last_mean_concentration = concentration_mean.iloc[1]['Alt_Mean']
     overall_trend = " ↗↘ "
     if first_mean_concentration > last_mean_concentration:
-        print('going down')
+        print('SCISAT_DEBUG: the red line is going down')
         overall_trend = " ↘ "
     elif first_mean_concentration < last_mean_concentration:
-        print('going up')
+        print('SCISAT_DEBUG: the red line is going up')
         overall_trend = " ↗ "
     else:
-        print('going straight')
+        print('SCISAT_DEBUG: the red line is going straight')
         overall_trend = ' -- '
 
     figure.add_trace(
@@ -1968,6 +1966,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
     columns = [{'name':_('Date'),'id':'date'},{'name':_("Mean concentration (ppv)"),'id':'conc','type':'numeric',"format":Format(precision=3, scheme=Scheme.exponent)},{'name':_("Overall trend"),'id':'trend','type':'string'}]
     
     #print('SCISAT_DEBUG: end of make_viz_chart() - Time spent: ' + str(time.time() - start_time1) + '\n')
+    print('\n\n\n')
     return [figure, columns, table_data]
 
 #=======================================================================================================================
@@ -2306,7 +2305,6 @@ def translate_static(x):
                 _("Text version - World map of mean gas concentrations"),
                 _("Text version - Mean gas concentration as a function of altitude"),
                 _("Text version - Mean gas concentration over time"),
-                #_('Download full data as netcdf'),
                 # _("Select x-axis:"),
                 # _("Select y-axis:"),
                 #_("Select statistic:"),

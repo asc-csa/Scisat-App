@@ -40,6 +40,10 @@ import os.path
 import sys
 
 
+# Constants
+DATA_VERSION = 'ACEFTS_L2_v5p2'
+
+
 class CustomDash(dash.Dash):
 
     analytics_code = ''
@@ -154,9 +158,6 @@ def get_app_locale():
     # so we use the locale from the user settings
     return 'en'
 
-
-DATA_VERSION = 'ACEFTS_L2_v5p2'
-
 # Loads the config file
 def get_config_dict():
     config = configparser.RawConfigParser()
@@ -186,8 +187,8 @@ if __name__ == '__main__':
         analytics_footer = '<h1>Did not load things footer</h1>'
     app_config = Config()
 
-    path_data=app_config.DATA_PATH
-    prefixe= app_config.APP_PREFIX
+    path_data = app_config.DATA_PATH
+    prefixe = app_config.APP_PREFIX
 
     tokens = get_config_dict()
     app = CustomDash(
@@ -197,7 +198,6 @@ if __name__ == '__main__':
         external_scripts=external_scripts,
         # analytics = analytics_code
     )
-
 else :
     from .header_footer import gc_header_en, gc_footer_en, gc_header_fr, gc_footer_fr, app_title_en, app_title_fr, app_footer_en, app_footer_fr
     from .config import Config
@@ -209,8 +209,8 @@ else :
         analytics_footer = ''
     app_config = Config()
 
-    path_data=app_config.DATA_PATH
-    prefixe= app_config.APP_PREFIX
+    path_data = app_config.DATA_PATH
+    prefixe = app_config.APP_PREFIX
 
     tokens = get_config_dict()
     app = CustomDash(
@@ -315,15 +315,12 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
 
     """
     
-    if data_reader.page_df.size != 0:
-        return data_reader.page_df
-
     #print('\nSCISAT_DEBUG: entering data_reader()')
     #start_time1 = time.time()
     
-    print("SCISAT Data version: " + DATA_VERSION)
-    print('data_reader() -> file: ' + file)
-    print('data_reader() -> datareader path: ' + path_to_files)
+    print('\nSCISAT_DEBUG: Reading data from file...')
+    print('SCISAT_DEBUG: data_reader() -> file: ' + file)
+    print('SCISAT_DEBUG: data_reader() -> datareader path: ' + path_to_files)
     
     if type(file)==list:
         file = file[0]
@@ -351,7 +348,13 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     alt = np.copy(nc.variables['altitude'][:])
 
     #valeurs de concentration [ppv]
-    data = np.copy(nc.variables[gaz][:])
+    print('SCISAT_DEBUG: data_reader() -> gaz: ' + str(gaz))
+    #print(nc.variables)
+    if gaz == 'GLC':
+        # Special case for GLC
+        data = np.copy(nc.variables['pressure'][:])
+    else:
+        data = np.copy(nc.variables[gaz][:])
     
     #Remplacer les données vides
     data[data == fillvalue1] = np.nan
@@ -381,8 +384,8 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     #Colonne de dates
     date=[]
     nbDays = len(days)
-    print('SCISAT_DEBUG: Number of days to loop: ' + str(nbDays))
-    print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
+    #print('SCISAT_DEBUG: Number of days to loop: ' + str(nbDays))
+    #print('SCISAT_DEBUG: Number of elements in the dataframe: ' + str(df.size))
     date = np.array([dt.datetime(int(years[i]), int(months[i]), int(days[i])) for i in range (nbDays)])
     #print('SCISAT_DEBUG: data_reader() - Time spent so far (#4): ' + str(time.time() - start_time1))
     df['Alt_Mean'] = np.nanmean(df.select_dtypes(include='number'), axis=1)
@@ -401,8 +404,9 @@ def data_reader(file,path_to_files,start_date=0,end_date=0,lat_min=-90,lat_max=9
     df=df[np.where(df['long']<lon_max,True,False)]
 
     #print('SCISAT_DEBUG: end of data_reader() - TOTAL Time spent: ' + str(time.time() - start_time1) + '\n\n')
-    data_reader.page_df = df
+    print('SCISAT_DEBUG: data_reader() -> Data file loaded (' + file + ')')
     return df
+
 data_reader.page_df = pd.DataFrame()
 
 # Returns a binned dataframe with the provided steps.
@@ -1352,14 +1356,14 @@ def update_error_list( lat_alert, lon_alert, gas_alert, date_alert):
         Input("gaz_list", "value")
     ]
 )
-
 def update_dates(start_date, end_date, gaz_list):
+    print('SCISAT_DEBUG: update_dates()')
     s = True
     #if not date_validation(start_date,end_date,gaz_list):
         #s = False
     return s
 
-# Update gas value using validation
+# Update gaz value using validation
 @app.callback(
     Output("gas_alert", "hidden"),
     [
@@ -1369,9 +1373,9 @@ def update_dates(start_date, end_date, gaz_list):
         State("gas_alert", "hidden")
     ],
 )
-def update_gas(gaz_list, is_open):
+def update_gaz(gaz_list, is_open):
     s = True
-    if not gas_validation(gaz_list):
+    if not gaz_validation(gaz_list):
         s = False
     return s
 
@@ -1415,25 +1419,26 @@ def lon_validation(lon_min,lon_max):
 
 # Date validation
 def date_validation(start_date, end_date, gaz_list):
+    # TODO: To remove this function; it is never called.
     start = dt.datetime.strptime(start_date.split('T')[0], '%Y-%m-%d')
     end = dt.datetime.strptime(end_date.split('T')[0], '%Y-%m-%d')
-    #print('\nReading data from date_validation()')
+    print('\nReading data from date_validation()')
     df = data_reader(gaz_list, path_data)
     MIN_DATE=df['date'].min().to_pydatetime()
     MAX_DATE=df['date'].max().to_pydatetime()
     return ((start>=MIN_DATE) and (start <= end) and (start <= MAX_DATE) and (end >= MIN_DATE) and (end <= MAX_DATE))
 
 # Gas validation
-def gas_validation(gaz_list):
+def gaz_validation(gaz_list):
     try:
-        print('SCISAT_DEBUG: gas_validation() - gaz_list: ')
+        print('\n-----------------------------------------')
+        print('SCISAT_DEBUG: gaz_validation() - gaz_list: ')
         print(gaz_list)
         if type(gaz_list)==list:
             gaz_list=gaz_list[0]
-        #print('Path to data:')
-        #print(path_data)
+
         name = path_data + '/' + gaz_list
-        nc = Dataset(name, 'r')
+        return path.isfile(name)
     except FileNotFoundError:
         return False
     return True
@@ -1972,7 +1977,7 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
 #=======================================================================================================================
 #  Controller and other major callback function.
 
-# The controller generates all figures, links and numbers from the input parameters provided. It is called by pressing the "Generate" button
+# The controller generates all figures, links and numbers from the input parameters provided.
 @app.callback(
     [
         Output("selector_map", "figure"),
@@ -2006,11 +2011,10 @@ def make_viz_chart(df):#, x_axis_selection='Date', y_axis_selection='Concentrati
         State("date_alert", "hidden")
     ]
 )
-
 def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_max, alt_range, start_date, end_date, lat_alert, lon_alert, gas_alert, date_alert):
     #if (lat_alert or lon_alert or date_alert):
     if (lat_alert or lon_alert):
-        #print('\nReading data from controller()')
+        print('\nReading data from controller()')
         df = data_reader(act_gaz_list, path_data, start_date, end_date, lat_min, lat_max, lon_min, lon_max, alt_range)
         df = remove_nagative_concentrations(df)
         [fig1, columns1, data1] = generate_geo_map(df)
@@ -2021,6 +2025,8 @@ def controller(n_clicks, gaz_list, act_gaz_list, lat_min, lat_max, lon_min, lon_
     else:
         df, fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr = None, None, None, None, None, None, None, None, None, None, None, 0
 
+    data_reader.page_df = df
+    print('SCISAT_DEBUG: Refreshing the application...')
     return fig1, columns1, data1, fig2, columns2, data2, fig3, columns3, data3, link, nbr
 
 # This function calculates the number of points selected
@@ -2061,7 +2067,7 @@ def update_filtering_text(df):
 
     return "{:n}".format(df.shape[0]) + " points" #!!!!!!!!!!
 
-# This function sets the max/min allowed dates when switching gas
+# This function sets the max/min allowed dates when switching gaz
 @app.callback(
     [Output('date_picker_range', 'min_date_allowed'),
     Output('date_picker_range', 'max_date_allowed'),
@@ -2072,7 +2078,7 @@ def update_filtering_text(df):
     )
     
 def update_picker(gaz_list):
-    #print('\nReading data from update_picker()')
+    print('\nReading data from update_picker()')
     data_reader.page_df = pd.DataFrame()
     df = data_reader(gaz_list, path_data)
     START_DATE = df.date.min().to_pydatetime()
@@ -2196,7 +2202,7 @@ def download_csv():
     alt_range[0] = int(alt_range[0])
     alt_range[1] = int(alt_range[1])
     #print('Reading data from download_csv()')
-    df =data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
+    df = data_reader(gaz_list,path_data,start_date,end_date,lat_min,lat_max,lon_min,lon_max,alt_range)
 
     # Making the output csv from the filtered df
     csv_buffer = StringIO()
@@ -2213,7 +2219,6 @@ def download_csv():
     output.headers["Content-type"] = "text/csv"
     
     #print('SCISAT_DEBUG: end of download_csv() - Time spent: ' + str(time.time() - start_time1) + '\n')
-
     return output
 
 #============================================================================
